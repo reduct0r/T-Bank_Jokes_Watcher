@@ -17,23 +17,56 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+
+        val mainOutput = mainOutput()
+
         setContent {
             Homework_project_1Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    StringOut(
+                        content = mainOutput,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
     }
+
+    private fun mainOutput(): String {
+        val store = ZooStore()
+        val breeds = listOf("Husky", "Corgi", "Scottish", "Siamese", "Persian")
+        val outputBuilder = StringBuilder()
+
+        for (breed in breeds) {
+            val animalType = store.getAnimalType(breed)
+            outputBuilder.append("Breed: $breed - Type: $animalType\n")
+
+            val animal = store.createAnimal(breed, weight = 20.0, age = 3)
+
+            if (animal != null) {
+                when (animal) {
+                    is Dog -> {
+                        outputBuilder.append("Breed: ${animal.breed}, Weight: ${animal.weight}kg, Age: ${animal.age},\nBite Type: ${animal.biteType}\n")
+                    }
+                    is Cat -> {
+                        outputBuilder.append("Breed: ${animal.breed}, Weight: ${animal.weight}kg, Age: ${animal.age},\nBehavior Type: ${animal.behaviorType}\n")
+                    }
+                }
+            } else {
+                outputBuilder.append("Breed $breed is not available in the store.\n")
+            }
+
+            outputBuilder.append("-----\n")
+        }
+        return outputBuilder.toString()
+    }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun StringOut(content: String, modifier: Modifier = Modifier) {
     Text(
-        text = "Hello $name!",
+        text = content,
         modifier = modifier
     )
 }
@@ -42,6 +75,6 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun GreetingPreview() {
     Homework_project_1Theme {
-        Greeting("Android")
+        StringOut("Sample output")
     }
 }
