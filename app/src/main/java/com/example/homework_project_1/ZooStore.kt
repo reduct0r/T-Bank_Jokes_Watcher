@@ -12,7 +12,7 @@ class ZooStore {
     private val breedToConstructorMap: Map<String, (Double, Int) -> Animal> = mapOf(
         "husky" to ::Husky,
         "corgi" to ::Corgi,
-        "scottish" to ::ScottishDog,
+        "scottish" to ::Scottish,
         "siamese" to ::Siamese
     )
 
