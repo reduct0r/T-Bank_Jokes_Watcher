@@ -18,7 +18,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-
         val mainOutput = mainOutput()
 
         setContent {
@@ -35,46 +34,47 @@ class MainActivity : ComponentActivity() {
 
     private fun mainOutput(): String {
         val store = ZooStore()
-        val breeds = listOf("Husky", "Corgi", "Scottish", "Siamese", "Persian")
+        val animals = listOf(
+            Husky(weight = 20.0, age = 3),
+            Corgi(weight = 20.0, age = 3),
+            ScottishFold(weight = 4.0, age = 2),
+            Siamese(weight = 1.0, age = 1)
+        )
         val outputBuilder = StringBuilder()
 
-        for (breed in breeds) {
-            val animalType = store.getAnimalType(breed)
-            outputBuilder.append("Breed: $breed - Type: $animalType\n")
+        for (animal in animals) {
+            val animalType = store.getAnimalType(animal)
+            outputBuilder.append("Type: $animalType\n")
 
-            val animal = store.createAnimal(breed, weight = 20.0, age = 3)
-
-            if (animal != null) {
-                when (animal) {
-                    is Dog -> {
-                        outputBuilder.append("Breed: ${animal.breed}, Weight: ${animal.weight}kg, Age: ${animal.age},\nBite Type: ${animal.biteType}\n")
-                    }
-                    is Cat -> {
-                        outputBuilder.append("Breed: ${animal.breed}, Weight: ${animal.weight}kg, Age: ${animal.age},\nBehavior Type: ${animal.behaviorType}\n")
-                    }
+            when (animal) {
+                is Dog -> {
+                    outputBuilder.append(
+                        "Breed: ${animal.breed.displayName}, Weight: ${animal.weight} kg, Age: ${animal.age},\n" +
+                                "Bite Type: ${animal.biteType}\n"
+                    )
                 }
-            } else {
-                outputBuilder.append("Breed $breed is not available in the store.\n")
+                is Cat -> {
+                    outputBuilder.append(
+                        "Breed: ${animal.breed.displayName}, Weight: ${animal.weight} kg, Age: ${animal.age},\n" +
+                                "Behavior Type: ${animal.behaviorType}\n"
+                    )
+                }
+                else -> {
+                    outputBuilder.append("Unknown animal\n")
+                }
             }
 
             outputBuilder.append("-----\n")
         }
         return outputBuilder.toString()
     }
-}
 
-@Composable
-fun StringOut(content: String, modifier: Modifier = Modifier) {
-    Text(
-        text = content,
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Homework_project_1Theme {
-        StringOut("Sample output")
+    @Composable
+    fun StringOut(content: String, modifier: Modifier = Modifier) {
+        Text(
+            text = content,
+            modifier = modifier
+        )
     }
 }
+

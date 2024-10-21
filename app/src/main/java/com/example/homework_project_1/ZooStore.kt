@@ -2,25 +2,15 @@ package com.example.homework_project_1
 
 class ZooStore {
 
-    private val breedToTypeMap = mapOf(
-        "husky" to "Dog",
-        "corgi" to "Dog",
-        "scottish" to "Dog",
-        "siamese" to "Cat"
-    )
-
-    private val breedToConstructorMap: Map<String, (Double, Int) -> Animal> = mapOf(
-        "husky" to ::Husky,
-        "corgi" to ::Corgi,
-        "scottish" to ::Scottish,
-        "siamese" to ::Siamese
-    )
-
-    fun getAnimalType(breed: String): String {
-        return breedToTypeMap[breed.lowercase()] ?: "Unknown"
+    fun getAnimalType(animal: Animal): String {
+        return when (animal) {
+            is Dog -> "Dog"
+            is Cat -> "Cat"
+            else -> "Unknown"
+        }
     }
 
-    fun createAnimal(breed: String, weight: Double, age: Int): Animal? {
-        return breedToConstructorMap[breed.lowercase()]?.invoke(weight, age)
+    fun createAnimal(animal: Animal): Animal {
+        return animal
     }
 }
