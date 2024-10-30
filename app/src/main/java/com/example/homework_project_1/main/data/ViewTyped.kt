@@ -1,6 +1,6 @@
 package com.example.homework_project_1.main.data
 
-import androidx.annotation.IdRes;
+import androidx.annotation.IdRes
 
 // Интерфейс для отображения элементов списка
 sealed interface ViewTyped {
