@@ -8,7 +8,7 @@ import com.example.homework_project_1.main.data.ViewTyped.*
 import kotlin.random.Random
 
 // Класс для генерации шуток
-class JokesGenerator() {
+class JokesGenerator {
     // Набор аватарок
     private val avatarSet = setOf(
         R.drawable.smile1,
