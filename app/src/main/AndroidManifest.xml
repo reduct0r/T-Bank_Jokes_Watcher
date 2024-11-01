@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Homework_project_1"
         tools:targetApi="31">
+        <activity android:name=".JokeDetailsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat">
+        </activity>
+
         <activity
             android:name=".JokeListActivity"
             android:exported="true"
