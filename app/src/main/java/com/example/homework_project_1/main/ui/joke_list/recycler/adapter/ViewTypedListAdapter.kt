@@ -62,6 +62,7 @@ class ViewTypedListAdapter(
         private const val HEADER_VIEW_TYPE = 1
     }
 
+
     // Обработка клика по элементу списка
     private fun handleClick(context: Context, position: Int) {
         if (position != RecyclerView.NO_POSITION) {

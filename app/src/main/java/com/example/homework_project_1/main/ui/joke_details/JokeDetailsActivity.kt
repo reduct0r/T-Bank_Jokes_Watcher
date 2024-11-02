@@ -6,17 +6,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.homework_project_1.databinding.ActivityJokeDetailsBinding
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.ViewTyped.*
+import com.example.homework_project_1.main.ui.joke_list.JokesViewModelFactory
 
 class JokeDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJokeDetailsBinding
     private val generator = JokesGenerator
     private var jokePosition: Int = -1
+    private lateinit var viewModel: JokesViewModelFactory
 
     companion object {
-
         private const val JOKE_POSITION_EXTRA = "JOKE_POSITION"
 
         fun getInstance(context: Context, jokePosition: Int): Intent {
@@ -24,6 +26,12 @@ class JokeDetailsActivity : AppCompatActivity() {
                 putExtra(JOKE_POSITION_EXTRA, jokePosition)
             }
         }
+    }
+
+    private fun initViewModel() {
+        val factory = JokesDetailsViewModelFactory()
+        //viewModel = ViewModelProvider(this, factory)[JokeDetailsViewModel::class.java]
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

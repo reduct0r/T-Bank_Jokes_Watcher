@@ -1,8 +1,9 @@
 package com.example.homework_project_1.main.ui.joke_list
 
 import android.os.Bundle
-import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.databinding.ActivityJokeListBinding
 import com.example.homework_project_1.main.data.JokesGenerator
@@ -11,8 +12,28 @@ import com.example.homework_project_1.main.ui.joke_details.JokeDetailsActivity
 
 class JokeListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJokeListBinding
+
+    private lateinit var viewModel: JokeListViewModel
+
     private val adapter = ViewTypedListAdapter{
         startActivity(JokeDetailsActivity.getInstance(this, it))
+    }
+
+    private fun initViewModel() {
+        val factory = JokesViewModelFactory()
+        viewModel = ViewModelProvider(this, factory)[JokeListViewModel::class.java]
+
+        viewModel.jokes.observe(this) {
+            adapter.submitList(it)
+        }
+
+        viewModel.error.observe(this) {
+            showError(it)
+        }
+    }
+
+    private fun showError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
     // Создаем RecyclerView и устанавливаем слушатель на кнопку
@@ -23,14 +44,10 @@ class JokeListActivity : AppCompatActivity() {
 
         createRecyclerViewList()
         val generator = JokesGenerator
-
+        initViewModel()
         // При нажатии на кнопку генерируем новые данные и обновляем список
         binding.button.setOnClickListener {
-            val data =  listOf(
-                generator.generateJokesData()
-            ).flatten()
-            adapter.submitList(data)
-            Log.d("JokeListActivity", "Data: ${data}")
+            viewModel.generateJokes()
         }
     }
 
