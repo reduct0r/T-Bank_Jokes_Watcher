@@ -67,7 +67,7 @@ class ViewTypedListAdapter(
     private fun handleClick(context: Context, position: Int) {
         if (position != RecyclerView.NO_POSITION) {
             clickListener(position)
-            Toast.makeText(context, "Clicked on joke with position: ${position}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Clicked on joke with position: $position", Toast.LENGTH_SHORT).show()
         }
     }
 }

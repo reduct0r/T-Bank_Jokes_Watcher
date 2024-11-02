@@ -5,8 +5,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityJokeListBinding
-import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.ui.joke_list.recycler.adapter.ViewTypedListAdapter
 import com.example.homework_project_1.main.ui.joke_details.JokeDetailsActivity
 
@@ -49,12 +49,12 @@ class JokeListActivity : AppCompatActivity() {
         binding.button.setOnClickListener {
             viewModel.generateJokes()
             if (viewModel.showGeneratedData().isEmpty()) {
-                binding.button.text = "Reset used jokes"
+                binding.button.text = getString(R.string.reset_used_jokes)
                 showError("No new jokes are available.")
                   viewModel.resetJokes()
             }
           else {
-            binding.button.text = "Generate 7 random jokes"
+            binding.button.text = getString(R.string.generate_jokes)
           }
         }
     }

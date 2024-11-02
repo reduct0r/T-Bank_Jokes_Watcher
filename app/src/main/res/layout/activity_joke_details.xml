@@ -14,6 +14,7 @@
         android:layout_height="154dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="50dp"
+        android:importantForAccessibility="no"
         android:paddingTop="1dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -85,13 +86,13 @@
         android:id="@+id/addToFavorites"
         android:layout_width="202dp"
         android:layout_height="47dp"
-        android:text="Add to favorites"
+        tools:text="Add to favorites"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/answer"
-        app:layout_constraintVertical_bias="0.113" />
+        app:layout_constraintVertical_bias="0.113"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

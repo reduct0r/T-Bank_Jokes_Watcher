@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityJokeDetailsBinding
 import com.example.homework_project_1.main.data.ViewTyped
 
@@ -41,6 +42,8 @@ class JokeDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityJokeDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.addToFavorites.text = getString(R.string.add_to_favorites)
 
         // Получение jokePosition из Intent
         val jokePosition = intent.getIntExtra(JOKE_POSITION_EXTRA, -1)

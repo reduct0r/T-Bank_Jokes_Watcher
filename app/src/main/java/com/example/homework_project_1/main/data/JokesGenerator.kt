@@ -93,7 +93,7 @@ object JokesGenerator {
         createJoke("Science", "Why did the geologist go on a hike?", "To rock and roll.")
     )
 
-    private var ind = 0;  // Уникальный идентификатор для каждой шутки
+    private var ind = 0  // Уникальный идентификатор для каждой шутки
     private var usedJokesIndices = mutableSetOf<Int>() // Индексы использованных шуток
 
     // Генерация данных для списка из рандомных шуток без повторения
