@@ -11,7 +11,6 @@ import com.example.homework_project_1.databinding.JokeItemBinding
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.recycler.HeaderViewHolder
 import com.example.homework_project_1.main.recycler.JokeViewHolder
-//import com.example.homework_project_1.main.recycler.util.JokeItemCallback
 import com.example.homework_project_1.main.recycler.util.ViewTypedCallback
 
 class ViewTypedListAdapter(

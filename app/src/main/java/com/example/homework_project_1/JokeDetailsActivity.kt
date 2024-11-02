@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.homework_project_1.databinding.ActivityJokeDetailsBinding
 import com.example.homework_project_1.main.data.JokesGenerator
-import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.ViewTyped.*
 
 class JokeDetailsActivity : AppCompatActivity() {
@@ -28,12 +27,19 @@ class JokeDetailsActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportActionBar?.hide()                                        // Скрытие ActionBar
         super.onCreate(savedInstanceState)
-        binding = ActivityJokeDetailsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        handleExtra()
+        binding = ActivityJokeDetailsBinding.inflate(layoutInflater)    // Инициализация ViewBinding
+        setContentView(binding.root)                                    // Установка корневого элемента
+        handleExtra()                                                   // Обработка переданных данных
+
+        // Обработка нажатия на кнопку "Назад"
+        binding.buttonBack.setOnClickListener {
+            finish()
+        }
     }
 
+    // Обработка переданных данных
     private fun handleExtra(){
         jokePosition = intent.getIntExtra(JOKE_POSITION_EXTRA, -1)
 

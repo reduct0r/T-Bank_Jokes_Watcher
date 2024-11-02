@@ -27,11 +27,10 @@ class JokeListActivity : AppCompatActivity() {
 
         // При нажатии на кнопку генерируем новые данные и обновляем список
         binding.button.setOnClickListener {
-            val data = generator.generateJokesData() //listOf(
-
-            //).flatten()
+            val data =  listOf(
+                generator.generateJokesData()
+            ).flatten()
             adapter.submitList(data)
-            //Toast.makeText(this, data.toString(), Toast.LENGTH_SHORT).show()
             Log.d("JokeListActivity", "Data: ${data}")
         }
     }
