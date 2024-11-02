@@ -1,9 +1,7 @@
 package com.example.homework_project_1.main.recycler.util
 
-import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.data.ViewTyped.*
 
 // Класс для сравнения элементов списка для DiffUtil
 class ViewTypedCallback : DiffUtil.ItemCallback<ViewTyped>() {

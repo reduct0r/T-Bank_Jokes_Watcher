@@ -1,17 +1,16 @@
 package com.example.homework_project_1
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.databinding.ActivityJokeListBinding
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.recycler.adapter.JokeListAdapter
+import com.example.homework_project_1.main.recycler.adapter.ViewTypedListAdapter
 
 class JokeListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJokeListBinding
-    private val adapter = JokeListAdapter{
+    private val adapter = ViewTypedListAdapter{
         startActivity(JokeDetailsActivity.getInstance(this, it))
     }
 
@@ -22,7 +21,7 @@ class JokeListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         createRecyclerViewList()
-        val generator = JokesGenerator()
+        val generator = JokesGenerator
 
         // При нажатии на кнопку генерируем новые данные и обновляем список
         binding.button.setOnClickListener {
@@ -38,4 +37,6 @@ class JokeListActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(this, 1)
     }
+
+
 }

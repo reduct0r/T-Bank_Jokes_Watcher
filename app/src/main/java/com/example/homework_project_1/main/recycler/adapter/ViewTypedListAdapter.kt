@@ -14,31 +14,34 @@ import com.example.homework_project_1.main.recycler.JokeViewHolder
 //import com.example.homework_project_1.main.recycler.util.JokeItemCallback
 import com.example.homework_project_1.main.recycler.util.ViewTypedCallback
 
-class JokeListAdapter(
-    private val clickListener: (Int) -> Unit
+class ViewTypedListAdapter(
+    private val clickListener: (Int) -> Unit        // Слушатель для обработки клика по элементу списка
 ) : ListAdapter<ViewTyped, RecyclerView.ViewHolder>(ViewTypedCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return when(viewType) {
+        return when (viewType) {
             JOKE_VIEW_TYPE -> {
                 val binding = JokeItemBinding.inflate(inflater, parent, false)
                 JokeViewHolder(binding)
                 return JokeViewHolder(binding).apply {
                     itemView.setOnClickListener {
-                        handleJokeClick(parent.context, adapterPosition)
+                        handleClick(parent.context, adapterPosition)
                     }
                 }
             }
+
             HEADER_VIEW_TYPE -> {
                 val binding = HeaderItemBinding.inflate(inflater, parent, false)
                 HeaderViewHolder(binding)
             }
+
             else -> throw IllegalArgumentException("Unknown view type: $viewType")
         }
 
     }
 
+    // Привязка данных к элементу списка
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
             is ViewTyped.Joke -> (holder as JokeViewHolder).bind(item)
@@ -46,6 +49,7 @@ class JokeListAdapter(
         }
     }
 
+    // Определение типа элемента списка
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
             is ViewTyped.Joke -> JOKE_VIEW_TYPE
@@ -60,12 +64,10 @@ class JokeListAdapter(
     }
 
     // Обработка клика по элементу списка
-    private fun handleJokeClick(context: Context, position: Int) {
+    private fun handleClick(context: Context, position: Int) {
         if (position != RecyclerView.NO_POSITION) {
-            val item = getItem(position)
             clickListener(position)
-
-
+            Toast.makeText(context, "Clicked on joke with position: ${position}", Toast.LENGTH_SHORT).show()
         }
     }
 }

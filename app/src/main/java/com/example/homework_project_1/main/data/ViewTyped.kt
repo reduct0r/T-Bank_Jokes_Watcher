@@ -6,7 +6,7 @@ import androidx.annotation.IdRes
 sealed interface ViewTyped {
     // Класс шутки
     data class Joke(
-        val id: Int,
+        var id: Int,
         @IdRes var avatar: Int?,
         val category: String,
         val question: String,

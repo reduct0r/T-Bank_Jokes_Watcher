@@ -1,15 +1,20 @@
 package com.example.homework_project_1
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.icu.text.Transliterator.Position
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.homework_project_1.databinding.ActivityJokeDetailsBinding
+import com.example.homework_project_1.main.data.JokesGenerator
+import com.example.homework_project_1.main.data.ViewTyped
+import com.example.homework_project_1.main.data.ViewTyped.*
 
 class JokeDetailsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityJokeDetailsBinding
+    private val generator = JokesGenerator
+    private var jokePosition: Int = -1
 
     companion object {
 
@@ -20,12 +25,51 @@ class JokeDetailsActivity : AppCompatActivity() {
                 putExtra(JOKE_POSITION_EXTRA, jokePosition)
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_joke_details)
-
+        binding = ActivityJokeDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        handleExtra()
     }
+
+    private fun handleExtra(){
+        jokePosition = intent.getIntExtra(JOKE_POSITION_EXTRA, -1)
+
+        if (jokePosition == -1) {
+            handleError()
+        }
+        else {
+            val item = generator.generateJokesData()[jokePosition] as? Joke
+
+            if (item != null){
+                setupJokesData(item)
+            }
+            else{
+                handleError()
+            }
+        }
+    }
+
+    // Установка данных шутки
+    @SuppressLint("ResourceType")
+    private fun setupJokesData(item: Joke) {
+        with(binding){
+            question.text = item.question
+            answer.text = item.answer
+            category.text = item.category
+            item.avatar?.let {
+                avatar.setImageResource(item.avatar!!)
+            }
+        }
+    }
+
+    // Обработка ошибки
+    private fun handleError() {
+        Toast.makeText(this, "Invalid person data", Toast.LENGTH_SHORT).show()
+        finish()
+    }
+
+
 }
