@@ -32,30 +32,28 @@
         android:id="@+id/question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="TextView"
         android:paddingStart="6dp"
+        android:maxLines="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.026"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.511"
-        tools:ignore="RtlSymmetry" />
+        tools:ignore="RtlSymmetry"
+        tools:text="TextView" />
 
     <TextView
         android:id="@+id/answer"
-        android:layout_width="300dp"
-        android:layout_height="20dp"
+        android:layout_width="284dp"
+        android:layout_height="23dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingStart="6dp"
+        android:paddingStart="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.026"
-        app:layout_constraintStart_toEndOf="@+id/avatar"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:text="TextView"
-        tools:ignore="RtlSymmetry" />
+        app:layout_constraintStart_toStartOf="@+id/question"
+        app:layout_constraintTop_toBottomOf="@+id/question"
+        tools:ignore="RtlSymmetry"
+        tools:text="TextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

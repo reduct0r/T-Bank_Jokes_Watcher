@@ -1,20 +1,19 @@
 package com.example.homework_project_1.main.data
 
-import androidx.annotation.DrawableRes
 import com.example.homework_project_1.R
 import com.example.homework_project_1.main.data.ViewTyped.*
 import kotlin.random.Random
 
 // Класс для генерации шуток
 object JokesGenerator {
-    private var selectedJokes = mutableListOf<Joke>()
+    private var selectedJokes = mutableListOf<Joke>() // Список выбранных шуток
+
     // Наборы аватарок по категориям
     private val defaultAvatars = listOf(
         R.drawable.def_ava1,
         R.drawable.def_ava2,
         R.drawable.def_ava3
     )
-
     private val programmingAvatars = listOf(
         R.drawable.prog_ava1,
         R.drawable.prog_ava2,
@@ -24,7 +23,6 @@ object JokesGenerator {
         R.drawable.prog_ava6,
         R.drawable.prog_ava7
     )
-
     private val mathAvatars = listOf(
         R.drawable.math_ava1,
         R.drawable.math_ava2,
@@ -32,7 +30,6 @@ object JokesGenerator {
         R.drawable.math_ava4,
         R.drawable.math_ava5
     )
-
     private val scienceAvatars = listOf(
         R.drawable.sci_ava1,
         R.drawable.sci_ava2,
@@ -42,7 +39,6 @@ object JokesGenerator {
         R.drawable.math_ava4,
         R.drawable.math_ava5
     )
-
     private val techAvatars = listOf(
         R.drawable.tech_ava1,
         R.drawable.tech_ava2,
@@ -105,7 +101,7 @@ object JokesGenerator {
         val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()                        // Использованные аватарки для категории
 
         var attempts = 0                                                                            // Счетчик попыток
-        val maxAttempts = jokesList.size * 2                                                        // Ограничение попыток для оптимизации
+        val maxAttempts = jokesList.size * 1                                                        // Ограничение попыток для оптимизации
 
         while (selectedJokes.size < 7 && jokesList.isNotEmpty() && attempts < maxAttempts) {
             attempts++
@@ -119,7 +115,8 @@ object JokesGenerator {
             val availableAvatars = avatars.filter { it !in usedAvatars }                            // Исключаем использованные аватарки
             val selectedAvatar = if (availableAvatars.isNotEmpty()) {
                 availableAvatars.random()                                                           // Выбираем рандомную аватарку
-            } else {
+            }
+            else {
                 defaultAvatars.random()                                                             // Используем дефолтную аватарку, если аватарки категории исчерпаны
             }
 
@@ -142,7 +139,7 @@ object JokesGenerator {
        TODO("Not yet implemented")
     }
 
-    // Создание шутки без индекса и аватарки
+    // Создание шутки без индекса и без аватарки
     private fun createJoke(category: String, question: String, answer: String): Joke {
         return Joke(
             id = 0,
