@@ -101,7 +101,7 @@ object JokesGenerator {
         val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()                        // Использованные аватарки для категории
 
         var attempts = 0                                                                            // Счетчик попыток
-        val maxAttempts = jokesList.size * 1                                                        // Ограничение попыток для оптимизации
+        val maxAttempts = jokesList.size * 2                                                        // Ограничение попыток для оптимизации
 
         while (selectedJokes.size < 7 && jokesList.isNotEmpty() && attempts < maxAttempts) {
             attempts++
@@ -140,6 +140,7 @@ object JokesGenerator {
         // и возвращать их обратно в основной список при вызове reset
        TODO("Not yet implemented")
     }
+
 
     // Создание шутки без индекса и без аватарки
     private fun createJoke(category: String, question: String, answer: String): Joke {
