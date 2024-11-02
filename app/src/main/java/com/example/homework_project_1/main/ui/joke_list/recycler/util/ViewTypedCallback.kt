@@ -1,4 +1,4 @@
-package com.example.homework_project_1.main.recycler.util
+package com.example.homework_project_1.main.ui.joke_list.recycler.util
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.homework_project_1.main.data.ViewTyped

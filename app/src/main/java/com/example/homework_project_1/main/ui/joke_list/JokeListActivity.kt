@@ -1,14 +1,13 @@
-package com.example.homework_project_1
+package com.example.homework_project_1.main.ui.joke_list
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.databinding.ActivityJokeListBinding
 import com.example.homework_project_1.main.data.JokesGenerator
-import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.recycler.adapter.ViewTypedListAdapter
+import com.example.homework_project_1.main.ui.joke_list.recycler.adapter.ViewTypedListAdapter
+import com.example.homework_project_1.main.ui.joke_details.JokeDetailsActivity
 
 class JokeListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJokeListBinding

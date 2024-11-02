@@ -1,4 +1,4 @@
-package com.example.homework_project_1.main.recycler.adapter
+package com.example.homework_project_1.main.ui.joke_list.recycler.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.databinding.HeaderItemBinding
 import com.example.homework_project_1.databinding.JokeItemBinding
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.recycler.HeaderViewHolder
-import com.example.homework_project_1.main.recycler.JokeViewHolder
-import com.example.homework_project_1.main.recycler.util.ViewTypedCallback
+import com.example.homework_project_1.main.ui.joke_list.recycler.HeaderViewHolder
+import com.example.homework_project_1.main.ui.joke_list.recycler.JokeViewHolder
+import com.example.homework_project_1.main.ui.joke_list.recycler.util.ViewTypedCallback
 
 class ViewTypedListAdapter(
     private val clickListener: (Int) -> Unit        // Слушатель для обработки клика по элементу списка

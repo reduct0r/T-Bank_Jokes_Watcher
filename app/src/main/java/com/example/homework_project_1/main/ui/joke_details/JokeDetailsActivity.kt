@@ -1,4 +1,4 @@
-package com.example.homework_project_1
+package com.example.homework_project_1.main.ui.joke_details
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -76,6 +76,4 @@ class JokeDetailsActivity : AppCompatActivity() {
         Toast.makeText(this, "Invalid person data", Toast.LENGTH_SHORT).show()
         finish()
     }
-
-
 }
