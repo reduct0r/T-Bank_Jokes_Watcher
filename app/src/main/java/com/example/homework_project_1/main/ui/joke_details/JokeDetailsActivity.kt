@@ -1,6 +1,5 @@
 package com.example.homework_project_1.main.ui.joke_details
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,15 +7,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.homework_project_1.databinding.ActivityJokeDetailsBinding
-import com.example.homework_project_1.main.data.JokesGenerator
-import com.example.homework_project_1.main.data.ViewTyped.*
-import com.example.homework_project_1.main.ui.joke_list.JokesViewModelFactory
+import com.example.homework_project_1.main.data.ViewTyped
 
 class JokeDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJokeDetailsBinding
-    private val generator = JokesGenerator
-    private var jokePosition: Int = -1
-    private lateinit var viewModel: JokesViewModelFactory
+    private lateinit var viewModel: JokeDetailsViewModel
 
     companion object {
         private const val JOKE_POSITION_EXTRA = "JOKE_POSITION"
@@ -28,60 +23,52 @@ class JokeDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViewModel() {
-        val factory = JokesDetailsViewModelFactory()
-        //viewModel = ViewModelProvider(this, factory)[JokeDetailsViewModel::class.java]
+    private fun initViewModel(jokePosition: Int) {
+        val factory = JokesDetailsViewModelFactory(jokePosition)
+        viewModel = ViewModelProvider(this, factory)[JokeDetailsViewModel::class.java]
 
+        viewModel.joke.observe(this) { joke ->
+            setupJokesData(joke)
+        }
+
+        viewModel.error.observe(this) { errorMessage ->
+            handleError(errorMessage)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        supportActionBar?.hide()                                        // Скрытие ActionBar
+        supportActionBar?.hide() // Скрытие ActionBar
         super.onCreate(savedInstanceState)
-        binding = ActivityJokeDetailsBinding.inflate(layoutInflater)    // Инициализация ViewBinding
-        setContentView(binding.root)                                    // Установка корневого элемента
-        handleExtra()                                                   // Обработка переданных данных
+        binding = ActivityJokeDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // Обработка нажатия на кнопку "Назад"
+        // Получение jokePosition из Intent
+        val jokePosition = intent.getIntExtra(JOKE_POSITION_EXTRA, -1)
+
+        if (jokePosition == -1) {
+            handleError("Incorrect joke position.")
+        } else {
+            initViewModel(jokePosition)
+        }
+
         binding.buttonBack.setOnClickListener {
             finish()
         }
     }
 
-    // Обработка переданных данных
-    private fun handleExtra(){
-        jokePosition = intent.getIntExtra(JOKE_POSITION_EXTRA, -1)
-
-        if (jokePosition == -1) {
-            handleError()
-        }
-        else {
-            val item = generator.getSelectedJokes()[jokePosition] as? Joke
-
-            if (item != null){
-                setupJokesData(item)
-            }
-            else{
-                handleError()
-            }
-        }
-    }
-
-    // Установка данных шутки
-    @SuppressLint("ResourceType")
-    private fun setupJokesData(item: Joke) {
-        with(binding){
+    private fun setupJokesData(item: ViewTyped.Joke) {
+        with(binding) {
             question.text = item.question
             answer.text = item.answer
             category.text = item.category
             item.avatar?.let {
-                avatar.setImageResource(item.avatar!!)
+                avatar.setImageResource(it)
             }
         }
     }
 
-    // Обработка ошибки
-    private fun handleError() {
-        Toast.makeText(this, "Invalid person data", Toast.LENGTH_SHORT).show()
+    private fun handleError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         finish()
     }
 }
