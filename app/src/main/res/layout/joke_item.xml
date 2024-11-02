@@ -20,6 +20,7 @@
 
     <TextView
         android:id="@+id/title"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="TITLE"
@@ -30,13 +31,14 @@
 
     <TextView
         android:id="@+id/question"
-        android:layout_width="wrap_content"
+        android:layout_width="290dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:paddingStart="6dp"
-        android:maxLines="2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.354"
         app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="RtlSymmetry"
@@ -44,13 +46,15 @@
 
     <TextView
         android:id="@+id/answer"
-        android:layout_width="284dp"
+        android:layout_width="290dp"
         android:layout_height="23dp"
+        android:textStyle="italic"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingStart="1dp"
+        android:paddingStart="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/question"
         app:layout_constraintTop_toBottomOf="@+id/question"
         tools:ignore="RtlSymmetry"

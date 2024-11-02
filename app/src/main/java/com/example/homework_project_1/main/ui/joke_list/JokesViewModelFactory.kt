@@ -9,7 +9,7 @@ class JokesViewModelFactory: ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(JokeListViewModel::class.java) -> {
-                JokeListViewModel() as T
+                JokeListViewModel() as T   // TODO: UNCHECKED_CAST  idk how to fix it
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         }

@@ -47,7 +47,8 @@ class JokeDetailsActivity : AppCompatActivity() {
 
         if (jokePosition == -1) {
             handleError("Incorrect joke position.")
-        } else {
+        }
+        else {
             initViewModel(jokePosition)
         }
 

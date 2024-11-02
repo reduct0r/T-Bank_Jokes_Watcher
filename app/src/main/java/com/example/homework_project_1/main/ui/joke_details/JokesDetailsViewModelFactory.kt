@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 class JokesDetailsViewModelFactory(private val jokePosition: Int) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(JokeDetailsViewModel::class.java)) {
-            JokeDetailsViewModel(jokePosition) as T
+            JokeDetailsViewModel(jokePosition) as T // TODO: UNCHECKED_CAST  idk how to fix it
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")
         }

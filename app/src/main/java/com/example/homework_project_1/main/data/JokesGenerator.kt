@@ -94,52 +94,57 @@ object JokesGenerator {
     )
 
     private var ind = 0;  // Уникальный идентификатор для каждой шутки
+    private var usedJokesIndices = mutableSetOf<Int>() // Индексы использованных шуток
 
     // Генерация данных для списка из рандомных шуток без повторения
     fun generateJokesData(): List<ViewTyped> {
-        selectedJokes = mutableListOf()                                                             // Уже выбранные шутки
-        val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()                        // Использованные аватарки для категории
+        selectedJokes = mutableListOf()
+        val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()
 
-        var attempts = 0                                                                            // Счетчик попыток
-        val maxAttempts = jokesList.size * 2                                                        // Ограничение попыток для оптимизации
+        var attempts = 0
+        val maxAttempts = jokesList.size * 2
 
         while (selectedJokes.size < 7 && jokesList.isNotEmpty() && attempts < maxAttempts) {
             attempts++
 
             val randomIndex = Random.nextInt(jokesList.size)
-            val joke = jokesList[randomIndex]                                                       // Выбираем рандомную шутку
 
-            val avatars = categoryAvatars[joke.category] ?: defaultAvatars                          // Выбираем аватарки по категориям иначе дефолтные
-            val usedAvatars = usedAvatarsPerCategory.getOrPut(joke.category) { mutableSetOf() }     // Использованные аватарки для категории
+            if (randomIndex in usedJokesIndices) continue // Пропустить, если шутка уже была использована
 
-            val availableAvatars = avatars.filter { it !in usedAvatars }                            // Исключаем использованные аватарки
+            val joke = jokesList[randomIndex]
+
+            val avatars = categoryAvatars[joke.category] ?: defaultAvatars
+            val usedAvatars = usedAvatarsPerCategory.getOrPut(joke.category) { mutableSetOf() }
+
+            val availableAvatars = avatars.filter { it !in usedAvatars }
             val selectedAvatar = if (availableAvatars.isNotEmpty()) {
-                availableAvatars.random()                                                           // Выбираем рандомную аватарку
-            }
-            else {
-                defaultAvatars.random()                                                             // Используем дефолтную аватарку, если аватарки категории исчерпаны
+                availableAvatars.random()
+            } else {
+                defaultAvatars.random()
             }
 
             joke.avatar = selectedAvatar
             joke.id = ind++
             selectedJokes.add(joke)
             usedAvatars.add(selectedAvatar)
-            jokesList.removeAt(randomIndex)                                                         // Удаляем шутку из списка, чтобы не повторять
+            usedJokesIndices.add(randomIndex) // Добавить индекс в использованные
         }
 
         return selectedJokes
+    }
+
+    // Метод для сброса ранее сгенерированных шуток
+    fun reset() {
+        selectedJokes.clear()
+        usedJokesIndices.clear()
     }
 
     fun getSelectedJokes(): List<ViewTyped> {
         return selectedJokes.toList()
     }
 
-    // Метод для сброса ранее сгенерированных шуток
-    fun reset() {
-        // в generateJokesData можно не удалять шутки из основного списка, а запоминать индексы использованных шуток
-        // и возвращать их обратно в основной список при вызове reset
-       TODO("Not yet implemented")
-    }
+
+
 
 
     // Создание шутки без индекса и без аватарки

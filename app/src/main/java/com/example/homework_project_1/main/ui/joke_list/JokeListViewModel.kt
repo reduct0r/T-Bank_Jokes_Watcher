@@ -16,8 +16,11 @@ class JokeListViewModel: ViewModel() {
         _jokes.value = JokesGenerator.generateJokesData()
     }
 
-    fun showGeneratedData() {
-        _jokes.value = JokesGenerator.getSelectedJokes()
+    fun showGeneratedData(): List<ViewTyped> {
+        return JokesGenerator.getSelectedJokes()
+    }
 
+    fun resetJokes() {
+        JokesGenerator.reset()
     }
 }

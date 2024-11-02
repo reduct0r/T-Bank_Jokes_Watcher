@@ -43,11 +43,19 @@ class JokeListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         createRecyclerViewList()
-        val generator = JokesGenerator
         initViewModel()
-        // При нажатии на кнопку генерируем новые данные и обновляем список
+
+        // При нажатии на кнопку генерируем новые данные и обновляем список или выводим ошибку и сбрасываем использованные шутки
         binding.button.setOnClickListener {
             viewModel.generateJokes()
+            if (viewModel.showGeneratedData().isEmpty()) {
+                binding.button.text = "Reset used jokes"
+                showError("No new jokes are available.")
+                  viewModel.resetJokes()
+            }
+          else {
+            binding.button.text = "Generate 7 random jokes"
+          }
         }
     }
 
