@@ -1,6 +1,8 @@
 package com.example.homework_project_1
 
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.databinding.ActivityJokeListBinding
@@ -25,10 +27,12 @@ class JokeListActivity : AppCompatActivity() {
 
         // При нажатии на кнопку генерируем новые данные и обновляем список
         binding.button.setOnClickListener {
-            val data = listOf(
-                generator.generateJokesData()
-            ).flatten()
+            val data = generator.generateJokesData() //listOf(
+
+            //).flatten()
             adapter.submitList(data)
+            //Toast.makeText(this, data.toString(), Toast.LENGTH_SHORT).show()
+            Log.d("JokeListActivity", "Data: ${data}")
         }
     }
 

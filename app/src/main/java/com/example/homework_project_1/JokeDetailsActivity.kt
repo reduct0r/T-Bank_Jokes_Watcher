@@ -41,7 +41,7 @@ class JokeDetailsActivity : AppCompatActivity() {
             handleError()
         }
         else {
-            val item = generator.generateJokesData()[jokePosition] as? Joke
+            val item = generator.getSelectedJokes()[jokePosition] as? Joke
 
             if (item != null){
                 setupJokesData(item)

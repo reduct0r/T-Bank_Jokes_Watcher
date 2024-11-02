@@ -7,6 +7,9 @@ import kotlin.random.Random
 
 // Класс для генерации шуток
 object JokesGenerator {
+
+    private var selectedJokes = mutableListOf<Joke>()
+
     // Наборы аватарок
     private val defaultAvatars = listOf(
         R.drawable.def_ava1,
@@ -98,7 +101,7 @@ object JokesGenerator {
     private var ind = 0;
     // Генерация данных для списка
     fun generateJokesData(): List<ViewTyped> {
-        val selectedJokes = mutableListOf<Joke>()
+        selectedJokes = mutableListOf()
         val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()
 
         // Копируем список шуток, чтобы не изменять оригинал при выборе
@@ -139,6 +142,10 @@ object JokesGenerator {
             }
         }
 
+        return selectedJokes
+    }
+
+    fun getSelectedJokes(): List<ViewTyped> {
         return selectedJokes
     }
 
