@@ -28,10 +28,12 @@ class JokeDetailsActivity : AppCompatActivity() {
         val factory = JokesDetailsViewModelFactory(jokePosition)
         viewModel = ViewModelProvider(this, factory)[JokeDetailsViewModel::class.java]
 
+        // Наблюдение за изменениями в LiveData
         viewModel.joke.observe(this) { joke ->
             setupJokesData(joke)
         }
 
+        // Наблюдение за ошибками
         viewModel.error.observe(this) { errorMessage ->
             handleError(errorMessage)
         }
@@ -55,11 +57,13 @@ class JokeDetailsActivity : AppCompatActivity() {
             initViewModel(jokePosition)
         }
 
+        // Обработка нажатия на кнопку "Назад"
         binding.buttonBack.setOnClickListener {
             finish()
         }
     }
 
+    // Установка данных в элементы экрана
     private fun setupJokesData(item: ViewTyped.Joke) {
         with(binding) {
             question.text = item.question
@@ -71,6 +75,7 @@ class JokeDetailsActivity : AppCompatActivity() {
         }
     }
 
+    // Обработка ошибок
     private fun handleError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         finish()

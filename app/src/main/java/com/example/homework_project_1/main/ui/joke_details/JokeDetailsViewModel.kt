@@ -17,6 +17,7 @@ class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
         loadJoke()
     }
 
+    // Загрузка шутки
     private fun loadJoke() {
         val selectedJokes = JokesGenerator.getSelectedJokes()
         if (jokePosition in selectedJokes.indices) {

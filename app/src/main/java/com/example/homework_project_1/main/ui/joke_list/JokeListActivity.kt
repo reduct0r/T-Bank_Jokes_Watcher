@@ -19,19 +19,23 @@ class JokeListActivity : AppCompatActivity() {
         startActivity(JokeDetailsActivity.getInstance(this, it))
     }
 
+    // Инициализация ViewModel
     private fun initViewModel() {
         val factory = JokesViewModelFactory()
         viewModel = ViewModelProvider(this, factory)[JokeListViewModel::class.java]
 
+        // Наблюдение за изменениями в LiveData
         viewModel.jokes.observe(this) {
             adapter.submitList(it)
         }
 
+        // Наблюдение за ошибками
         viewModel.error.observe(this) {
             showError(it)
         }
     }
 
+    // Вывод ошибки
     private fun showError(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
@@ -64,6 +68,4 @@ class JokeListActivity : AppCompatActivity() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(this, 1)
     }
-
-
 }
