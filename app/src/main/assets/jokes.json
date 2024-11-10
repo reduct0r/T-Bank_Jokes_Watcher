@@ -1,0 +1,189 @@
+{
+  "categories": [
+    {
+      "name": "General",
+      "jokes": [
+        {
+          "question": "Why did the duck go to the doctor?",
+          "answer": "It had a quack.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the bee become a singer?",
+          "answer": "Because it had the buzz!",
+          "avatar": null
+        },
+        {
+          "question": "Why did the skeleton go to the party alone?",
+          "answer": "He had no body to go with.",
+          "avatar": null
+        },
+        {
+          "question": "Why don't scientists trust stairs?",
+          "answer": "Because they're always up to something.",
+          "avatar": null
+        }
+      ]
+    },
+    {
+      "name": "Programming",
+      "jokes": [
+        {
+          "question": "Why don't programmers like to write comments?",
+          "answer": "Because the code should speak for itself.",
+          "avatar": "prog_ava1"
+        },
+        {
+          "question": "Why did the developer disassemble the desk lamp?",
+          "answer": "Because the manual said to debug.",
+          "avatar": null
+        },
+        {
+          "question": "Why was the function looking for an argument?",
+          "answer": "It needed closure.",
+          "avatar": null
+        },
+        {
+          "question": "Why do Python developers prefer snakes?",
+          "answer": "Because they are flexible with their syntax.",
+          "avatar": null
+        },
+        {
+          "question": "Why is the algorithm so persistent?",
+          "answer": "Because it always wants to find a solution.",
+          "avatar": null
+        },
+        {
+          "question": "Why does Python enjoy the cold?",
+          "answer": "Because there's plenty of room for its modules in the freezer.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the coder get kicked out of the casino?",
+          "answer": "They kept counting cards.",
+          "avatar": null
+        },
+        {
+          "question": "Why do programmers hate nature?",
+          "answer": "Because it has too many bugs.",
+          "avatar": null
+        }
+      ]
+    },
+    {
+      "name": "Math",
+      "jokes": [
+        {
+          "question": "Why is geometry never sad?",
+          "answer": "Because it always finds the common denominator.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the equal simplify the equation?",
+          "answer": "It felt it was dragging on too long.",
+          "avatar": null
+        },
+        {
+          "question": "Why don't mathematicians argue?",
+          "answer": "Because they always agree on the terms.",
+          "avatar": null
+        },
+        {
+          "question": "Why is the number six afraid of seven?",
+          "answer": "Because seven eight (ate) nine.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the fraction go on vacation?",
+          "answer": "To get itself in order.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the linear equation meet the quadratic?",
+          "answer": "To find common points.",
+          "avatar": null
+        },
+        {
+          "question": "Why was the math book sad?",
+          "answer": "It had too many problems.",
+          "avatar": null
+        },
+        {
+          "question": "Why didn't the antiderivative do well at the party?",
+          "answer": "It couldn't find its integral.",
+          "avatar": null
+        }
+      ]
+    },
+    {
+      "name": "Science",
+      "jokes": [
+        {
+          "question": "Why is an electron never lonely?",
+          "answer": "Because it always seeks a pair.",
+          "avatar": null
+        },
+        {
+          "question": "Why does the chemist need a break?",
+          "answer": "Because reactions take time.",
+          "avatar": null
+        },
+        {
+          "question": "Why don't astronauts get together?",
+          "answer": "They need space.",
+          "avatar": null
+        },
+        {
+          "question": "Why can't you trust a quark?",
+          "answer": "Because it’s always changing.",
+          "avatar": null
+        },
+        {
+          "question": "Why is a microbiologist never lost in conditions?",
+          "answer": "Because they always have a control experiment on hand.",
+          "avatar": null
+        },
+        {
+          "question": "Why is the astronomer always in trend?",
+          "answer": "Because they follow all the new flares in the sky.",
+          "avatar": null
+        },
+        {
+          "question": "Why can't you trust bacteria?",
+          "answer": "They multiply in the dark.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the geologist go on a hike?",
+          "answer": "To rock and roll.",
+          "avatar": null
+        }
+      ]
+    },
+    {
+      "name": "Tech",
+      "jokes": [
+        {
+          "question": "Why does the server never laugh?",
+          "answer": "Because it is busy processing data.",
+          "avatar": null
+        },
+        {
+          "question": "Why is the keyboard always in the spotlight?",
+          "answer": "Because all of its keys are exposed.",
+          "avatar": null
+        },
+        {
+          "question": "Why was the computer cold?",
+          "answer": "It left its Windows open.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the smartphone go to school?",
+          "answer": "It wanted to improve its connections.",
+          "avatar": null
+        }
+      ]
+    }
+  ]
+}

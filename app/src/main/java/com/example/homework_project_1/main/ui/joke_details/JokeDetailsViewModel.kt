@@ -13,12 +13,8 @@ class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    init {
-        loadJoke()
-    }
-
     // Загрузка шутки
-    private fun loadJoke() {
+    fun loadJoke() {
         val selectedJokes = JokesGenerator.getSelectedJokes()
         if (jokePosition in selectedJokes.indices) {
             val item = selectedJokes[jokePosition]
@@ -30,5 +26,9 @@ class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
         } else {
             _error.value = "Incorrect position."
         }
+    }
+
+    fun getPosition(): Int {
+        return jokePosition
     }
 }

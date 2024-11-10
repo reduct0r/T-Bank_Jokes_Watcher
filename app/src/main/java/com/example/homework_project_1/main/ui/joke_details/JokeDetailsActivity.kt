@@ -4,15 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityJokeDetailsBinding
 import com.example.homework_project_1.main.data.ViewTyped
 
 class JokeDetailsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityJokeDetailsBinding
-    private lateinit var viewModel: JokeDetailsViewModel
 
     companion object {
         private const val JOKE_POSITION_EXTRA = "JOKE_POSITION"
@@ -24,9 +22,24 @@ class JokeDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initViewModel(jokePosition: Int) {
-        val factory = JokesDetailsViewModelFactory(jokePosition)
-        viewModel = ViewModelProvider(this, factory)[JokeDetailsViewModel::class.java]
+    private lateinit var binding: ActivityJokeDetailsBinding
+
+    private val viewModel: JokeDetailsViewModel by viewModels {
+        JokesDetailsViewModelFactory(intent.getIntExtra(JOKE_POSITION_EXTRA, -1))
+    }
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        supportActionBar?.hide() // Скрытие ActionBar
+        super.onCreate(savedInstanceState)
+        binding = ActivityJokeDetailsBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        viewModel.loadJoke()
+
+        if (viewModel.getPosition() == -1) {
+            handleError("Incorrect joke position.")
+        }
 
         // Наблюдение за изменениями в LiveData
         viewModel.joke.observe(this) { joke ->
@@ -37,25 +50,9 @@ class JokeDetailsActivity : AppCompatActivity() {
         viewModel.error.observe(this) { errorMessage ->
             handleError(errorMessage)
         }
-    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        supportActionBar?.hide() // Скрытие ActionBar
-        super.onCreate(savedInstanceState)
-        binding = ActivityJokeDetailsBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
+        // Установка текста на кнопку "Добавить в избранное"
         binding.addToFavorites.text = getString(R.string.add_to_favorites)
-
-        // Получение jokePosition из Intent
-        val jokePosition = intent.getIntExtra(JOKE_POSITION_EXTRA, -1)
-
-        if (jokePosition == -1) {
-            handleError("Incorrect joke position.")
-        }
-        else {
-            initViewModel(jokePosition)
-        }
 
         // Обработка нажатия на кнопку "Назад"
         binding.buttonBack.setOnClickListener {
@@ -81,3 +78,4 @@ class JokeDetailsActivity : AppCompatActivity() {
         finish()
     }
 }
+

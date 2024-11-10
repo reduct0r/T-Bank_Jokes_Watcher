@@ -17,12 +17,17 @@ class ViewTypedListAdapter(
     private val clickListener: (Int) -> Unit        // Слушатель для обработки клика по элементу списка
 ) : ListAdapter<ViewTyped, RecyclerView.ViewHolder>(ViewTypedCallback()) {
 
+    companion object {
+        private const val JOKE_VIEW_TYPE = 0
+        private const val HEADER_VIEW_TYPE = 1
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             JOKE_VIEW_TYPE -> {
                 val binding = JokeItemBinding.inflate(inflater, parent, false)
-                JokeViewHolder(binding)
+
                 return JokeViewHolder(binding).apply {
                     itemView.setOnClickListener {
                         handleClick(parent.context, adapterPosition)
@@ -56,12 +61,6 @@ class ViewTypedListAdapter(
             else -> throw IllegalArgumentException("Unknown type!")
         }
     }
-
-    companion object {
-        private const val JOKE_VIEW_TYPE = 0
-        private const val HEADER_VIEW_TYPE = 1
-    }
-
 
     // Обработка клика по элементу списка
     private fun handleClick(context: Context, position: Int) {

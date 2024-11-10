@@ -21,7 +21,7 @@ class JokeListActivity : AppCompatActivity() {
 
     // Инициализация ViewModel
     private fun initViewModel() {
-        val factory = JokesViewModelFactory()
+        val factory = JokesViewModelFactory(this)
         viewModel = ViewModelProvider(this, factory)[JokeListViewModel::class.java]
 
         // Наблюдение за изменениями в LiveData
@@ -57,7 +57,7 @@ class JokeListActivity : AppCompatActivity() {
                 showError("No new jokes are available.")
                   viewModel.resetJokes()
             }
-          else {
+            else {
             binding.button.text = getString(R.string.generate_jokes)
           }
         }

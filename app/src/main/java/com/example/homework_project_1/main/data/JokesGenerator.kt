@@ -1,12 +1,14 @@
 package com.example.homework_project_1.main.data
-
+import android.annotation.SuppressLint
+import kotlinx.serialization.json.Json
+import android.content.Context
 import com.example.homework_project_1.R
-import com.example.homework_project_1.main.data.ViewTyped.*
+import java.io.IOException
 import kotlin.random.Random
 
 // Класс для генерации шуток
 object JokesGenerator {
-    private var selectedJokes = mutableListOf<Joke>() // Список выбранных шуток
+    private var selectedJokes = mutableListOf<ViewTyped.Joke>()
 
     // Наборы аватарок по категориям
     private val defaultAvatars = listOf(
@@ -57,80 +59,82 @@ object JokesGenerator {
         "Tech" to techAvatars
     )
 
-    // Инициализация списка шуток
-    private val jokesList: MutableList<Joke> = mutableListOf(
-        createJoke("General", "Why did the duck go to the doctor?", "It had a quack."),
-        createJoke("General", "Why did the bee become a singer?", "Because it had the buzz!"),
-        createJoke("General", "Why did the skeleton go to the party alone?", "He had no body to go with."),
-        createJoke("General", "Why don't scientists trust stairs?", "Because they're always up to something."),
-        createJoke("Programming", "Why don't programmers like to write comments?", "Because the code should speak for itself."),
-        createJoke("Programming", "Why did the developer disassemble the desk lamp?", "Because the manual said to debug."),
-        createJoke("Programming", "Why was the function looking for an argument?", "It needed closure."),
-        createJoke("Programming", "Why do Python developers prefer snakes?", "Because they are flexible with their syntax."),
-        createJoke("Math", "Why is geometry never sad?", "Because it always finds the common denominator."),
-        createJoke("Math", "Why did the equal simplify the equation?", "It felt it was dragging on too long."),
-        createJoke("Math", "Why don't mathematicians argue?", "Because they always agree on the terms."),
-        createJoke("Math", "Why is the number six afraid of seven?", "Because seven eight (ate) nine."),
-        createJoke("Science", "Why is an electron never lonely?", "Because it always seeks a pair."),
-        createJoke("Science", "Why does the chemist need a break?", "Because reactions take time."),
-        createJoke("Science", "Why don't astronauts get together?", "They need space."),
-        createJoke("Science", "Why can’t you trust a quark?", "Because it’s always changing."),
-        createJoke("Tech", "Why does the server never laugh?", "Because it is busy processing data."),
-        createJoke("Tech", "Why is the keyboard always in the spotlight?", "Because all of its keys are exposed."),
-        createJoke("Tech", "Why was the computer cold?", "It left its Windows open."),
-        createJoke("Tech", "Why did the smartphone go to school?", "It wanted to improve its connections."),
-        createJoke("Programming", "Why is the algorithm so persistent?", "Because it always wants to find a solution."),
-        createJoke("Programming", "Why does Python enjoy the cold?", "Because there's plenty of room for its modules in the freezer."),
-        createJoke("Programming", "Why did the coder get kicked out of the casino?", "They kept counting cards."),
-        createJoke("Programming", "Why do programmers hate nature?", "Because it has too many bugs."),
-        createJoke("Math", "Why did the fraction go on vacation?", "To get itself in order."),
-        createJoke("Math", "Why did the linear equation meet the quadratic?", "To find common points."),
-        createJoke("Math", "Why was the math book sad?", "It had too many problems."),
-        createJoke("Math", "Why didn't the antiderivative do well at the party?", "It couldn't find its integral."),
-        createJoke("Science", "Why is a microbiologist never lost in conditions?", "Because they always have a control experiment on hand."),
-        createJoke("Science", "Why is the astronomer always in trend?", "Because they follow all the new flares in the sky."),
-        createJoke("Science", "Why can't you trust bacteria?", "They multiply in the dark."),
-        createJoke("Science", "Why did the geologist go on a hike?", "To rock and roll.")
-    )
+    private var jokesList: MutableList<ViewTyped.Joke> = mutableListOf()
+    private var ind = 0
+    private var usedJokesIndices = mutableSetOf<Int>()
 
-    private var ind = 0                                                                             // Уникальный идентификатор для каждой шутки
-    private var usedJokesIndices = mutableSetOf<Int>()                                              // Индексы использованных шуток
+    // Инициализация списка шуток из JSON
+    fun initialize(context: Context) {
+        val jokesData = JsonReader.readJokesFromAsset(context)
+        jokesData?.categories?.forEach { category ->
+            category.jokes.forEach { jokeDto ->
+                val avatarResId = if (jokeDto.avatar != null) {
+                    getAvatarResourceId(context, jokeDto.avatar) // Если аватарка указана в JSON, то получить ее ресурс
+                } else {
+                    null
+                }
+
+                jokesList.add(
+                    ViewTyped.Joke(
+                        id = 0,
+                        avatar = avatarResId,
+                        category = category.name,
+                        question = jokeDto.question,
+                        answer = jokeDto.answer
+                    )
+                )
+            }
+        }
+    }
+
+    // Получение ресурса аватарки по имени
+    @SuppressLint("DiscouragedApi")
+    private fun getAvatarResourceId(context: Context, avatarName: String?): Int? {
+        return avatarName?.let {
+            val resId = context.resources.getIdentifier(it, "drawable", context.packageName)
+            if (resId != 0) resId else null
+        }
+    }
 
     // Генерация данных для списка из рандомных шуток без повторения
     fun generateJokesData(): List<ViewTyped> {
-        selectedJokes = mutableListOf()
-        val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()                        // Использованные аватарки по категориям
+        val newSelectedJokes = mutableListOf<ViewTyped.Joke>()
+        val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()
 
         var attempts = 0
-        val maxAttempts = jokesList.size * 2
+        val maxAttempts = jokesList.size * 3
 
-        while (selectedJokes.size < 7 && jokesList.isNotEmpty() && attempts < maxAttempts) {
+        while (newSelectedJokes.size < 7 && jokesList.isNotEmpty() && attempts < maxAttempts) {
             attempts++
 
             val randomIndex = Random.nextInt(jokesList.size)
 
-            if (randomIndex in usedJokesIndices) continue                                           // Пропустить, если шутка уже была использована
+            if (randomIndex in usedJokesIndices)
+                continue // Пропустить, если шутка уже была использована
 
-            val joke = jokesList[randomIndex]                                                       // Выбрать случайную шутку
+            val joke = jokesList[randomIndex].copy() // Создаем копию шутки
 
-            val avatars = categoryAvatars[joke.category] ?: defaultAvatars                          // Выбрать аватарки для категории или использовать дефолтные
-            val usedAvatars = usedAvatarsPerCategory.getOrPut(joke.category) { mutableSetOf() }     // Получить использованные аватарки для категории
+            // Если аватарка не указана в json, то выбираем случайную из доступных по категории
+            if (joke.avatar == null) {
+                val avatars = categoryAvatars[joke.category] ?: defaultAvatars
+                val usedAvatars = usedAvatarsPerCategory.getOrPut(joke.category) { mutableSetOf() }
 
-            val availableAvatars = avatars.filter { it !in usedAvatars }                            // Выбрать доступные аватарки
-            val selectedAvatar = if (availableAvatars.isNotEmpty()) {                               // Выбрать случайную аватарку
-                availableAvatars.random()
-            } else {
-                defaultAvatars.random()                                                             // Использовать дефолтную аватарку, если доступные закончились
+                val availableAvatars = avatars.filter { it !in usedAvatars }
+                val selectedAvatar = if (availableAvatars.isNotEmpty()) {
+                    availableAvatars.random()
+                } else {
+                    defaultAvatars.random()
+                }
+                joke.avatar = selectedAvatar
+                usedAvatars.add(selectedAvatar)
             }
 
-            joke.avatar = selectedAvatar
             joke.id = ind++
-            selectedJokes.add(joke)
-            usedAvatars.add(selectedAvatar)
-
-            usedJokesIndices.add(randomIndex) // Добавить индекс в использованные
+            newSelectedJokes.add(joke)
+            usedJokesIndices.add(randomIndex)
         }
 
+        selectedJokes = newSelectedJokes
         return selectedJokes
     }
 
@@ -143,20 +147,5 @@ object JokesGenerator {
     // Получение списка выбранных шуток
     fun getSelectedJokes(): List<ViewTyped> {
         return selectedJokes.toList()
-    }
-
-
-
-
-
-    // Создание шутки без индекса и без аватарки
-    private fun createJoke(category: String, question: String, answer: String): Joke {
-        return Joke(
-            id = 0,
-            avatar = null,
-            category = category,
-            question = question,
-            answer = answer
-        )
     }
 }
