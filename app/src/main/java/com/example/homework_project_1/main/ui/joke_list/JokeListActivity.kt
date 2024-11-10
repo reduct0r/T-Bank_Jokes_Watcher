@@ -2,6 +2,7 @@ package com.example.homework_project_1.main.ui.joke_list
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -10,29 +11,16 @@ import com.example.homework_project_1.databinding.ActivityJokeListBinding
 import com.example.homework_project_1.main.ui.joke_list.recycler.adapter.ViewTypedListAdapter
 import com.example.homework_project_1.main.ui.joke_details.JokeDetailsActivity
 
+
 class JokeListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityJokeListBinding
 
-    private lateinit var viewModel: JokeListViewModel
+    private val viewModel: JokeListViewModel by viewModels {
+        JokesViewModelFactory(this)
+    }
 
     private val adapter = ViewTypedListAdapter{
         startActivity(JokeDetailsActivity.getInstance(this, it))
-    }
-
-    // Инициализация ViewModel
-    private fun initViewModel() {
-        val factory = JokesViewModelFactory(this)
-        viewModel = ViewModelProvider(this, factory)[JokeListViewModel::class.java]
-
-        // Наблюдение за изменениями в LiveData
-        viewModel.jokes.observe(this) {
-            adapter.submitList(it)
-        }
-
-        // Наблюдение за ошибками
-        viewModel.error.observe(this) {
-            showError(it)
-        }
     }
 
     // Вывод ошибки
@@ -45,9 +33,17 @@ class JokeListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityJokeListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         createRecyclerViewList()
-        initViewModel()
+
+        // Наблюдение за изменениями в LiveData
+        viewModel.jokes.observe(this) {
+            adapter.submitList(it)
+        }
+
+        // Наблюдение за ошибками
+        viewModel.error.observe(this) {
+            showError(it)
+        }
 
         // При нажатии на кнопку генерируем новые данные и обновляем список или выводим ошибку и сбрасываем использованные шутки
         binding.button.setOnClickListener {
