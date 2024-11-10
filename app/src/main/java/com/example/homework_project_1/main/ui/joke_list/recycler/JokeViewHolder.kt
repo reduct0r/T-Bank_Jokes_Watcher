@@ -1,4 +1,4 @@
-package com.example.homework_project_1.main.recycler
+package com.example.homework_project_1.main.ui.joke_list.recycler
 
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.databinding.JokeItemBinding
