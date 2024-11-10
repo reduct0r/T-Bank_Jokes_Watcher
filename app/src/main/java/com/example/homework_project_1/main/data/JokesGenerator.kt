@@ -98,6 +98,7 @@ object JokesGenerator {
 
     // Генерация данных для списка из рандомных шуток без повторения
     fun generateJokesData(): List<ViewTyped> {
+        ind = 0
         val newSelectedJokes = mutableListOf<ViewTyped.Joke>()
         val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()
 
@@ -140,6 +141,7 @@ object JokesGenerator {
 
     // Сброс использованных шуток
     fun reset() {
+        ind = 0
         selectedJokes.clear()
         usedJokesIndices.clear()
     }
