@@ -1,9 +1,7 @@
 package com.example.homework_project_1.main.data
 import android.annotation.SuppressLint
-import kotlinx.serialization.json.Json
 import android.content.Context
 import com.example.homework_project_1.R
-import java.io.IOException
 import kotlin.random.Random
 
 // Класс для генерации шуток

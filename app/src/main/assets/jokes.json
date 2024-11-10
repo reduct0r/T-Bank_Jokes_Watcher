@@ -22,6 +22,26 @@
           "question": "Why don't scientists trust stairs?",
           "answer": "Because they're always up to something.",
           "avatar": null
+        },
+        {
+          "question": "Why did the tomato turn red?",
+          "answer": "Because it saw the salad dressing!",
+          "avatar": null
+        },
+        {
+          "question": "Why did the bicycle fall over?",
+          "answer": "Because it was two-tired.",
+          "avatar": null
+        },
+        {
+          "question": "Why don't eggs tell jokes?",
+          "answer": "They'd crack each other up.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the golfer bring two pairs of pants?",
+          "answer": "In case he got a hole in one.",
+          "avatar": null
         }
       ]
     },
@@ -66,6 +86,31 @@
         {
           "question": "Why do programmers hate nature?",
           "answer": "Because it has too many bugs.",
+          "avatar": null
+        },
+        {
+          "question": "Why do Java developers wear glasses?",
+          "answer": "Because they don't C#.",
+          "avatar": null
+        },
+        {
+          "question": "Why was the computer cold at work?",
+          "answer": "It left its Windows open.",
+          "avatar": null
+        },
+        {
+          "question": "How many programmers does it take to change a light bulb?",
+          "answer": "None, that's a hardware problem.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the programmer quit his job?",
+          "answer": "Because he didn't get arrays.",
+          "avatar": null
+        },
+        {
+          "question": "What do you call a programmer from Finland?",
+          "answer": "Nerdic.",
           "avatar": null
         }
       ]
@@ -112,6 +157,31 @@
           "question": "Why didn't the antiderivative do well at the party?",
           "answer": "It couldn't find its integral.",
           "avatar": null
+        },
+        {
+          "question": "Why was the obtuse angle always so frustrated?",
+          "answer": "Because it was never right.",
+          "avatar": null
+        },
+        {
+          "question": "Why do plants hate math?",
+          "answer": "Because it gives them square roots.",
+          "avatar": null
+        },
+        {
+          "question": "Why was the calculus teacher so good at gardening?",
+          "answer": "Because he knew the derivatives of all the plants.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the two 4s skip lunch?",
+          "answer": "They already 8 (ate).",
+          "avatar": null
+        },
+        {
+          "question": "Why was the math lecture so long?",
+          "answer": "The professor kept going off on a tangent.",
+          "avatar": null
         }
       ]
     },
@@ -157,6 +227,31 @@
           "question": "Why did the geologist go on a hike?",
           "answer": "To rock and roll.",
           "avatar": null
+        },
+        {
+          "question": "Why did the photon check a suitcase at the airport?",
+          "answer": "Because it was traveling light.",
+          "avatar": null
+        },
+        {
+          "question": "Why do biologists look forward to casual Fridays?",
+          "answer": "They're less gene-restrictive.",
+          "avatar": null
+        },
+        {
+          "question": "Why was the physics book always calm?",
+          "answer": "Because it had so many solutions.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the scientist take out his doorbell?",
+          "answer": "Because he wanted to win the no-bell prize.",
+          "avatar": null
+        },
+        {
+          "question": "Why are chemists excellent for solving problems?",
+          "answer": "They have all the solutions.",
+          "avatar": null
         }
       ]
     },
@@ -181,6 +276,26 @@
         {
           "question": "Why did the smartphone go to school?",
           "answer": "It wanted to improve its connections.",
+          "avatar": null
+        },
+        {
+          "question": "Why don't robots ever get scared?",
+          "answer": "Because they have nerves of steel.",
+          "avatar": null
+        },
+        {
+          "question": "Why was the computer tired when it got home?",
+          "answer": "It had too many bytes during the day.",
+          "avatar": null
+        },
+        {
+          "question": "Why did the tech company hire a gardener?",
+          "answer": "To help with the roots.",
+          "avatar": null
+        },
+        {
+          "question": "Why do programmers prefer dark mode?",
+          "answer": "Because light attracts bugs.",
           "avatar": null
         }
       ]
