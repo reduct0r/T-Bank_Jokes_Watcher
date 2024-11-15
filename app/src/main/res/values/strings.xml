@@ -3,6 +3,7 @@
     <string name="back">Back</string>
     <string name="reset_used_jokes">Reset used jokes</string>
     <string name="no_new_jokes">No new jokes are available.</string>
-    <string name="generate_jokes">Generate 7 random jokes</string>
+    <string name="generate_jokes">Generate a list of random jokes</string>
     <string name="add_to_favorites">Add to favorites</string>
+    <string name="no_new_jokes_available">No new jokes</string>
 </resources>

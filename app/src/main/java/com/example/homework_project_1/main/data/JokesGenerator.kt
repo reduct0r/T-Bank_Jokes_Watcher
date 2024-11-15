@@ -1,9 +1,7 @@
 package com.example.homework_project_1.main.data
 import android.annotation.SuppressLint
-import kotlinx.serialization.json.Json
 import android.content.Context
 import com.example.homework_project_1.R
-import java.io.IOException
 import kotlin.random.Random
 
 // Класс для генерации шуток
@@ -98,6 +96,7 @@ object JokesGenerator {
 
     // Генерация данных для списка из рандомных шуток без повторения
     fun generateJokesData(): List<ViewTyped> {
+        ind = 0
         val newSelectedJokes = mutableListOf<ViewTyped.Joke>()
         val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()
 
@@ -140,6 +139,7 @@ object JokesGenerator {
 
     // Сброс использованных шуток
     fun reset() {
+        ind = 0
         selectedJokes.clear()
         usedJokesIndices.clear()
     }

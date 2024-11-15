@@ -32,6 +32,7 @@ sealed interface ViewTyped {
         val answer: String,
     ) : ViewTyped
 
+
     // Класс заголовка
     data class Header(
         val title: String
