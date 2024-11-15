@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.ViewTyped
+import com.example.homework_project_1.main.data.JokesRepository
 
 class JokeListViewModel(context: Context): ViewModel() {
     private val _jokes = MutableLiveData<List<ViewTyped>>()
@@ -15,7 +16,7 @@ class JokeListViewModel(context: Context): ViewModel() {
 
     init {
         // Инициализируем генератор шуток с контекстом
-        JokesGenerator.initialize(context)
+        JokesRepository.initialize(context)
     }
 
     fun generateJokes() {

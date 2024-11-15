@@ -1,7 +1,6 @@
 package com.example.homework_project_1.main.data
-import android.annotation.SuppressLint
-import android.content.Context
 import com.example.homework_project_1.R
+import kotlinx.coroutines.runBlocking
 import kotlin.random.Random
 
 // Класс для генерации шуток
@@ -57,46 +56,18 @@ object JokesGenerator {
         "Tech" to techAvatars
     )
 
-    private var jokesList: MutableList<ViewTyped.Joke> = mutableListOf()
+    private var jokesList: List<ViewTyped.Joke> = runBlocking {
+        JokesRepository.getJokes()
+    }
+
     private var ind = 0
     private var usedJokesIndices = mutableSetOf<Int>()
 
     // Инициализация списка шуток из JSON
-    fun initialize(context: Context) {
-        val jokesData = JsonReader.readJokesFromAsset(context)
-        jokesData?.categories?.forEach { category ->
-            category.jokes.forEach { jokeDto ->
-                val avatarResId = if (jokeDto.avatar != null) {
-                    getAvatarResourceId(context, jokeDto.avatar) // Если аватарка указана в JSON, то получить ее ресурс
-                } else {
-                    null
-                }
 
-                jokesList.add(
-                    ViewTyped.Joke(
-                        id = 0,
-                        avatar = avatarResId,
-                        category = category.name,
-                        question = jokeDto.question,
-                        answer = jokeDto.answer
-                    )
-                )
-            }
-        }
-    }
-
-    // Получение ресурса аватарки по имени
-    @SuppressLint("DiscouragedApi")
-    private fun getAvatarResourceId(context: Context, avatarName: String?): Int? {
-        return avatarName?.let {
-            val resId = context.resources.getIdentifier(it, "drawable", context.packageName)
-            if (resId != 0) resId else null
-        }
-    }
 
     // Генерация данных для списка из рандомных шуток без повторения
     fun generateJokesData(): List<ViewTyped> {
-        ind = 0
         val newSelectedJokes = mutableListOf<ViewTyped.Joke>()
         val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()
 
@@ -139,7 +110,6 @@ object JokesGenerator {
 
     // Сброс использованных шуток
     fun reset() {
-        ind = 0
         selectedJokes.clear()
         usedJokesIndices.clear()
     }
