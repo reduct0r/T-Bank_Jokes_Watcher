@@ -9,7 +9,7 @@
     tools:context=".main.ui.joke_list.JokeListActivity">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button_generate_jokes"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"

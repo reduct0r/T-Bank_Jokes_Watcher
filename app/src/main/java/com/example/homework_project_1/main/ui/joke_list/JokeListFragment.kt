@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.ui.joke_list
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
+import com.example.homework_project_1.main.ui.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.ui.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.ui.joke_list.recycler.adapter.ViewTypedListAdapter
 
@@ -65,16 +67,23 @@ class JokeListFragment : Fragment() {
             showError(it)
         }
 
-        // Обработка нажатия на кнопку
-        binding.button.setOnClickListener {
+        // Обработка нажатия на кнопку генерации шуток
+        binding.buttonGenerateJokes.setOnClickListener {
             viewModel.generateJokes()
             if (viewModel.showGeneratedData().isEmpty()) {
-                binding.button.text = getString(R.string.reset_used_jokes)
+                binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
                 showError("No new jokes are available.")
                 viewModel.resetJokes()
             } else {
-                binding.button.text = getString(R.string.generate_jokes)
+                binding.buttonGenerateJokes.text = getString(R.string.generate_jokes)
             }
+        }
+
+        // Обработка нажатия на кнопку добавления шутки
+        binding.buttonAddJoke.setOnClickListener {
+            // Запуск AddJokeActivity
+            val intent = Intent(requireContext(), AddJokeActivity::class.java)
+            startActivity(intent)
         }
     }
 

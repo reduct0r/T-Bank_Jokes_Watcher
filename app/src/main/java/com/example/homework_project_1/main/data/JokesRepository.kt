@@ -46,13 +46,11 @@ object JokesRepository {
     }
 
     suspend fun getJokes(): List<ViewTyped.Joke> {
-        Toast.makeText(null, "Test Delay: Jokes are loading", Toast.LENGTH_SHORT).show()
-        delay(2000)
+        delay(500)
         return jokesList
     }
 
     suspend fun addNewJoke(joke: ViewTyped.Joke) {
-        Toast.makeText(null, "Test Delay: Joke is adding", Toast.LENGTH_SHORT).show()
         delay(500)
         jokesList.add(joke)
         categories.add(joke.category) // Добавляем категорию, если ее нет

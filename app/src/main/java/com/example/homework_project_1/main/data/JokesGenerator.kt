@@ -74,7 +74,7 @@ object JokesGenerator {
         var attempts = 0
         val maxAttempts = jokesList.size * 3
 
-        while (newSelectedJokes.size < 7 && jokesList.isNotEmpty() && attempts < maxAttempts) {
+        while (newSelectedJokes.size < 20 && jokesList.isNotEmpty() && attempts < maxAttempts) {
             attempts++
 
             val randomIndex = Random.nextInt(jokesList.size)
