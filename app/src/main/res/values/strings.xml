@@ -10,4 +10,12 @@
     <string name="add_question">Question</string>
     <string name="add_answer">Answer</string>
     <string name="add_save">Save</string>
+    <string name="generate_7_random_jokes">Generate 7 random jokes</string>
+    <string name="add_joke">Add Joke</string>
+    <string name="add_new_category">Add new category</string>
+    <string name="fill_all_fields">Fill ALL fields</string>
+    <string name="enter_category_name">Enter new category Name</string>
+    <string name="add">Add</string>
+    <string name="invalid_category">Invalid Category</string>
+    <string name="cancel">Cancel</string>
 </resources>
