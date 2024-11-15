@@ -46,7 +46,7 @@ object JokesRepository {
     }
 
     suspend fun getJokes(): List<ViewTyped.Joke> {
-        delay(500)
+        delay(2000)
         return jokesList
     }
 

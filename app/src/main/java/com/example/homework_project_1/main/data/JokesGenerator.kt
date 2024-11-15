@@ -1,73 +1,32 @@
 package com.example.homework_project_1.main.data
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.homework_project_1.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 // Класс для генерации шуток
 object JokesGenerator {
-    private var selectedJokes = mutableListOf<ViewTyped.Joke>()
-
-    // Наборы аватарок по категориям
-    private val defaultAvatars = listOf(
-        R.drawable.def_ava1,
-        R.drawable.def_ava2,
-        R.drawable.def_ava3
-    )
-    private val programmingAvatars = listOf(
-        R.drawable.prog_ava1,
-        R.drawable.prog_ava2,
-        R.drawable.prog_ava3,
-        R.drawable.prog_ava4,
-        R.drawable.prog_ava5,
-        R.drawable.prog_ava6,
-        R.drawable.prog_ava7
-    )
-    private val mathAvatars = listOf(
-        R.drawable.math_ava1,
-        R.drawable.math_ava2,
-        R.drawable.math_ava3,
-        R.drawable.math_ava4,
-        R.drawable.math_ava5
-    )
-    private val scienceAvatars = listOf(
-        R.drawable.sci_ava1,
-        R.drawable.sci_ava2,
-        R.drawable.sci_ava3,
-        R.drawable.sci_ava4,
-        R.drawable.math_ava1,
-        R.drawable.math_ava4,
-        R.drawable.math_ava5
-    )
-    private val techAvatars = listOf(
-        R.drawable.tech_ava1,
-        R.drawable.tech_ava2,
-        R.drawable.tech_ava3,
-        R.drawable.sci_ava2,
-        R.drawable.sci_ava3,
-        R.drawable.sci_ava4
-    )
-
-    // Карта, связывающая категории с их аватарками
-    private val categoryAvatars: Map<String, List<Int>> = mapOf(
-        "General" to defaultAvatars,
-        "Programming" to programmingAvatars,
-        "Math" to mathAvatars,
-        "Science" to scienceAvatars,
-        "Tech" to techAvatars
-    )
-
-    private var jokesList: List<ViewTyped.Joke> = runBlocking {
-        JokesRepository.getJokes()
-    }
-
-    private var ind = 0
-    private var usedJokesIndices = mutableSetOf<Int>()
-
-    // Инициализация списка шуток из JSON
-
+    private var jokesList: List<ViewTyped.Joke> = emptyList()          // Список всех шуток
+    private val _loading = MutableLiveData<Boolean>()
+    val loading: LiveData<Boolean> get() = _loading
+    private var selectedJokes = mutableListOf<ViewTyped.Joke>()         // Список выбранных шуток
+    private val categoryAvatars = AvatarProvider.getCategoryAvatars()   // Наборы аватарок по категориям
+    private var ind = 0                                                 // Уникальный индекс (счетчик) для шуток
+    private var usedJokesIndices = mutableSetOf<Int>()                  // Индексы использованных шуток
 
     // Генерация данных для списка из рандомных шуток без повторения
-    fun generateJokesData(): List<ViewTyped> {
+    suspend fun generateJokesData(): List<ViewTyped> {
+        _loading.value = true
+        withContext(Dispatchers.IO) {
+            jokesList = JokesRepository.getJokes()
+            _loading.postValue(false)
+        }
+
         val newSelectedJokes = mutableListOf<ViewTyped.Joke>()
         val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()
 
@@ -79,21 +38,21 @@ object JokesGenerator {
 
             val randomIndex = Random.nextInt(jokesList.size)
 
-            if (randomIndex in usedJokesIndices)
+            if (randomIndex in usedJokesIndices) {
                 continue // Пропустить, если шутка уже была использована
-
+            }
             val joke = jokesList[randomIndex].copy() // Создаем копию шутки
 
             // Если аватарка не указана в json, то выбираем случайную из доступных по категории
             if (joke.avatar == null) {
-                val avatars = categoryAvatars[joke.category] ?: defaultAvatars
+                val avatars = categoryAvatars[joke.category] ?: AvatarProvider.getDefaultAvatars()
                 val usedAvatars = usedAvatarsPerCategory.getOrPut(joke.category) { mutableSetOf() }
 
                 val availableAvatars = avatars.filter { it !in usedAvatars }
                 val selectedAvatar = if (availableAvatars.isNotEmpty()) {
                     availableAvatars.random()
                 } else {
-                    defaultAvatars.random()
+                    AvatarProvider.getDefaultAvatars().random()
                 }
                 joke.avatar = selectedAvatar
                 usedAvatars.add(selectedAvatar)
@@ -107,6 +66,7 @@ object JokesGenerator {
         selectedJokes = newSelectedJokes
         return selectedJokes
     }
+
 
     // Сброс использованных шуток
     fun reset() {

@@ -19,7 +19,7 @@ class JokeListViewModel(context: Context): ViewModel() {
         JokesRepository.initialize(context)
     }
 
-    fun generateJokes() {
+    suspend fun generateJokes() {
         _jokes.value = JokesGenerator.generateJokesData()
     }
 
