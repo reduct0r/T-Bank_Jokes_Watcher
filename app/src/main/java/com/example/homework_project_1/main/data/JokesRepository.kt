@@ -41,14 +41,13 @@ object JokesRepository {
     }
 
     suspend fun getJokes(): List<Joke> {
-        delay(2000)
+        delay(500)
         return jokesList
     }
 
     suspend fun addNewJoke(joke: Joke) {
-        delay(500)
+        delay(5000)
         jokesList.add(joke)
-        categories.add(joke.category) // Добавляем категорию, если ее нет
     }
 
     fun getCategories(): List<String> {
