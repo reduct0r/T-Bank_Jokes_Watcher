@@ -1,11 +1,7 @@
 package com.example.homework_project_1.main.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.homework_project_1.R
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 

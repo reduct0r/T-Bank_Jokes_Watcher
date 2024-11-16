@@ -2,7 +2,6 @@ package com.example.homework_project_1.main.data
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.Toast
 import kotlinx.coroutines.delay
 
 object JokesRepository {

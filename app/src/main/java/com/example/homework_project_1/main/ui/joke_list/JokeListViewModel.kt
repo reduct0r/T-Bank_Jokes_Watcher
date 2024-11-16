@@ -5,9 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.data.JokesRepository
 
-class JokeListViewModel(context: Context): ViewModel() {
+class JokeListViewModel: ViewModel() {
     private val _jokes = MutableLiveData<List<ViewTyped>>()
     val jokes: MutableLiveData<List<ViewTyped>> = _jokes
 

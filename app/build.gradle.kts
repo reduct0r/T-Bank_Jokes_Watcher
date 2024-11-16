@@ -6,11 +6,12 @@ plugins {
 
 android {
     namespace = "com.example.homework_project_1"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.homework_project_1"
         minSdk = 28
+        //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

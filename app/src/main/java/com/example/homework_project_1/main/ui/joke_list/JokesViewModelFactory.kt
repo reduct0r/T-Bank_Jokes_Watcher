@@ -11,7 +11,7 @@ class JokesViewModelFactory(private val context: Context) : ViewModelProvider.Fa
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(JokeListViewModel::class.java) -> {
-                JokeListViewModel(context) as T
+                JokeListViewModel() as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel class")
         }

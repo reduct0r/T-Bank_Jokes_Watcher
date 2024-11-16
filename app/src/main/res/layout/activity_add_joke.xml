@@ -96,7 +96,8 @@
         android:text="@string/choose_or_create_a_category"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonSelectAvatar" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonSelectAvatar"
+        tools:ignore="RtlSymmetry" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

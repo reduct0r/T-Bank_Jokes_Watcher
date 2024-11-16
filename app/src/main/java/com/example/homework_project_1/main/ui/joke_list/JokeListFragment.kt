@@ -74,17 +74,16 @@ class JokeListFragment : Fragment() {
             showError(it)
         }
 
-        JokesGenerator.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+        JokesGenerator.loading.observe(viewLifecycleOwner) { isLoading ->
             binding.buttonGenerateJokes.isEnabled = !isLoading
             if (isLoading) {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.buttonGenerateJokes.text = getString(R.string.loading)
-            }
-            else {
+            } else {
                 binding.progressBar.visibility = View.GONE
                 binding.buttonGenerateJokes.text = getString(R.string.generate_jokes)
             }
-        })
+        }
 
         // Обработка нажатия на кнопку генерации шуток
         binding.buttonGenerateJokes.setOnClickListener {
