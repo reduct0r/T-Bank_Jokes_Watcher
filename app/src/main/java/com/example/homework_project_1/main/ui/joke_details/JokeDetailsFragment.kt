@@ -75,6 +75,9 @@ class JokeDetailsFragment : Fragment() {
             question.text = item.question
             answer.text = item.answer
             category.text = item.category
+            if (item.avatarUri != null) {
+                avatar.setImageURI(item.avatarUri)
+            } else
             item.avatar?.let {
                 avatar.setImageResource(it)
             }
