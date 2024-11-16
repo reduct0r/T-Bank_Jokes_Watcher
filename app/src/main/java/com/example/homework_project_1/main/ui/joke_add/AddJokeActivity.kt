@@ -70,7 +70,7 @@ class AddJokeActivity : AppCompatActivity() {
             val answer = binding.editTextAnswer.text.toString()
 
             if (selectedCategory.isNotBlank() && question.isNotBlank() && answer.isNotBlank()) {
-                val joke = ViewTyped.Joke(
+                val jokeUIModel = ViewTyped.JokeUIModel(
                     id = UUID.randomUUID().hashCode(),
                     avatar = null,
                     avatarUri = if(selectedImageUri != null) selectedImageUri else null,
@@ -79,7 +79,7 @@ class AddJokeActivity : AppCompatActivity() {
                     answer = answer,
                 )
                 lifecycleScope.launch {
-                    JokesRepository.addNewJoke(joke)
+                    JokesRepository.addNewJoke(jokeUIModel)
                     finish() // Возвращаемся на главный экран после сохранения
                 }
             } else {

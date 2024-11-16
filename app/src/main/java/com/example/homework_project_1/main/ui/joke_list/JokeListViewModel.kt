@@ -1,6 +1,5 @@
 package com.example.homework_project_1.main.ui.joke_list
 
-import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.homework_project_1.main.data.JokesGenerator

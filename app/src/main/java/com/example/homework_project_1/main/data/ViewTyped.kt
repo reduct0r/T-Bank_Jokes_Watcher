@@ -22,16 +22,27 @@ data class JokeDTO(
     val avatar: String?
 )
 
+// Класс шутки
+data class Joke(
+    var id: Int,
+    @IdRes var avatar: Int?,
+    val avatarUri: Uri? = null,
+    val category: String,
+    val question: String,
+    val answer: String,
+)
+
 // Интерфейс для отображения элементов списка
 sealed interface ViewTyped {
-    // Класс шутки
-    data class Joke(
+    // Класс шутки для отображения
+    data class JokeUIModel(
         var id: Int,
         @IdRes var avatar: Int?,
         val avatarUri: Uri? = null,
         val category: String,
         val question: String,
         val answer: String,
+        val isFavorite: Boolean = false,
     ) : ViewTyped
 
 
@@ -39,4 +50,17 @@ sealed interface ViewTyped {
     data class Header(
         val title: String
     ) : ViewTyped
+}
+
+// Функция-мэппер для преобразования данных в UI модель
+fun Joke.toUiJokeModel(isFavorite: Boolean = false): ViewTyped.JokeUIModel {
+    return ViewTyped.JokeUIModel(
+        id = this.id,
+        avatar = this.avatar,
+        avatarUri = this.avatarUri,
+        category = this.category,
+        question = this.question,
+        answer = this.answer,
+        isFavorite = isFavorite
+    )
 }

@@ -6,15 +6,15 @@ import com.example.homework_project_1.databinding.JokeItemBinding
 import com.example.homework_project_1.main.data.ViewTyped
 
 class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHolder(binding.root) {
-    fun bind(joke: ViewTyped.Joke) {
-        bindQuestion(joke.question)
-        bindAnswer(joke.answer)
-        bindTitle(joke.category)
+    fun bind(jokeUIModel: ViewTyped.JokeUIModel) {
+        bindQuestion(jokeUIModel.question)
+        bindAnswer(jokeUIModel.answer)
+        bindTitle(jokeUIModel.category)
 
-        if (joke.avatarUri != null) {
-            bindURIAvatar(joke.avatarUri)
+        if (jokeUIModel.avatarUri != null) {
+            bindURIAvatar(jokeUIModel.avatarUri)
         } else {
-            bindAvatar(joke.avatar)
+            bindAvatar(jokeUIModel.avatar)
         }
     }
 

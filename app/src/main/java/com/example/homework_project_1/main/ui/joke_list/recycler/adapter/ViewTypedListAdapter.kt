@@ -44,14 +44,14 @@ class ViewTypedListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
-            is ViewTyped.Joke -> (holder as JokeViewHolder).bind(item)
+            is ViewTyped.JokeUIModel -> (holder as JokeViewHolder).bind(item)
             is ViewTyped.Header -> (holder as HeaderViewHolder).bindHeader(item)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is ViewTyped.Joke -> JOKE_VIEW_TYPE
+            is ViewTyped.JokeUIModel -> JOKE_VIEW_TYPE
             is ViewTyped.Header -> HEADER_VIEW_TYPE
             else -> throw IllegalArgumentException("Unknown type!")
         }

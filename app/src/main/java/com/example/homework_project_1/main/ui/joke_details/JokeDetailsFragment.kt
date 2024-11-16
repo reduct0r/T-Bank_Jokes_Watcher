@@ -52,7 +52,7 @@ class JokeDetailsFragment : Fragment() {
         }
 
         // Наблюдение за изменениями в LiveData
-        viewModel.joke.observe(viewLifecycleOwner) { joke ->
+        viewModel.jokeUIModel.observe(viewLifecycleOwner) { joke ->
             setupJokesData(joke)
         }
 
@@ -70,7 +70,7 @@ class JokeDetailsFragment : Fragment() {
     }
 
     // Установка данных в элементы экрана
-    private fun setupJokesData(item: ViewTyped.Joke) {
+    private fun setupJokesData(item: ViewTyped.JokeUIModel) {
         with(binding) {
             question.text = item.question
             answer.text = item.answer

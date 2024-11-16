@@ -5,7 +5,7 @@ import android.content.Context
 import kotlinx.coroutines.delay
 
 object JokesRepository {
-    private val jokesList = mutableListOf<ViewTyped.Joke>()
+    private val jokesList = mutableListOf<ViewTyped.JokeUIModel>()
     private val categories = mutableSetOf<String>()
 
     fun parseJSON(context: Context) {
@@ -20,12 +20,12 @@ object JokesRepository {
                 }
 
                 jokesList.add(
-                    ViewTyped.Joke(
+                    ViewTyped.JokeUIModel(
                         id = 0,
                         avatar = avatarResId,
                         category = category.name,
                         question = jokeDto.question,
-                        answer = jokeDto.answer
+                        answer = jokeDto.answer,
                     )
                 )
             }
@@ -40,15 +40,15 @@ object JokesRepository {
         }
     }
 
-    suspend fun getJokes(): List<ViewTyped.Joke> {
+    suspend fun getJokes(): List<ViewTyped.JokeUIModel> {
         delay(2000)
         return jokesList
     }
 
-    suspend fun addNewJoke(joke: ViewTyped.Joke) {
+    suspend fun addNewJoke(jokeUIModel: ViewTyped.JokeUIModel) {
         delay(500)
-        jokesList.add(joke)
-        categories.add(joke.category) // Добавляем категорию, если ее нет
+        jokesList.add(jokeUIModel)
+        categories.add(jokeUIModel.category) // Добавляем категорию, если ее нет
     }
 
     fun getCategories(): List<String> {

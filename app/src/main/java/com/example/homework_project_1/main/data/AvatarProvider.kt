@@ -42,9 +42,6 @@ object AvatarProvider {
         R.drawable.sci_ava4
     )
 
-    // Аватарки, добавленные пользователем
-    private val customAvatars = emptyList<R.drawable>()
-
     private val categoryAvatars: Map<String, List<Int>> = mapOf(
         "General" to defaultAvatars,
         "Programming" to programmingAvatars,
