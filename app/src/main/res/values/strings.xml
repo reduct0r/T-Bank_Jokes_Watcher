@@ -22,4 +22,7 @@
     <string name="select_avatar">Select image</string>
     <string name="avatar_preview">Avatar</string>
     <string name="choose_or_create_a_category">Choose or create a category:</string>
+    <string name="unsaved_changes_message">Changes will be lost</string>
+    <string name="unsaved_changes">Unsaved changes</string>
+    <string name="exit">Exit</string>
 </resources>

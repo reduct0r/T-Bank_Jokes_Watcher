@@ -92,7 +92,16 @@ class AddJokeActivity : AppCompatActivity() {
         }
 
         binding.buttonBack.setOnClickListener {
-            finish()
+            if (binding.editTextQuestion.text.isNotBlank() || binding.editTextAnswer.text.isNotBlank()) {
+                AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.unsaved_changes))
+                    .setMessage(getString(R.string.unsaved_changes_message))
+                    .setPositiveButton(getString(R.string.exit)) { _, _ -> finish() }
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .show()
+            } else {
+                finish()
+            }
         }
     }
 
