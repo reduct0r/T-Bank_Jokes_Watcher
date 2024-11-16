@@ -43,6 +43,7 @@ class AddJokeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddJokeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        supportActionBar?.hide()
 
         // Получаем список категорий из репозитория
         categoriesList.addAll(JokesRepository.getCategories())
@@ -88,6 +89,10 @@ class AddJokeActivity : AppCompatActivity() {
 
         binding.buttonSelectAvatar.setOnClickListener {
             pickImageLauncher.launch(arrayOf("image/*"))
+        }
+
+        binding.buttonBack.setOnClickListener {
+            finish()
         }
     }
 
