@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
 import com.example.homework_project_1.main.data.JokesGenerator
+import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.ui.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.ui.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.ui.joke_list.recycler.adapter.ViewTypedListAdapter
@@ -37,7 +38,7 @@ class JokeListFragment : Fragment() {
                 R.anim.slide_in_left,   // Анимация для возврата к предыдущему фрагменту
                 R.anim.slide_out_right  // Анимация для снятия нового фрагмента
             )
-            .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke))
+            .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke.id))
             .addToBackStack(null)
             .commit()
     }
@@ -60,6 +61,8 @@ class JokeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         createRecyclerViewList()
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
+
+        JokesRepository.parseJSON(requireContext()) // Чтение данных из JSON файла
 
         // Наблюдение за изменениями в LiveData
         viewModel.jokes.observe(viewLifecycleOwner) {

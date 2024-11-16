@@ -12,7 +12,7 @@ import com.example.homework_project_1.main.ui.joke_list.recycler.JokeViewHolder
 import com.example.homework_project_1.main.ui.joke_list.recycler.util.ViewTypedCallback
 
 class ViewTypedListAdapter(
-    private val clickListener: (Int) -> Unit // Слушатель для обработки клика по позиции шутки
+    private val clickListener: (ViewTyped.Joke) -> Unit // Изменено на передачу объекта Joke
 ) : ListAdapter<ViewTyped, RecyclerView.ViewHolder>(ViewTypedCallback()) {
 
     companion object {
@@ -29,7 +29,8 @@ class ViewTypedListAdapter(
                     itemView.setOnClickListener {
                         val position = bindingAdapterPosition
                         if (position != RecyclerView.NO_POSITION) {
-                            clickListener(position)
+                            val joke = getItem(position) as? ViewTyped.Joke
+                            joke?.let { clickListener(it) }
                         }
                     }
                 }

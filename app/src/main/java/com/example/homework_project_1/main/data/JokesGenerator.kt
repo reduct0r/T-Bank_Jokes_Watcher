@@ -44,7 +44,7 @@ object JokesGenerator {
             val joke = jokesList[randomIndex].copy() // Создаем копию шутки
 
             // Если аватарка не указана в json, то выбираем случайную из доступных по категории
-            if (joke.avatar == null) {
+            if (joke.avatar == null && joke.avatarUri == null) {
                 val avatars = categoryAvatars[joke.category] ?: AvatarProvider.getDefaultAvatars()
                 val usedAvatars = usedAvatarsPerCategory.getOrPut(joke.category) { mutableSetOf() }
 
@@ -57,7 +57,6 @@ object JokesGenerator {
                 joke.avatar = selectedAvatar
                 usedAvatars.add(selectedAvatar)
             }
-
             joke.id = ind++
             newSelectedJokes.add(joke)
             usedJokesIndices.add(randomIndex)

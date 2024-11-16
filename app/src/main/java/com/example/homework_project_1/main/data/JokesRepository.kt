@@ -9,11 +9,7 @@ object JokesRepository {
     private val jokesList = mutableListOf<ViewTyped.Joke>()
     private val categories = mutableSetOf<String>()
 
-    fun initialize(context: Context) {
-        parseJSON(context)
-    }
-
-    private fun parseJSON(context: Context) {
+    fun parseJSON(context: Context) {
         val jokesData = JsonReader.readJokesFromAsset(context)
         jokesData?.categories?.forEach { category ->
             categories.add(category.name)

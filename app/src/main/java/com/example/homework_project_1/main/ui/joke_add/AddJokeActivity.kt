@@ -1,12 +1,15 @@
 package com.example.homework_project_1.main.ui.joke_add
 
 import android.app.AlertDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.homework_project_1.R
@@ -16,11 +19,24 @@ import com.example.homework_project_1.main.data.ViewTyped
 import kotlinx.coroutines.launch
 
 class AddJokeActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityAddJokeBinding
-
     private lateinit var categoriesAdapter: ArrayAdapter<String>
     private var categoriesList: MutableList<String> = mutableListOf()
+
+    private var selectedImageUri: Uri? = null
+    private val pickImageLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri: Uri? ->
+        uri?.let {
+            selectedImageUri = it
+            // постоянный доступ к URI
+            contentResolver.takePersistableUriPermission(
+                it,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+           binding.imageViewAvatar.setImageURI(it)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +68,14 @@ class AddJokeActivity : AppCompatActivity() {
             val answer = binding.editTextAnswer.text.toString()
 
             if (selectedCategory.isNotBlank() && question.isNotBlank() && answer.isNotBlank()) {
-                val joke = ViewTyped.Joke(id = 0, avatar = null, category = selectedCategory, question = question, answer = answer)
+                val joke = ViewTyped.Joke(
+                    id = 0,
+                    avatar = null,
+                    avatarUri = if(selectedImageUri != null) selectedImageUri else null,
+                    category = selectedCategory,
+                    question = question,
+                    answer = answer,
+                )
                 lifecycleScope.launch {
                     JokesRepository.addNewJoke(joke)
                     finish() // Возвращаемся на главный экран после сохранения
@@ -60,6 +83,10 @@ class AddJokeActivity : AppCompatActivity() {
             } else {
                 Toast.makeText(this, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.buttonSelectAvatar.setOnClickListener {
+            pickImageLauncher.launch(arrayOf("image/*"))
         }
     }
 
