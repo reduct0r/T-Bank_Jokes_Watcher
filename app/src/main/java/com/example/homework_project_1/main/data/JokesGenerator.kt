@@ -7,29 +7,29 @@ import kotlin.random.Random
 
 // Класс для генерации шуток
 object JokesGenerator {
-    private var jokesList: List<ViewTyped.JokeUIModel> = emptyList()          // Список всех шуток
+    private var jokesList: List<Joke> = emptyList()          // Список всех шуток
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> get() = _loading
-    private var selectedJokeUIModels = mutableListOf<ViewTyped.JokeUIModel>()         // Список выбранных шуток
+    private var selectedJokes = mutableListOf<Joke>()         // Список выбранных шуток
     private val categoryAvatars = AvatarProvider.getCategoryAvatars()   // Наборы аватарок по категориям
     private var ind = 0                                                 // Уникальный индекс (счетчик) для шуток
     private var usedJokesIndices = mutableSetOf<Int>()                  // Индексы использованных шуток
 
     // Генерация данных для списка из рандомных шуток без повторения
-    suspend fun generateJokesData(): List<ViewTyped> {
+    suspend fun generateJokesData(): List<Joke> {
         _loading.value = true
         withContext(Dispatchers.IO) {
             jokesList = JokesRepository.getJokes()
             _loading.postValue(false)
         }
 
-        val newSelectedJokeUIModels = mutableListOf<ViewTyped.JokeUIModel>()
+        val newSelectedJokes = mutableListOf<Joke>()
         val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()
 
         var attempts = 0
         val maxAttempts = jokesList.size * 3
 
-        while (newSelectedJokeUIModels.size < 20 && jokesList.isNotEmpty() && attempts < maxAttempts) {
+        while (newSelectedJokes.size < 20 && jokesList.isNotEmpty() && attempts < maxAttempts) {
             attempts++
 
             val randomIndex = Random.nextInt(jokesList.size)
@@ -54,23 +54,23 @@ object JokesGenerator {
                 usedAvatars.add(selectedAvatar)
             }
             joke.id = ind++
-            newSelectedJokeUIModels.add(joke)
+            newSelectedJokes.add(joke)
             usedJokesIndices.add(randomIndex)
         }
 
-        selectedJokeUIModels = newSelectedJokeUIModels
-        return selectedJokeUIModels
+        selectedJokes = newSelectedJokes
+        return selectedJokes
     }
 
 
     // Сброс использованных шуток
     fun reset() {
-        selectedJokeUIModels.clear()
+        selectedJokes.clear()
         usedJokesIndices.clear()
     }
 
     // Получение списка выбранных шуток
-    fun getSelectedJokes(): List<ViewTyped> {
-        return selectedJokeUIModels.toList()
+    fun getSelectedJokes(): List<Joke> {
+        return selectedJokes.toList()
     }
 }

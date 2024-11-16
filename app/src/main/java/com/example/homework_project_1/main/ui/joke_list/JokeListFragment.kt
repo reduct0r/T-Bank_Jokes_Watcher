@@ -13,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
+import com.example.homework_project_1.main.data.Joke
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.ui.joke_add.AddJokeActivity
@@ -29,20 +30,18 @@ class JokeListFragment : Fragment() {
     }
 
     private val adapter = ViewTypedListAdapter { joke ->
-        // Навигация к деталям шутки с использованием идентификатора
         parentFragmentManager.beginTransaction()
             .setCustomAnimations(
-                R.anim.slide_in_right,  // Анимация для входа нового фрагмента
-                R.anim.slide_out_left,  // Анимация для выхода текущего фрагмента
-                R.anim.slide_in_left,   // Анимация для возврата к предыдущему фрагменту
-                R.anim.slide_out_right  // Анимация для снятия нового фрагмента
+                R.anim.slide_in_right,
+                R.anim.slide_out_left,
+                R.anim.slide_in_left,
+                R.anim.slide_out_right
             )
             .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke))
             .addToBackStack(null)
             .commit()
     }
 
-    // Вывод ошибки
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
@@ -55,17 +54,21 @@ class JokeListFragment : Fragment() {
         return binding.root
     }
 
-    // Создаем RecyclerView и устанавливаем слушатель на кнопку
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createRecyclerViewList()
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
 
-        JokesRepository.parseJSON(requireContext()) // Чтение данных из JSON файла
+        JokesRepository.parseJSON(requireContext())
 
-        // Наблюдение за изменениями в LiveData
-        viewModel.jokes.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+        // Наблюдение за данными шуток
+        viewModel.jokes.observe(viewLifecycleOwner) { jokes ->
+            adapter.submitList(jokes)
+            if (viewModel.showGeneratedData().isEmpty()) {
+                binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
+                showError("No new jokes are available.")
+                viewModel.resetJokes()
+            }
         }
 
         // Наблюдение за ошибками
@@ -73,7 +76,8 @@ class JokeListFragment : Fragment() {
             showError(it)
         }
 
-        JokesGenerator.loading.observe(viewLifecycleOwner) { isLoading ->
+        // Наблюдение за состоянием загрузки
+        viewModel.isLoading.observe(viewLifecycleOwner) { isLoading: Boolean ->
             binding.buttonGenerateJokes.isEnabled = !isLoading
             if (isLoading) {
                 binding.progressBar.visibility = View.VISIBLE
@@ -88,25 +92,16 @@ class JokeListFragment : Fragment() {
         binding.buttonGenerateJokes.setOnClickListener {
             lifecycleScope.launch {
                 viewModel.generateJokes()
-                if (viewModel.showGeneratedData().isEmpty() && binding.progressBar.visibility != View.VISIBLE) {
-                    binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
-                    showError("No new jokes are available.")
-                    viewModel.resetJokes()
-                } else if (binding.progressBar.visibility != View.VISIBLE){
-                    binding.buttonGenerateJokes.text = getString(R.string.generate_jokes)
-                }
             }
         }
 
         // Обработка нажатия на кнопку добавления шутки
         binding.buttonAddJoke.setOnClickListener {
-            // Запуск AddJokeActivity
             val intent = Intent(requireContext(), AddJokeActivity::class.java)
             startActivity(intent)
         }
     }
 
-    // Создаем RecyclerView
     private fun createRecyclerViewList() {
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 1)

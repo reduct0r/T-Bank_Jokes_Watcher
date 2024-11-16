@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityAddJokeBinding
+import com.example.homework_project_1.main.data.Joke
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
 import kotlinx.coroutines.launch
@@ -70,7 +71,7 @@ class AddJokeActivity : AppCompatActivity() {
             val answer = binding.editTextAnswer.text.toString()
 
             if (selectedCategory.isNotBlank() && question.isNotBlank() && answer.isNotBlank()) {
-                val jokeUIModel = ViewTyped.JokeUIModel(
+                val joke = Joke(
                     id = UUID.randomUUID().hashCode(),
                     avatar = null,
                     avatarUri = if(selectedImageUri != null) selectedImageUri else null,
@@ -79,7 +80,7 @@ class AddJokeActivity : AppCompatActivity() {
                     answer = answer,
                 )
                 lifecycleScope.launch {
-                    JokesRepository.addNewJoke(jokeUIModel)
+                    JokesRepository.addNewJoke(joke)
                     finish() // Возвращаемся на главный экран после сохранения
                 }
             } else {

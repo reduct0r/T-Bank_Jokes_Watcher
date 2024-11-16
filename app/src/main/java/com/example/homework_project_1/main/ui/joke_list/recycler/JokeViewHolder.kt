@@ -3,18 +3,19 @@ package com.example.homework_project_1.main.ui.joke_list.recycler
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.databinding.JokeItemBinding
+import com.example.homework_project_1.main.data.Joke
 import com.example.homework_project_1.main.data.ViewTyped
 
 class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHolder(binding.root) {
-    fun bind(jokeUIModel: ViewTyped.JokeUIModel) {
-        bindQuestion(jokeUIModel.question)
-        bindAnswer(jokeUIModel.answer)
-        bindTitle(jokeUIModel.category)
+    fun bind(joke: ViewTyped.JokeUIModel) {
+        bindQuestion(joke.question)
+        bindAnswer(joke.answer)
+        bindTitle(joke.category)
 
-        if (jokeUIModel.avatarUri != null) {
-            bindURIAvatar(jokeUIModel.avatarUri)
+        if (joke.avatarUri != null) {
+            bindURIAvatar(joke.avatarUri)
         } else {
-            bindAvatar(jokeUIModel.avatar)
+            bindAvatar(joke.avatar)
         }
     }
 

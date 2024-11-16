@@ -22,7 +22,25 @@ data class JokeDTO(
     val avatar: String?
 )
 
-// Класс шутки
+// Интерфейс для отображения элементов списка
+sealed interface ViewTyped {
+    // Класс шутки
+    data class JokeUIModel(
+        var id: Int,
+        @IdRes var avatar: Int?,
+        val avatarUri: Uri? = null,
+        val category: String,
+        val question: String,
+        val answer: String,
+        val isFavorite: Boolean = false
+    ) : ViewTyped
+
+    // Класс заголовка
+    data class Header(
+        val title: String
+    ) : ViewTyped
+}
+
 data class Joke(
     var id: Int,
     @IdRes var avatar: Int?,
@@ -32,35 +50,16 @@ data class Joke(
     val answer: String,
 )
 
-// Интерфейс для отображения элементов списка
-sealed interface ViewTyped {
-    // Класс шутки для отображения
-    data class JokeUIModel(
-        var id: Int,
-        @IdRes var avatar: Int?,
-        val avatarUri: Uri? = null,
-        val category: String,
-        val question: String,
-        val answer: String,
-        val isFavorite: Boolean = false,
-    ) : ViewTyped
-
-
-    // Класс заголовка
-    data class Header(
-        val title: String
-    ) : ViewTyped
-}
-
-// Функция-мэппер для преобразования данных в UI модель
-fun Joke.toUiJokeModel(isFavorite: Boolean = false): ViewTyped.JokeUIModel {
-    return ViewTyped.JokeUIModel(
-        id = this.id,
-        avatar = this.avatar,
-        avatarUri = this.avatarUri,
-        category = this.category,
-        question = this.question,
-        answer = this.answer,
-        isFavorite = isFavorite
-    )
+fun convertToUiModel(dataList: List<Joke>, isFavorite: Boolean): List<ViewTyped.JokeUIModel> {
+    return dataList.map { data ->
+        ViewTyped.JokeUIModel(
+            id = data.id,
+            avatar = data.avatar,
+            avatarUri = data.avatarUri,
+            category = data.category,
+            question = data.question,
+            answer = data.answer,
+            isFavorite = isFavorite
+        )
+    }
 }
