@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeDetailsBinding
 import com.example.homework_project_1.main.data.ViewTyped
 

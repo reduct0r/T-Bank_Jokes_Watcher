@@ -42,10 +42,10 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
                 if (workInfo != null) {
                     when (workInfo.state) {
                         androidx.work.WorkInfo.State.ENQUEUED -> {
-                            // Handle ENQUEUED state if needed
+                            _addJokeStatus.value = AddJokeStatus.Error("Enqueued")
                         }
                         androidx.work.WorkInfo.State.RUNNING -> {
-                            // Handle RUNNING state if needed
+                            _addJokeStatus.value = AddJokeStatus.Error("Running")
                         }
                         androidx.work.WorkInfo.State.SUCCEEDED -> {
                             _addJokeStatus.value = AddJokeStatus.Success

@@ -48,9 +48,9 @@ class AddJokeActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        // Получение списка категорий (можно также перенести в ViewModel)
+        // Получение списка категорий
         categoriesList.addAll(JokesRepository.getCategories())
-        categoriesList.add(getString(R.string.add_new_category)) // Добавляем опцию "Добавить новую категорию"
+        categoriesList.add(getString(R.string.add_new_category)) //"Добавить новую категорию"
 
         categoriesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoriesList)
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -84,27 +84,12 @@ class AddJokeActivity : AppCompatActivity() {
             }
         }
 
-        binding.buttonSave.setOnClickListener {
-            val selectedCategory = binding.spinnerCategory.selectedItem.toString()
-            val question = binding.editTextQuestion.text.toString()
-            val answer = binding.editTextAnswer.text.toString()
-
-            if (question.isBlank() || answer.isBlank()) {
-                viewModel.addJoke(
-                    question = question,
-                    answer = answer,
-                    category = selectedCategory,
-                    avatarUri = selectedImageUri
-                )
-            } else {
-                Toast.makeText(this, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show()
-            }
-        }
-
+        // Обработка нажатия кнопки "Выбрать аватар"
         binding.buttonSelectAvatar.setOnClickListener {
-            pickImageLauncher.launch(arrayOf("image/*"))
+            pickImageLauncher.launch(arrayOf("image/*")) // Запуск выбора изображения
         }
 
+        // Обработка нажатия кнопки "Сохранить"
         binding.buttonSave.setOnClickListener {
             val selectedCategory = binding.spinnerCategory.selectedItem.toString()
             val question = binding.editTextQuestion.text.toString()
@@ -124,6 +109,7 @@ class AddJokeActivity : AppCompatActivity() {
             }
         }
 
+        // Обработка нажатия кнопки "Назад"
         binding.buttonBack.setOnClickListener {
             if (binding.editTextQuestion.text.isNotBlank() || binding.editTextAnswer.text.isNotBlank()) {
                 AlertDialog.Builder(this)
@@ -139,6 +125,7 @@ class AddJokeActivity : AppCompatActivity() {
 
     }
 
+    // Диалог добавления новой категории
     private fun showAddCategoryDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.add_new_category))
@@ -147,6 +134,7 @@ class AddJokeActivity : AppCompatActivity() {
         input.hint = getString(R.string.enter_category_name)
         builder.setView(input)
 
+        // Обработка нажатия кнопки "Добавить"
         builder.setPositiveButton(getString(R.string.add)) { dialog, _ ->
             val newCategory = input.text.toString().trim()
             if (newCategory.isNotEmpty() && !categoriesList.contains(newCategory)) {
@@ -160,10 +148,12 @@ class AddJokeActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
+        // Обработка нажатия кнопки "Отмена"
         builder.setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
             dialog.cancel()
         }
 
+        // Отображение диалога
         builder.show()
     }
 
