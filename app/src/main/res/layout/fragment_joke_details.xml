@@ -85,7 +85,7 @@
         android:id="@+id/addToFavorites"
         android:layout_width="202dp"
         android:layout_height="47dp"
-        tools:text="Add to favorites"
+        android:text="@string/add_to_favorites"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"

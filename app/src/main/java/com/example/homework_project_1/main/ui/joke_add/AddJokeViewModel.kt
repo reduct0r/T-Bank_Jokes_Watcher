@@ -14,9 +14,6 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
     private val _addJokeStatus = MutableLiveData<AddJokeStatus>()
     val addJokeStatus: LiveData<AddJokeStatus> get() = _addJokeStatus
 
-    private val _error = MutableLiveData<String>()
-    val error: LiveData<String> get() = _error
-
     fun addJoke(question: String, answer: String, category: String, avatarUri: Uri?) {
         // Создание входных данных для менеджера
         val data = Data.Builder()
@@ -44,14 +41,23 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
             .observeForever { workInfo ->
                 if (workInfo != null) {
                     when (workInfo.state) {
+                        androidx.work.WorkInfo.State.ENQUEUED -> {
+                            // Handle ENQUEUED state if needed
+                        }
+                        androidx.work.WorkInfo.State.RUNNING -> {
+                            // Handle RUNNING state if needed
+                        }
                         androidx.work.WorkInfo.State.SUCCEEDED -> {
                             _addJokeStatus.value = AddJokeStatus.Success
                         }
                         androidx.work.WorkInfo.State.FAILED -> {
                             _addJokeStatus.value = AddJokeStatus.Error("Can't add joke")
                         }
-                        else -> {
-                            _error.value = "Unknown WorkInfo.State error"
+                        androidx.work.WorkInfo.State.BLOCKED -> {
+                            _addJokeStatus.value = AddJokeStatus.Error("Work blocked")
+                        }
+                        androidx.work.WorkInfo.State.CANCELLED -> {
+                            _addJokeStatus.value = AddJokeStatus.Error("Work cancelled")
                         }
                     }
                 }

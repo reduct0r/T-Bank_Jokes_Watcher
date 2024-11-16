@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.homework_project_1.main.data.Joke
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.convertToUiModel
@@ -35,5 +36,17 @@ class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
 
     fun getPosition(): Int {
         return jokePosition
+    }
+
+    fun addToFavorites(jokeUI: ViewTyped.JokeUIModel) {
+        viewModelScope.launch {
+            try {
+                jokeUI.isFavorite = true
+                // TODO: add to favorites
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Unknown error"
+            }
+        }
+
     }
 }

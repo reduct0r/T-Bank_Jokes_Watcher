@@ -78,7 +78,9 @@ class AddJokeActivity : AppCompatActivity() {
                     Toast.makeText(this, status.message, Toast.LENGTH_SHORT).show()
                 }
 
-                else -> {}
+                else -> {
+                    handleError(getString(R.string.unknown_error))
+                }
             }
         }
 
@@ -135,9 +137,6 @@ class AddJokeActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.error.observe(this) { errorMessage ->
-            handleError(errorMessage)
-        }
     }
 
     private fun showAddCategoryDialog() {

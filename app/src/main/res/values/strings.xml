@@ -27,4 +27,5 @@
     <string name="exit">Exit</string>
     <string name="joke_added_successfully">Joke added successfully</string>
     <string name="joke_add_in_background">Joke is uploading in BG</string>
+    <string name="unknown_error">Unknown error</string>
 </resources>

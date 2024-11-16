@@ -61,8 +61,11 @@ class JokeDetailsFragment : Fragment() {
             handleError(errorMessage)
         }
 
-        // Установка текста на кнопку "Добавить в избранное"
-        binding.addToFavorites.text = getString(R.string.add_to_favorites)
+        binding.addToFavorites.setOnClickListener {
+            Toast.makeText(requireContext(), "Added to favorites (TEST)", Toast.LENGTH_SHORT).show()
+            viewModel.addToFavorites(viewModel.joke.value!!)
+        }
+
         // Обработка нажатия на кнопку "Назад"
         binding.buttonBack.setOnClickListener {
             parentFragmentManager.popBackStack()

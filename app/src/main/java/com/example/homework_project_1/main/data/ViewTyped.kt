@@ -32,7 +32,7 @@ sealed interface ViewTyped {
         val category: String,
         val question: String,
         val answer: String,
-        val isFavorite: Boolean = false
+        var isFavorite: Boolean = false
     ) : ViewTyped
 
     // Класс заголовка
