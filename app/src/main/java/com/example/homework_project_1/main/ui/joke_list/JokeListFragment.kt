@@ -38,7 +38,7 @@ class JokeListFragment : Fragment() {
                 R.anim.slide_in_left,   // Анимация для возврата к предыдущему фрагменту
                 R.anim.slide_out_right  // Анимация для снятия нового фрагмента
             )
-            .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke.id))
+            .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke))
             .addToBackStack(null)
             .commit()
     }

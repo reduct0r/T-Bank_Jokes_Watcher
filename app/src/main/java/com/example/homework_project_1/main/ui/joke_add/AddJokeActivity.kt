@@ -17,6 +17,7 @@ import com.example.homework_project_1.databinding.ActivityAddJokeBinding
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class AddJokeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddJokeBinding
@@ -69,7 +70,7 @@ class AddJokeActivity : AppCompatActivity() {
 
             if (selectedCategory.isNotBlank() && question.isNotBlank() && answer.isNotBlank()) {
                 val joke = ViewTyped.Joke(
-                    id = 0,
+                    id = UUID.randomUUID().hashCode(),
                     avatar = null,
                     avatarUri = if(selectedImageUri != null) selectedImageUri else null,
                     category = selectedCategory,
