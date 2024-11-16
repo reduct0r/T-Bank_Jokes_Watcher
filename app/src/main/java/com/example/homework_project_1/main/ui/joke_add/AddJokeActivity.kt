@@ -1,5 +1,7 @@
 package com.example.homework_project_1.main.ui.joke_add
 
+import AddJokeStatus
+import AddJokeViewModel
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -37,7 +39,7 @@ class AddJokeActivity : AppCompatActivity() {
 
     // Инициализация ViewModel
     private val viewModel: AddJokeViewModel by viewModels {
-        AddJokeViewModelFactory()
+        AddJokeViewModelFactory(application)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +76,9 @@ class AddJokeActivity : AppCompatActivity() {
                 }
                 is AddJokeStatus.Error -> {
                     Toast.makeText(this, status.message, Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    handleError("Unknown status error")
                 }
             }
         }
@@ -158,5 +163,10 @@ class AddJokeActivity : AppCompatActivity() {
         }
 
         builder.show()
+    }
+
+    private fun handleError(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        finish()
     }
 }

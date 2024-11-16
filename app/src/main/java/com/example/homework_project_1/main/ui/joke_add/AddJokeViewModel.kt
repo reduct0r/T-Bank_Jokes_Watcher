@@ -1,18 +1,21 @@
-package com.example.homework_project_1.main.ui.joke_add
-
+import android.app.Application
 import android.net.Uri
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import java.util.UUID
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.example.homework_project_1.main.ui.joke_add.AddJokeWorker
+import java.util.UUID
 
-class AddJokeViewModel : ViewModel() {
+class AddJokeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _addJokeStatus = MutableLiveData<AddJokeStatus>()
     val addJokeStatus: LiveData<AddJokeStatus> get() = _addJokeStatus
+
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
 
     fun addJoke(question: String, answer: String, category: String, avatarUri: Uri?) {
         // Создание входных данных для менеджера
@@ -30,11 +33,14 @@ class AddJokeViewModel : ViewModel() {
             .setInputData(data)
             .build()
 
+        // Получение экземпляра WorkManager с использованием контекста приложения
+        val workManager = WorkManager.getInstance(getApplication())
+
         // Добавление задачи в очередь
-        WorkManager.getInstance().enqueue(addJokeRequest)
+        workManager.enqueue(addJokeRequest)
 
         // Наблюдение за состоянием задачи
-        WorkManager.getInstance().getWorkInfoByIdLiveData(addJokeRequest.id)
+        workManager.getWorkInfoByIdLiveData(addJokeRequest.id)
             .observeForever { workInfo ->
                 if (workInfo != null) {
                     when (workInfo.state) {
@@ -45,7 +51,7 @@ class AddJokeViewModel : ViewModel() {
                             _addJokeStatus.value = AddJokeStatus.Error("Can't add joke")
                         }
                         else -> {
-                            // do nothing
+                            _error.value = "Unknown WorkInfo.State error"
                         }
                     }
                 }
