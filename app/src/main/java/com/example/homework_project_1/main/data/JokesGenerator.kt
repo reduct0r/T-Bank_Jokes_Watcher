@@ -1,5 +1,4 @@
 package com.example.homework_project_1.main.data
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
