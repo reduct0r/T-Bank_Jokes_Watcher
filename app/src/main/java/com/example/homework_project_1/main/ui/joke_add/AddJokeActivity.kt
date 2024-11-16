@@ -77,9 +77,8 @@ class AddJokeActivity : AppCompatActivity() {
                 is AddJokeStatus.Error -> {
                     Toast.makeText(this, status.message, Toast.LENGTH_SHORT).show()
                 }
-                else -> {
-                    handleError("Unknown status error")
-                }
+
+                else -> {}
             }
         }
 
@@ -134,6 +133,10 @@ class AddJokeActivity : AppCompatActivity() {
             } else {
                 finish()
             }
+        }
+
+        viewModel.error.observe(this) { errorMessage ->
+            handleError(errorMessage)
         }
     }
 
