@@ -3,32 +3,29 @@ package com.example.homework_project_1.main.ui.joke_add
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.homework_project_1.R
+import com.example.homework_project_1.databinding.ActivityAddJokeBinding
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
 import kotlinx.coroutines.launch
 
 class AddJokeActivity : AppCompatActivity() {
 
-    private lateinit var spinnerCategory: Spinner
-    private lateinit var questionEditText: EditText
-    private lateinit var answerEditText: EditText
-    private lateinit var saveButton: Button
+    private lateinit var binding: ActivityAddJokeBinding
 
     private lateinit var categoriesAdapter: ArrayAdapter<String>
     private var categoriesList: MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_joke)
-
-        spinnerCategory = findViewById(R.id.spinnerCategory)
-        questionEditText = findViewById(R.id.editTextQuestion)
-        answerEditText = findViewById(R.id.editTextAnswer)
-        saveButton = findViewById(R.id.buttonSave)
+        binding = ActivityAddJokeBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         // Получаем список категорий из репозитория
         categoriesList.addAll(JokesRepository.getCategories())
@@ -36,9 +33,9 @@ class AddJokeActivity : AppCompatActivity() {
 
         categoriesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoriesList)
         categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinnerCategory.adapter = categoriesAdapter
+        binding.spinnerCategory.adapter = categoriesAdapter
 
-        spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -49,10 +46,10 @@ class AddJokeActivity : AppCompatActivity() {
             }
         }
 
-        saveButton.setOnClickListener {
-            val selectedCategory = spinnerCategory.selectedItem.toString()
-            val question = questionEditText.text.toString()
-            val answer = answerEditText.text.toString()
+        binding.buttonSave.setOnClickListener {
+            val selectedCategory = binding.spinnerCategory.selectedItem.toString()
+            val question = binding.editTextQuestion.text.toString()
+            val answer = binding.editTextAnswer.text.toString()
 
             if (selectedCategory.isNotBlank() && question.isNotBlank() && answer.isNotBlank()) {
                 val joke = ViewTyped.Joke(id = 0, avatar = null, category = selectedCategory, question = question, answer = answer)
@@ -83,7 +80,7 @@ class AddJokeActivity : AppCompatActivity() {
                 categoriesList.add(categoriesList.size - 1, newCategory)
                 categoriesAdapter.notifyDataSetChanged()
                 // Устанавливаем выбранной новую категорию
-                spinnerCategory.setSelection(categoriesList.indexOf(newCategory))
+                binding.spinnerCategory.setSelection(categoriesList.indexOf(newCategory))
             } else {
                 Toast.makeText(this, getString(R.string.invalid_category), Toast.LENGTH_SHORT).show()
             }

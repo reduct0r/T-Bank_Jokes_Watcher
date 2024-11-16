@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.data
 
+import android.net.Uri
 import androidx.annotation.IdRes
 import kotlinx.serialization.Serializable
 
@@ -27,6 +28,7 @@ sealed interface ViewTyped {
     data class Joke(
         var id: Int,
         @IdRes var avatar: Int?,
+        val avatarUri: Uri? = null,
         val category: String,
         val question: String,
         val answer: String,
