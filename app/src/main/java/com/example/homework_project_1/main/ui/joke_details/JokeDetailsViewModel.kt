@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.homework_project_1.main.data.Joke
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.convertToUiModel

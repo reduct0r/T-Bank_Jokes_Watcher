@@ -16,7 +16,6 @@ import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityAddJokeBinding
 import com.example.homework_project_1.main.data.Joke
 import com.example.homework_project_1.main.data.JokesRepository
-import com.example.homework_project_1.main.data.ViewTyped
 import kotlinx.coroutines.launch
 import java.util.UUID
 

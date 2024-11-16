@@ -13,8 +13,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
-import com.example.homework_project_1.main.data.Joke
-import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.ui.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.ui.joke_details.JokeDetailsFragment
