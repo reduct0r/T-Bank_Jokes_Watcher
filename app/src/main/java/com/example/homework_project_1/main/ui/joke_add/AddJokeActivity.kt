@@ -138,6 +138,7 @@ class AddJokeActivity : AppCompatActivity() {
                 binding.spinnerCategory.setSelection(categoriesList.indexOf(newCategory))
             } else {
                 Toast.makeText(this, getString(R.string.invalid_category), Toast.LENGTH_SHORT).show()
+                binding.spinnerCategory.setSelection(0)
             }
             dialog.dismiss()
         }
