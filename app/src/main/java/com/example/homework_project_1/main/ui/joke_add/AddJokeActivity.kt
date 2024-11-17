@@ -152,8 +152,4 @@ class AddJokeActivity : AppCompatActivity() {
         builder.show()
     }
 
-    private fun handleError(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-        finish()
-    }
 }
