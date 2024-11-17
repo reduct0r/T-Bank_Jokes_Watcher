@@ -51,7 +51,7 @@ class JokeDetailsFragment : Fragment() {
         }
 
         // Наблюдение за изменениями в LiveData
-        viewModel.jokeUIModel.observe(viewLifecycleOwner) { joke ->
+        viewModel.joke.observe(viewLifecycleOwner) { joke ->
             setupJokesData(joke)
         }
 

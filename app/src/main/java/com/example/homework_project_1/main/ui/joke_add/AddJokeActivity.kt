@@ -1,7 +1,5 @@
 package com.example.homework_project_1.main.ui.joke_add
 
-import AddJokeStatus
-import AddJokeViewModel
 import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
@@ -76,10 +74,6 @@ class AddJokeActivity : AppCompatActivity() {
                 }
                 is AddJokeStatus.Error -> {
                     Toast.makeText(this, status.message, Toast.LENGTH_SHORT).show()
-                }
-
-                else -> {
-                    handleError(getString(R.string.unknown_error))
                 }
             }
         }

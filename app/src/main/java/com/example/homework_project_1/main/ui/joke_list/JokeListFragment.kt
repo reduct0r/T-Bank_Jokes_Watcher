@@ -63,8 +63,9 @@ class JokeListFragment : Fragment() {
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->
             adapter.submitList(jokes)
             if (viewModel.showGeneratedData().isEmpty()) {
-                binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
                 showError("No new jokes are available.")
+                binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
+                binding.progressBar.visibility = View.GONE
                 viewModel.resetJokes()
             }
         }
@@ -80,7 +81,7 @@ class JokeListFragment : Fragment() {
             if (isLoading) {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.buttonGenerateJokes.text = getString(R.string.loading)
-            } else {
+            } else if (viewModel.showGeneratedData().isNotEmpty()) {
                 binding.progressBar.visibility = View.GONE
                 binding.buttonGenerateJokes.text = getString(R.string.generate_jokes)
             }

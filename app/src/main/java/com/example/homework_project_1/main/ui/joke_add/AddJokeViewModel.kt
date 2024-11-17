@@ -1,3 +1,5 @@
+package com.example.homework_project_1.main.ui.joke_add
+
 import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
@@ -5,8 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.example.homework_project_1.main.ui.joke_add.AddJokeWorker
 import java.util.UUID
 
 class AddJokeViewModel(application: Application) : AndroidViewModel(application) {
@@ -41,24 +43,21 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
             .observeForever { workInfo ->
                 if (workInfo != null) {
                     when (workInfo.state) {
-                        androidx.work.WorkInfo.State.ENQUEUED -> {
-                            _addJokeStatus.value = AddJokeStatus.Error("Enqueued")
-                        }
-                        androidx.work.WorkInfo.State.RUNNING -> {
-                            _addJokeStatus.value = AddJokeStatus.Error("Running")
-                        }
-                        androidx.work.WorkInfo.State.SUCCEEDED -> {
+                        WorkInfo.State.SUCCEEDED -> {
                             _addJokeStatus.value = AddJokeStatus.Success
                         }
-                        androidx.work.WorkInfo.State.FAILED -> {
+                        WorkInfo.State.FAILED -> {
                             _addJokeStatus.value = AddJokeStatus.Error("Can't add joke")
                         }
-                        androidx.work.WorkInfo.State.BLOCKED -> {
+                        WorkInfo.State.BLOCKED -> {
                             _addJokeStatus.value = AddJokeStatus.Error("Work blocked")
                         }
-                        androidx.work.WorkInfo.State.CANCELLED -> {
+                        WorkInfo.State.CANCELLED -> {
                             _addJokeStatus.value = AddJokeStatus.Error("Work cancelled")
                         }
+
+                        WorkInfo.State.ENQUEUED -> {}
+                        WorkInfo.State.RUNNING -> {}
                     }
                 }
             }
