@@ -9,12 +9,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
-import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.ui.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.ui.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.ui.joke_list.recycler.adapter.ViewTypedListAdapter
@@ -68,7 +66,7 @@ class JokeListFragment : Fragment() {
         // Наблюдение за данными шуток
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->
             adapter.submitList(jokes)
-            if (viewModel.getGeneratedJokesList().isEmpty()) {
+            if (viewModel.getRenderedJokesList().isEmpty()) {
                 showError("No new jokes are available.")
                 binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
                 binding.progressBar.visibility = View.GONE
@@ -87,7 +85,7 @@ class JokeListFragment : Fragment() {
             if (isLoading) {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.buttonGenerateJokes.text = getString(R.string.loading)
-            } else if (viewModel.getGeneratedJokesList().isNotEmpty()) {
+            } else if (viewModel.getRenderedJokesList().isNotEmpty()) {
                 binding.progressBar.visibility = View.GONE
                 binding.buttonGenerateJokes.text = getString(R.string.generate_jokes)
             }

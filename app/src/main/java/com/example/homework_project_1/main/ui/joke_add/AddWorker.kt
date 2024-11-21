@@ -5,6 +5,7 @@ import android.net.Uri
 import android.widget.Toast
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.Joke
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
@@ -31,7 +32,7 @@ class AddJokeWorker(
             answer = answer,
             category = category,
             avatarUri = avatarUri,
-            avatar = null
+            avatar = if (avatarUri == null) AvatarProvider.getAvatarsByCategory(category).random() else null
         )
 
         return try {

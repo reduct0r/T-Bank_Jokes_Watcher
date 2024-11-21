@@ -54,6 +54,10 @@ object AvatarProvider {
         return categoryAvatars
     }
 
+    fun getAvatarsByCategory(category: String): List<Int> {
+        return categoryAvatars[category] ?: defaultAvatars
+    }
+
     fun getDefaultAvatars(): List<Int> {
         return defaultAvatars
     }

@@ -40,7 +40,7 @@ class JokeListViewModel : ViewModel() {
     }
 
     // Получение списка сгенерированных шуток
-    fun getGeneratedJokesList(): List<ViewTyped.JokeUIModel> {
+    fun getRenderedJokesList(): List<ViewTyped.JokeUIModel> {
         return jokes.value ?: emptyList()
     }
 
@@ -49,10 +49,23 @@ class JokeListViewModel : ViewModel() {
         JokesGenerator.reset()
     }
 
-    // Наблюдение за изменением шуток
+    // Наблюдение за добавлением новых шуток
     private fun observeNewJoke() {
-        JokesRepository.getUserJokes().observeForever { newJokes ->
-            _jokes.value = convertToUiModel(newJokes, false)
+        viewModelScope.launch {
+            _isLoading.value = true
+
+            JokesRepository.getUserJokes().observeForever { newJokes ->
+                val lastJoke =  newJokes.last()
+                if (_jokes.value != null) {
+                    val modelUI = (convertToUiModel(listOf(lastJoke), false))
+                    _jokes.value = _jokes.value?.plus(modelUI)
+                } else {
+                    _jokes.value = convertToUiModel(listOf(lastJoke), false)
+                }
+
+
+            }
+            _isLoading.value = false
         }
     }
 
