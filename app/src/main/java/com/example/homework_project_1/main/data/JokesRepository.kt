@@ -54,11 +54,14 @@ object JokesRepository {
     suspend fun addNewJoke(joke: Joke) {
         delay(1000)
         userJokesList.add(joke)
-        // Обновляем LiveData после добавления шутки
         _userJokesLiveData.postValue(userJokesList.toList())
+
         if (joke.category !in categories ) {
             categories.add(joke.category)
         }
+
+        JokesGenerator.addToSelectedJokes(joke, userJokesList.size + defaultJokesList.size - 1)
+
     }
 
     fun getUserJokes(): LiveData<List<Joke>> {

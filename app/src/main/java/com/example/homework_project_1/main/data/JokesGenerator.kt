@@ -8,9 +8,7 @@ import kotlin.random.Random
 object JokesGenerator {
     private var jokesList: List<Joke> = emptyList()                     // Список всех шуток
     private val _loading = MutableLiveData<Boolean>()
-    //val loading: LiveData<Boolean> get() = _loading
     private var selectedJokes = mutableListOf<Joke>()                   // Список выбранных шуток
-    private val categoryAvatars = AvatarProvider.getCategoryAvatars()   // Наборы аватарок по категориям
     private var ind = 0                                                 // Уникальный индекс (счетчик) для шуток
     private var usedJokesIndices = mutableSetOf<Int>()                  // Индексы использованных шуток
 
@@ -40,7 +38,7 @@ object JokesGenerator {
 
             // Если аватарка не указана в json, то выбираем случайную из доступных по категории
             if (joke.avatar == null && joke.avatarUri == null) {
-                val avatars = categoryAvatars[joke.category] ?: AvatarProvider.getDefaultAvatars()
+                val avatars = AvatarProvider.getAvatarsByCategory(joke.category)
                 val usedAvatars = usedAvatarsPerCategory.getOrPut(joke.category) { mutableSetOf() }
 
                 val availableAvatars = avatars.filter { it !in usedAvatars }
@@ -73,7 +71,8 @@ object JokesGenerator {
         return selectedJokes.toList()
     }
 
-    fun addToSelectedJokes(joke: Joke) {
+    fun addToSelectedJokes(joke: Joke, index: Int) {
         selectedJokes.add(joke)
+        usedJokesIndices.add(index)
     }
 }

@@ -50,10 +50,6 @@ object AvatarProvider {
         "Tech" to techAvatars
     )
 
-    fun getCategoryAvatars(): Map<String, List<Int>> {
-        return categoryAvatars
-    }
-
     fun getAvatarsByCategory(category: String): List<Int> {
         return categoryAvatars[category] ?: defaultAvatars
     }
