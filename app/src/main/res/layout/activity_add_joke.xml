@@ -74,7 +74,8 @@
         android:autoSizeMaxTextSize="18sp"
         app:layout_constraintTop_toBottomOf="@id/buttonSelectAvatar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/spinnerCategory" />
+        app:layout_constraintEnd_toStartOf="@id/spinnerCategory"
+        tools:ignore="RtlSymmetry" />
 
     <Spinner
         android:id="@+id/spinnerCategory"
@@ -92,6 +93,7 @@
         android:id="@+id/editTextQuestion"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:hint="@string/add_question"
         android:inputType="textMultiLine"
         android:layout_marginTop="8dp"

@@ -13,7 +13,7 @@ object JokesRepository {
     private val categories = mutableSetOf<String>()
 
     private val _userJokesLiveData = MutableLiveData<List<Joke>>()
-    val userJokesLiveData: LiveData<List<Joke>> get() = _userJokesLiveData
+    //val userJokesLiveData: LiveData<List<Joke>> get() = _userJokesLiveData
 
     fun parseJSON(context: Context) {
         val jokesData = JsonReader.readJokesFromAsset(context)
@@ -52,7 +52,7 @@ object JokesRepository {
     }
 
     suspend fun addNewJoke(joke: Joke) {
-        delay(1000)
+        delay(5000)
         userJokesList.add(joke)
         _userJokesLiveData.postValue(userJokesList.toList())
 
