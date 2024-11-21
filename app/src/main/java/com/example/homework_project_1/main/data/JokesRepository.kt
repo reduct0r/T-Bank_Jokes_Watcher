@@ -59,9 +59,7 @@ object JokesRepository {
         if (joke.category !in categories ) {
             categories.add(joke.category)
         }
-
         JokesGenerator.addToSelectedJokes(joke, userJokesList.size + defaultJokesList.size - 1)
-
     }
 
     fun getUserJokes(): LiveData<List<Joke>> {

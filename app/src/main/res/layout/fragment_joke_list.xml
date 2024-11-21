@@ -11,7 +11,8 @@
     <Button
         android:id="@+id/button_generate_jokes"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button"
+        android:layout_height="40dp"
         android:text="@string/generate_jokes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,8 +32,9 @@
     <Button
         android:id="@+id/buttonAddJoke"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_button"
         android:text="@string/add_joke"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
