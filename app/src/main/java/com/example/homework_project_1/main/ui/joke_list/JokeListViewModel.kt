@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.data.JokesGenerator
+import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.convertToUiModel
 import kotlinx.coroutines.launch
@@ -18,6 +19,10 @@ class JokeListViewModel : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
+
+    init {
+        observeNewJoke()
+    }
 
     fun generateJokes() {
         viewModelScope.launch {
@@ -34,11 +39,26 @@ class JokeListViewModel : ViewModel() {
         }
     }
 
-    fun showGeneratedData(): List<ViewTyped.JokeUIModel> {
+    // Получение списка сгенерированных шуток
+    fun getGeneratedJokesList(): List<ViewTyped.JokeUIModel> {
         return jokes.value ?: emptyList()
     }
 
+    // Сброс показанных шуток
     fun resetJokes() {
         JokesGenerator.reset()
+    }
+
+    // Наблюдение за изменением шуток
+    private fun observeNewJoke() {
+        JokesRepository.getUserJokes().observeForever { newJokes ->
+            _jokes.value = convertToUiModel(newJokes, false)
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        // Отписываемся от наблюдателя, чтобы избежать утечек памяти
+        JokesRepository.getUserJokes().removeObserver { }
     }
 }

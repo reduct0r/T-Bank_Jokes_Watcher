@@ -72,4 +72,8 @@ object JokesGenerator {
     fun getSelectedJokes(): List<Joke> {
         return selectedJokes.toList()
     }
+
+    fun addToSelectedJokes(joke: Joke) {
+        selectedJokes.add(joke)
+    }
 }

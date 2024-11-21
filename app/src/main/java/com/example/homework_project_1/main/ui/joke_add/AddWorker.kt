@@ -2,9 +2,11 @@ package com.example.homework_project_1.main.ui.joke_add
 
 import android.content.Context
 import android.net.Uri
+import android.widget.Toast
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.homework_project_1.main.data.Joke
+import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

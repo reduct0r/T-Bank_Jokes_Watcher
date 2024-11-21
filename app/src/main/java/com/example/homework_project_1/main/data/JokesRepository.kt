@@ -2,11 +2,18 @@ package com.example.homework_project_1.main.data
 
 import android.annotation.SuppressLint
 import android.content.Context
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.delay
+import java.util.UUID
 
 object JokesRepository {
-    private val jokesList = mutableListOf<Joke>()
+    private val defaultJokesList = mutableListOf<Joke>()
+    private val userJokesList = mutableListOf<Joke>()
     private val categories = mutableSetOf<String>()
+
+    private val _userJokesLiveData = MutableLiveData<List<Joke>>()
+    val userJokesLiveData: LiveData<List<Joke>> get() = _userJokesLiveData
 
     fun parseJSON(context: Context) {
         val jokesData = JsonReader.readJokesFromAsset(context)
@@ -18,10 +25,9 @@ object JokesRepository {
                 } else {
                     null
                 }
-
-                jokesList.add(
+                defaultJokesList.add(
                     Joke(
-                        id = 0,
+                        id = UUID.randomUUID().hashCode(),
                         avatar = avatarResId,
                         category = category.name,
                         question = jokeDto.question,
@@ -42,12 +48,21 @@ object JokesRepository {
 
     suspend fun getJokes(): List<Joke> {
         delay(500)
-        return jokesList
+        return defaultJokesList + userJokesList
     }
 
     suspend fun addNewJoke(joke: Joke) {
-        delay(5000)
-        jokesList.add(joke)
+        delay(1000)
+        userJokesList.add(joke)
+        // Обновляем LiveData после добавления шутки
+        _userJokesLiveData.postValue(userJokesList.toList())
+        if (joke.category !in categories ) {
+            categories.add(joke.category)
+        }
+    }
+
+    fun getUserJokes(): LiveData<List<Joke>> {
+        return _userJokesLiveData
     }
 
     fun getCategories(): List<String> {

@@ -43,7 +43,9 @@ class JokeDetailsFragment : Fragment() {
     // Настройка данных и обработка событий
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel.loadJoke()
+
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
         if (viewModel.getPosition() == -1) {
