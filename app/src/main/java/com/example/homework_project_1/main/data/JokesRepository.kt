@@ -4,16 +4,32 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.homework_project_1.main.data.models.Flags
+import com.example.homework_project_1.main.data.models.JokeResponse
+import com.example.homework_project_1.main.data.network.NetworkModule.client
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import java.util.UUID
 
 object JokesRepository {
     private val defaultJokesList = mutableListOf<Joke>()
     private val userJokesList = mutableListOf<Joke>()
+    private val networkJokesList = mutableListOf<Joke>()
     private val categories = mutableSetOf<String>()
 
+    private var currentPage = 1
+    private val jokesPerPage = 25
+    private var isLoading = false
+
     private val _userJokesLiveData = MutableLiveData<List<Joke>>()
-    //val userJokesLiveData: LiveData<List<Joke>> get() = _userJokesLiveData
+    val userJokesLiveData: LiveData<List<Joke>> get() = _userJokesLiveData
+
+    private val _jokesLiveData = MutableLiveData<List<ViewTyped>>()
+    val jokesLiveData: LiveData<List<ViewTyped>> get() = _jokesLiveData
 
     fun parseJSON(context: Context) {
         val jokesData = JsonReader.readJokesFromAsset(context)
@@ -31,7 +47,11 @@ object JokesRepository {
                         avatar = avatarResId,
                         category = category.name,
                         question = jokeDto.question,
-                        answer = jokeDto.answer
+                        answer = jokeDto.answer,
+                        type = "single",
+                        flags = Flags(false, false, false, false, false, false),
+                        safe = true,
+                        lang = "en",
                     )
                 )
             }
@@ -60,6 +80,72 @@ object JokesRepository {
             categories.add(joke.category)
         }
         JokesGenerator.addToSelectedJokes(joke, userJokesList.size + defaultJokesList.size - 1)
+    }
+
+    suspend fun fetchJokesFromNetwork() {
+        if (isLoading) return
+        isLoading = true
+        try {
+            val response: JokeResponse = client.get("https://v2.jokeapi.dev/joke/Any") {
+                parameter("blacklistFlags", "nsfw,religious,political,racist,sexist,explicit")
+                parameter("type", "twopart")
+                parameter("amount", jokesPerPage)
+            }.body()
+
+            if (!response.error) {
+                networkJokesList.addAll(response.jokes)
+                updateJokesLiveData()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Обработка ошибок (можно добавить LiveData для ошибок)
+        } finally {
+            isLoading = false
+        }
+    }
+
+    suspend fun loadMoreJokes() {
+        withContext(Dispatchers.IO) {
+            fetchJokesFromNetwork()
+        }
+    }
+
+    private fun updateJokesLiveData() {
+        val combinedList = mutableListOf<ViewTyped>()
+
+        // Добавляем пользовательские шутки
+        userJokesList.forEach { userJoke ->
+            combinedList.add(
+                ViewTyped.JokeUIModel(
+                    id = userJoke.id,
+                    avatar = null,
+                    avatarUri = null,
+                    category = userJoke.category,
+                    question = userJoke.question,
+                    answer = userJoke.answer,
+                    isFavorite = false,
+                    source = JokeSource.USER
+                )
+            )
+        }
+
+        // Добавляем сетевые шутки
+        networkJokesList.forEach { networkJoke ->
+            combinedList.add(
+                ViewTyped.JokeUIModel(
+                    id = networkJoke.id,
+                    avatar = null,
+                    avatarUri = null,
+                    category = networkJoke.category,
+                    question = networkJoke.question,
+                    answer = networkJoke.answer,
+                    isFavorite = false,
+                    source = JokeSource.NETWORK
+                )
+            )
+        }
+
+        _jokesLiveData.postValue(combinedList)
     }
 
     fun getUserJokes(): LiveData<List<Joke>> {

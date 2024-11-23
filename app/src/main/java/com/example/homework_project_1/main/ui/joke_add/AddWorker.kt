@@ -9,6 +9,7 @@ import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.Joke
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
+import com.example.homework_project_1.main.data.models.Flags
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -32,7 +33,11 @@ class AddJokeWorker(
             answer = answer,
             category = category,
             avatarUri = avatarUri,
-            avatar = if (avatarUri == null) AvatarProvider.getAvatarsByCategory(category).random() else null
+            avatar = if (avatarUri == null) AvatarProvider.getAvatarsByCategory(category).random() else null,
+            flags = Flags(false, false, false, false, false, false),
+            lang = "en",
+            safe = true,
+            type = "single"
         )
 
         return try {

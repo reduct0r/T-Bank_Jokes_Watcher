@@ -3,6 +3,7 @@ package com.example.homework_project_1.main.ui.joke_list.recycler
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.databinding.JokeItemBinding
+import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.ViewTyped
 
 class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHolder(binding.root) {
@@ -16,6 +17,17 @@ class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHol
         } else {
             bindAvatar(joke.avatar)
         }
+
+//        when (joke.source) {
+//            JokeSource.USER -> {
+//                itemView.sourceLabel.text = "Собственная"
+//                itemView.sourceLabelBG.setTextColor(itemView.context.getColor(R.color.green))
+//            }
+//            JokeSource.NETWORK -> {
+//                itemView.sourceLabel.text = "Сеть"
+//                itemView.sourceLabelBG.setTextColor(itemView.context.getColor(R.color.blue))
+//            }
+//        }
     }
 
     private fun bindQuestion(question: String){

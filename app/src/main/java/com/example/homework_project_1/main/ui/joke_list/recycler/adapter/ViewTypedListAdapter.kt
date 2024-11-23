@@ -4,12 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.HeaderItemBinding
 import com.example.homework_project_1.databinding.JokeItemBinding
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.ViewTyped.*
 import com.example.homework_project_1.main.ui.joke_list.recycler.HeaderViewHolder
 import com.example.homework_project_1.main.ui.joke_list.recycler.JokeViewHolder
+import com.example.homework_project_1.main.ui.joke_list.recycler.LoadingViewHolder
 import com.example.homework_project_1.main.ui.joke_list.recycler.util.ViewTypedCallback
 
 class ViewTypedListAdapter(
@@ -19,6 +21,7 @@ class ViewTypedListAdapter(
     companion object {
         private const val JOKE_VIEW_TYPE = 0
         private const val HEADER_VIEW_TYPE = 1
+        private const val LOADING_VIEW_TYPE = 2
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -39,6 +42,11 @@ class ViewTypedListAdapter(
                 val binding = HeaderItemBinding.inflate(inflater, parent, false)
                 HeaderViewHolder(binding)
             }
+
+            LOADING_VIEW_TYPE -> {
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false)
+                return LoadingViewHolder(view)
+            }
             else -> throw IllegalArgumentException("Unknown view type: $viewType")
         }
     }
@@ -46,7 +54,8 @@ class ViewTypedListAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
             is JokeUIModel -> (holder as JokeViewHolder).bind(item)
-            is Header -> (holder as HeaderViewHolder)
+            is Header -> (holder as HeaderViewHolder).bindHeader(item)
+            is Loading -> Unit
         }
     }
 
@@ -54,7 +63,14 @@ class ViewTypedListAdapter(
         return when (getItem(position)) {
             is JokeUIModel -> JOKE_VIEW_TYPE
             is Header -> HEADER_VIEW_TYPE
-            else -> throw IllegalArgumentException("Unknown type!")
+            is Loading -> LOADING_VIEW_TYPE
+            else -> LOADING_VIEW_TYPE
+            //else -> throw IllegalArgumentException("Unknown type!")
+            //TODO: add loading view type
         }
     }
+
+//    override fun getItemCount(): Int {
+//        return super.getItemCount()
+//    }
 }

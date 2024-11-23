@@ -62,6 +62,11 @@ dependencies {
     implementation(libs.ktor.client.core)
     implementation(libs.ktor.client.cio)
     implementation(libs.ktor.client.serialization)
+    implementation(libs.ktor.client.core.v163)
+    implementation(libs.ktor.client.cio.v163)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+    implementation(libs.ktor.client.logging)
 
     // Kotlinx Serialization
     implementation(libs.kotlinx.serialization.json.v151)

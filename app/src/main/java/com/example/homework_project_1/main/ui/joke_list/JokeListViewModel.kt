@@ -11,6 +11,7 @@ import com.example.homework_project_1.main.data.convertToUiModel
 import kotlinx.coroutines.launch
 
 class JokeListViewModel : ViewModel() {
+
     private val _jokes = MutableLiveData<List<ViewTyped.JokeUIModel>>()
     val jokes: LiveData<List<ViewTyped.JokeUIModel>> = _jokes
 
@@ -39,6 +40,15 @@ class JokeListViewModel : ViewModel() {
         }
     }
 
+    fun loadMoreJokes() {
+        if (_isLoading.value == true) return
+        _isLoading.value = true
+        viewModelScope.launch {
+            JokesRepository.loadMoreJokes()
+            _isLoading.value = false
+        }
+    }
+
     // Получение списка сгенерированных шуток
     fun getRenderedJokesList(): List<ViewTyped.JokeUIModel> {
         return jokes.value ?: emptyList()
@@ -62,8 +72,6 @@ class JokeListViewModel : ViewModel() {
                 } else {
                     _jokes.value = convertToUiModel(listOf(lastJoke), false)
                 }
-
-
             }
             _isLoading.value = false
         }
