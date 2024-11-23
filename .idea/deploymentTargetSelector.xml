@@ -4,7 +4,7 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-02T21:48:01.240291200Z">
+        <DropdownSelection timestamp="2024-11-21T19:57:04.105929600Z">
           <Target type="DEFAULT_BOOT">
             <handle>
               <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\timur\.android\avd\Medium_Phone_API_35_2.avd" />
@@ -14,6 +14,9 @@
         <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="MainActivity">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="homework_project_1">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
