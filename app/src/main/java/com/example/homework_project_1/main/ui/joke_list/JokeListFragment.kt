@@ -2,6 +2,7 @@ package com.example.homework_project_1.main.ui.joke_list
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -100,8 +101,10 @@ class JokeListFragment : Fragment() {
 
         // Обработка нажатия на кнопку добавления шутки
         binding.buttonAddJoke.setOnClickListener {
-            val intent = Intent(requireContext(), AddJokeActivity::class.java)
-            startActivity(intent)
+            //val intent = Intent(requireContext(), AddJokeActivity::class.java)
+            //startActivity(intent)
+            viewModel.loadMoreJokes()
+            Log.d("JokeListFragment", "Add joke button clicked")
         }
     }
 

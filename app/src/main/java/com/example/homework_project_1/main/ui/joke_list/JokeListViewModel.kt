@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.ui.joke_list
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,7 +9,10 @@ import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
+import com.example.homework_project_1.main.data.api.ApiService
 import com.example.homework_project_1.main.data.convertToUiModel
+import com.example.homework_project_1.main.data.repository.JokeRepositoryImpl
+import com.example.homework_project_1.main.data.repository.Repository
 import kotlinx.coroutines.launch
 
 class JokeListViewModel : ViewModel() {
@@ -43,12 +47,20 @@ class JokeListViewModel : ViewModel() {
 
     fun loadMoreJokes() {
         if (_isLoading.value == true) return
+
         _isLoading.value = true
         viewModelScope.launch {
-            JokesRepository.loadMoreJokes()
-            _isLoading.value = false
+            try {
+                val newJokes = JokeRepositoryImpl.fetchJokes(amount = 5)
+                _jokes.value = (_jokes.value ?: emptyList()).plus(convertToUiModel(false, *newJokes.toTypedArray()))
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Unknown error"
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
+
 
     // Получение списка сгенерированных шуток
     fun getRenderedJokesList(): List<ViewTyped.JokeUIModel> {

@@ -1,6 +1,7 @@
 package com.example.homework_project_1.main.data
 
 import android.content.Context
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.IOException
 
@@ -19,3 +20,21 @@ object JsonReader {
         }
     }
 }
+
+@Serializable
+data class JokesData(
+    val categories: List<Category>
+)
+
+@Serializable
+data class Category(
+    val name: String,
+    val jokes: List<JokeJSONDTO>
+)
+
+@Serializable
+data class JokeJSONDTO(
+    val question: String,
+    val answer: String,
+    val avatar: String?
+)

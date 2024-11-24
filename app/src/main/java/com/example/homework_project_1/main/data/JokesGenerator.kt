@@ -1,26 +1,27 @@
 package com.example.homework_project_1.main.data
 import androidx.lifecycle.MutableLiveData
+import com.example.homework_project_1.main.data.model.JokeDTO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 // Класс для генерации шуток
 object JokesGenerator {
-    private var jokesList: List<Joke> = emptyList()                     // Список всех шуток
+    private var jokesList: List<JokeDTO> = emptyList()                     // Список всех шуток
     private val _loading = MutableLiveData<Boolean>()
-    private var selectedJokes = mutableListOf<Joke>()                   // Список выбранных шуток
+    private var selectedJokes = mutableListOf<JokeDTO>()                   // Список выбранных шуток
     private var ind = 0                                                 // Уникальный индекс (счетчик) для шуток
     private var usedJokesIndices = mutableSetOf<Int>()                  // Индексы использованных шуток
 
     // Генерация данных для списка из рандомных шуток без повторения
-    suspend fun generateJokesData(): List<Joke> {
+    suspend fun generateJokesData(): List<JokeDTO> {
         _loading.value = true
         withContext(Dispatchers.IO) {
             jokesList = JokesRepository.getJokes()
             _loading.postValue(false)
         }
 
-        val newSelectedJokes = mutableListOf<Joke>()
+        val newSelectedJokes = mutableListOf<JokeDTO>()
         val usedAvatarsPerCategory = mutableMapOf<String, MutableSet<Int>>()
 
         var attempts = 0
@@ -67,11 +68,11 @@ object JokesGenerator {
     }
 
     // Получение списка выбранных шуток
-    fun getSelectedJokes(): List<Joke> {
+    fun getSelectedJokes(): List<JokeDTO> {
         return selectedJokes.toList()
     }
 
-    fun addToSelectedJokes(joke: Joke, index: Int) {
+    fun addToSelectedJokes(joke: JokeDTO, index: Int) {
         selectedJokes.add(joke)
         usedJokesIndices.add(index)
     }
