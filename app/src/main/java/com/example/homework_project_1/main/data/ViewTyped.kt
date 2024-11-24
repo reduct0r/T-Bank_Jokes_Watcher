@@ -30,9 +30,7 @@ sealed interface ViewTyped {
     ) : ViewTyped
 
     // Класс загрузки
-    data class Loading(
-        val title: String
-    ) : ViewTyped
+    data object Loading : ViewTyped
 }
 
 enum class JokeSource {

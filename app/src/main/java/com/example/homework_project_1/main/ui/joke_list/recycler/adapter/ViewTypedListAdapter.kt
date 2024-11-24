@@ -19,6 +19,8 @@ class ViewTypedListAdapter(
     private val clickListener: (Int) -> Unit
 ) : ListAdapter<ViewTyped, RecyclerView.ViewHolder>(ViewTypedCallback()) {
 
+    private var isLoadingAdded = false
+
     companion object {
         private const val JOKE_VIEW_TYPE = 0
         private const val HEADER_VIEW_TYPE = 1
@@ -71,7 +73,23 @@ class ViewTypedListAdapter(
         }
     }
 
-//    override fun getItemCount(): Int {
-//        return super.getItemCount()
-//    }
+    fun addLoadingFooter() {
+        if (!isLoadingAdded) {
+            isLoadingAdded = true
+            val currentList = currentList.toMutableList()
+            currentList.add(Loading)
+            submitList(currentList)
+        }
+    }
+
+    fun removeLoadingFooter() {
+        if (isLoadingAdded) {
+            isLoadingAdded = false
+            val currentList = currentList.toMutableList()
+            if (currentList.isNotEmpty() && currentList.last() is Loading) {
+                currentList.removeAt(currentList.size - 1)
+                submitList(currentList)
+            }
+        }
+    }
 }

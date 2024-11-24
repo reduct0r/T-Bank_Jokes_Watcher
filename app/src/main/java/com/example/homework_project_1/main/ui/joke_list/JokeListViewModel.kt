@@ -17,6 +17,9 @@ import kotlinx.coroutines.launch
 
 class JokeListViewModel : ViewModel() {
 
+    private val _isInitialLoading = MutableLiveData<Boolean>(true)
+    val isInitialLoading: LiveData<Boolean> = _isInitialLoading
+
     private val _jokes = MutableLiveData<List<ViewTyped.JokeUIModel>>()
     val jokes: LiveData<List<ViewTyped.JokeUIModel>> = _jokes
 
@@ -25,6 +28,9 @@ class JokeListViewModel : ViewModel() {
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
+
+    private val _isLoadingEl = MutableLiveData<Boolean>()
+    val isLoadingEl: LiveData<Boolean> = _isLoadingEl
 
     init {
         observeNewJoke()
@@ -48,15 +54,20 @@ class JokeListViewModel : ViewModel() {
     fun loadMoreJokes() {
         if (_isLoading.value == true) return
 
-        _isLoading.value = true
+        _isLoadingEl.value = true
         viewModelScope.launch {
             try {
+                // Fetch 5 more jokes
                 val newJokes = JokeRepositoryImpl.fetchJokes(amount = 5)
-                _jokes.value = (_jokes.value ?: emptyList()).plus(convertToUiModel(false, *newJokes.toTypedArray()))
+                val uiModels = convertToUiModel(false, *newJokes.toTypedArray())
+
+                // Append the new jokes to the existing list
+                val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
+                _jokes.value = updatedJokes
             } catch (e: Exception) {
-                _error.value = e.message ?: "Unknown error"
+                _error.value = e.message ?: "Unknown error occurred while loading more jokes."
             } finally {
-                _isLoading.value = false
+                _isLoadingEl.value = false
             }
         }
     }
@@ -95,4 +106,9 @@ class JokeListViewModel : ViewModel() {
         // Отписываемся от наблюдателя, чтобы избежать утечек памяти
         JokesRepository.getUserJokes().removeObserver { }
     }
+
+    fun isLoadingInitial(): Boolean {
+        return _isInitialLoading.value ?: false
+    }
 }
+

@@ -19,10 +19,7 @@ object JokesRepository {
     private val userJokesList = mutableListOf<JokeDTO>()
     private val networkJokesList = mutableListOf<JokeDTO>()
     private val categories = mutableSetOf<String>()
-
-    private var currentPage = 1
-    private val jokesPerPage = 25
-    private var isLoading = false
+    
 
     private val _userJokesLiveData = MutableLiveData<List<JokeDTO>>()
     val userJokesLiveData: LiveData<List<JokeDTO>> get() = _userJokesLiveData

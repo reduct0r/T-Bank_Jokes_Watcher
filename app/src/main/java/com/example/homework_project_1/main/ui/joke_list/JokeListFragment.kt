@@ -57,13 +57,6 @@ class JokeListFragment : Fragment() {
         createRecyclerViewList()
         (requireActivity() as AppCompatActivity).supportActionBar?.show()
 
-        //viewModel.observeJokes()
-//        lifecycleScope.launch {
-//            viewModel.observeJokes()
-//            //viewModel.generateJokes()
-//        }
-        //viewModel.observeNewJoke()
-
         // Наблюдение за данными шуток
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->
             adapter.submitList(jokes)
@@ -92,6 +85,14 @@ class JokeListFragment : Fragment() {
             }
         }
 
+        viewModel.isLoadingEl.observe(viewLifecycleOwner) { isLoadingEl: Boolean ->
+            if (isLoadingEl) {
+                adapter.addLoadingFooter()
+            } else {
+                adapter.removeLoadingFooter()
+            }
+        }
+
         // Обработка нажатия на кнопку генерации шуток
         binding.buttonGenerateJokes.setOnClickListener {
             lifecycleScope.launch {
@@ -101,11 +102,16 @@ class JokeListFragment : Fragment() {
 
         // Обработка нажатия на кнопку добавления шутки
         binding.buttonAddJoke.setOnClickListener {
-            //val intent = Intent(requireContext(), AddJokeActivity::class.java)
-            //startActivity(intent)
+            val intent = Intent(requireContext(), AddJokeActivity::class.java)
+            startActivity(intent)
             viewModel.loadMoreJokes()
-            Log.d("JokeListFragment", "Add joke button clicked")
         }
+
+        binding.recyclerView.addOnScrollListener(object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!) {
+            override fun onLoadMore() {
+                viewModel.loadMoreJokes()
+            }
+        })
     }
 
     private fun createRecyclerViewList() {
