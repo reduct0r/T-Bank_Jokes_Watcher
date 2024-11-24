@@ -17,8 +17,6 @@ data class JokeDTO(
     var source: JokeSource,
 
     // Доп поля из запроса
-    val type: String,
     val flags: FlagsDTO,
-    val safe: Boolean,
     val lang: String
 )

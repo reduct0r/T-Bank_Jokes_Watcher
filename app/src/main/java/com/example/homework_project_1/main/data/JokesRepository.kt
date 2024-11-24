@@ -44,9 +44,7 @@ object JokesRepository {
                         category = category.name,
                         question = jokeDto.question,
                         answer = jokeDto.answer,
-                        type = "single",
                         flags = FlagsDTO(false, false, false, false, false, false),
-                        safe = true,
                         lang = "en",
                         source = JokeSource.DEFAULT
                     )

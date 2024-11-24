@@ -113,7 +113,6 @@ class JokeListFragment : Fragment() {
             startActivity(intent)
         }
 
-
         scrollListener = object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!) {
             override fun onLoadMore() {
                 viewModel.loadMoreJokes()

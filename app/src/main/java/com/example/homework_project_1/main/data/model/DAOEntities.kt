@@ -34,10 +34,8 @@ data class FlagsEntity(
 fun JokeEntity.toDto(flags: FlagsEntity) = JokeDTO(
     id = id,
     category = category,
-    type = type,
     question = setup.toString(),
     answer = delivery.toString(),
-    safe = safe,
     lang = lang,
     flags = flags.toDto(),
     avatar = null,
@@ -54,15 +52,15 @@ fun FlagsEntity.toDto() = FlagsDTO(
     explicit = explicit
 )
 
-fun JokeDTO.toEntity() = JokeEntity(
+fun JokeDTO.toEntity(safe: Boolean, type: String) = JokeEntity(
     id = id,
     category = category,
-    type = type,
     setup = question,
     delivery = answer,
-    safe = safe,
     lang = lang,
-    flags = flags.toEntity(id)
+    flags = flags.toEntity(id),
+    safe = safe,
+    type = type
 )
 
 fun FlagsDTO.toEntity(jokeId: Int) = FlagsEntity(
