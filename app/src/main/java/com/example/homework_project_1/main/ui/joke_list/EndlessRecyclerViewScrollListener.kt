@@ -15,7 +15,7 @@ abstract class EndlessRecyclerViewScrollListener(
     private var loading = true
 
     // Минимальное количество элементов, которые должны быть ниже текущей позиции прокрутки перед загрузкой дополнительных данных
-    private val visibleThreshold = 5
+    private val visibleThreshold = 1
 
     override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(view, dx, dy)
@@ -45,10 +45,15 @@ abstract class EndlessRecyclerViewScrollListener(
         }
 
         // Если не загружается, проверяем, нужно ли загружать больше данных
-        if (!loading && (lastVisibleItemPosition + visibleThreshold) >= totalItemCount && lastVisibleItemPosition != 0) {
+        if (!loading && (lastVisibleItemPosition + visibleThreshold) >= totalItemCount) {
             onLoadMore()
             loading = true
         }
+    }
+
+    fun resetState() {
+        this.previousTotalItemCount = 0
+        this.loading = true
     }
 
     abstract fun onLoadMore()

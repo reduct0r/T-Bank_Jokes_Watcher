@@ -19,9 +19,6 @@ import kotlinx.coroutines.launch
 
 class JokeListViewModel : ViewModel() {
 
-    private val _isInitialLoading = MutableLiveData<Boolean>(true)
-    val isInitialLoading: LiveData<Boolean> = _isInitialLoading
-
     private val _jokes = MutableLiveData<List<ViewTyped.JokeUIModel>>()
     val jokes: LiveData<List<ViewTyped.JokeUIModel>> = _jokes
 
@@ -39,6 +36,7 @@ class JokeListViewModel : ViewModel() {
     }
 
     fun generateJokes() {
+        if (_isLoadingEl.value == true) return
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -91,40 +89,29 @@ class JokeListViewModel : ViewModel() {
 
     // Получение списка сгенерированных шуток
     fun getRenderedJokesList(): List<ViewTyped.JokeUIModel> {
-        return jokes.value ?: emptyList()
+        return _jokes.value ?: emptyList()
     }
 
     // Сброс показанных шуток
     fun resetJokes() {
         JokesGenerator.reset()
+        //_jokes.value = emptyList()
     }
 
     // Наблюдение за добавлением новых шуток
     private fun observeNewJoke() {
-        viewModelScope.launch {
-            _isLoading.value = true
-
-            JokesRepository.getUserJokes().observeForever { newJokes ->
-                val lastJoke = newJokes.last()
-                if (_jokes.value != null) {
-                    val modelUI = convertToUiModel(false, lastJoke)
-                    _jokes.value = _jokes.value?.plus(modelUI)
-                } else {
-                    _jokes.value = convertToUiModel(false, lastJoke)
-                }
-            }
-            _isLoading.value = false
+        JokesRepository.getUserJokes().observeForever { newJokes ->
+            val lastJoke = newJokes.last()
+            val modelUI = convertToUiModel(false, lastJoke)
+            val updatedJokes = (_jokes.value ?: emptyList()) + modelUI
+            _jokes.value = updatedJokes
         }
     }
 
     override fun onCleared() {
         super.onCleared()
-        // Отписываемся от наблюдателя, чтобы избежать утечек памяти
         JokesRepository.getUserJokes().removeObserver { }
     }
 
-    fun isLoadingInitial(): Boolean {
-        return _isInitialLoading.value ?: false
-    }
 }
 

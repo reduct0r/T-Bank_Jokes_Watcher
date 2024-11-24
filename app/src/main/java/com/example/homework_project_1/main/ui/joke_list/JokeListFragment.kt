@@ -27,6 +27,8 @@ class JokeListFragment : Fragment() {
         JokesViewModelFactory()
     }
 
+    private lateinit var scrollListener: EndlessRecyclerViewScrollListener
+
     private val adapter = ViewTypedListAdapter { jokePos ->
         parentFragmentManager.beginTransaction()
             .setCustomAnimations(
@@ -59,12 +61,14 @@ class JokeListFragment : Fragment() {
 
         // Наблюдение за данными шуток
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->
-            adapter.submitList(jokes)
             if (viewModel.getRenderedJokesList().isEmpty()) {
                 showError("No new jokes are available.")
+                viewModel.resetJokes()
                 binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
                 binding.progressBar.visibility = View.GONE
-                viewModel.resetJokes()
+            }
+            else{
+                adapter.submitList(jokes)
             }
         }
 
@@ -97,7 +101,9 @@ class JokeListFragment : Fragment() {
         // Обработка нажатия на кнопку генерации шуток
         binding.buttonGenerateJokes.setOnClickListener {
             lifecycleScope.launch {
+                scrollListener.resetState()
                 viewModel.generateJokes()
+                //binding.recyclerView.scrollToPosition(0)
             }
         }
 
@@ -107,12 +113,13 @@ class JokeListFragment : Fragment() {
             startActivity(intent)
         }
 
-        // Обработка скролла
-        binding.recyclerView.addOnScrollListener(object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!) {
+
+        scrollListener = object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!) {
             override fun onLoadMore() {
                 viewModel.loadMoreJokes()
             }
-        })
+        }
+        binding.recyclerView.addOnScrollListener(scrollListener)
     }
 
     private fun createRecyclerViewList() {
