@@ -85,6 +85,7 @@ class JokeListFragment : Fragment() {
             }
         }
 
+        // Наблюдение за состоянием загрузки новых шуток из api
         viewModel.isLoadingEl.observe(viewLifecycleOwner) { isLoadingEl: Boolean ->
             if (isLoadingEl) {
                 adapter.addLoadingFooter()
@@ -104,9 +105,9 @@ class JokeListFragment : Fragment() {
         binding.buttonAddJoke.setOnClickListener {
             val intent = Intent(requireContext(), AddJokeActivity::class.java)
             startActivity(intent)
-            viewModel.loadMoreJokes()
         }
 
+        // Обработка скролла
         binding.recyclerView.addOnScrollListener(object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!) {
             override fun onLoadMore() {
                 viewModel.loadMoreJokes()

@@ -8,26 +8,29 @@ abstract class EndlessRecyclerViewScrollListener(
     private val layoutManager: RecyclerView.LayoutManager
 ) : RecyclerView.OnScrollListener() {
 
-    // The total number of items in the dataset after the last load
+    // Общее количество элементов в наборе данных после последней загрузки
     private var previousTotalItemCount = 0
 
-    // True if we are still waiting for the last set of data to load.
+    // Загрузка последнего набора данных
     private var loading = true
 
-    // The minimum amount of items to have below your current scroll position before loading more.
+    // Минимальное количество элементов, которые должны быть ниже текущей позиции прокрутки перед загрузкой дополнительных данных
     private val visibleThreshold = 5
 
     override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(view, dx, dy)
 
-        val totalItemCount = layoutManager.itemCount
+
+        val totalItemCount = layoutManager.itemCount // Общее количество элементов в наборе данных
+
+        // Последняя видимая позиция элемента
         val lastVisibleItemPosition = when (layoutManager) {
             is LinearLayoutManager -> layoutManager.findLastVisibleItemPosition()
             is GridLayoutManager -> layoutManager.findLastVisibleItemPosition()
             else -> throw UnsupportedOperationException("Unsupported layout manager.")
         }
 
-        // If the total item count is zero and the previous isn't, assume the list is invalidated and reset
+        // Если общее количество элементов равно нулю, а предыдущее не равно сбрасываем список
         if (totalItemCount < previousTotalItemCount) {
             this.previousTotalItemCount = totalItemCount
             if (totalItemCount == 0) {
@@ -35,14 +38,14 @@ abstract class EndlessRecyclerViewScrollListener(
             }
         }
 
-        // If it's still loading, check if the dataset count has changed
+        // Если все еще загружается, проверяем, изменилось ли количество элементов в наборе данных
         if (loading && totalItemCount > previousTotalItemCount) {
             loading = false
             previousTotalItemCount = totalItemCount
         }
 
-        // If not loading, check if we need to load more data
-        if (!loading && (lastVisibleItemPosition + visibleThreshold) >= totalItemCount) {
+        // Если не загружается, проверяем, нужно ли загружать больше данных
+        if (!loading && (lastVisibleItemPosition + visibleThreshold) >= totalItemCount && lastVisibleItemPosition != 0) {
             onLoadMore()
             loading = true
         }

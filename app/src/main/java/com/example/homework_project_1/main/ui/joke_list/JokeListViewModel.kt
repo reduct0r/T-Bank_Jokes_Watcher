@@ -14,6 +14,7 @@ import com.example.homework_project_1.main.data.api.ApiService
 import com.example.homework_project_1.main.data.convertToUiModel
 import com.example.homework_project_1.main.data.repository.JokeRepositoryImpl
 import com.example.homework_project_1.main.data.repository.Repository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class JokeListViewModel : ViewModel() {
@@ -59,6 +60,7 @@ class JokeListViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val newJokes = JokeRepositoryImpl.fetchJokes(amount = 5)
+                delay(500)
 
                 newJokes.forEach { joke ->
                     if (joke.avatar == null && joke.avatarUri == null) {
