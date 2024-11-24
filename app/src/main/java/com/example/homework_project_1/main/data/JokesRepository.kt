@@ -44,7 +44,6 @@ object JokesRepository {
         }
     }
 
-    @SuppressLint("DiscouragedApi")
     private fun getAvatarResourceId(context: Context, avatarName: String?): Int? {
         return avatarName?.let {
             val resId = context.resources.getIdentifier(it, "drawable", context.packageName)
