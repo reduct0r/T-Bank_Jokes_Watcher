@@ -21,7 +21,7 @@ class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
         viewModelScope.launch {
             try {
                 val selectedJokes = JokesGenerator.getSelectedJokes()
-                val uiModel = convertToUiModel(selectedJokes, false)
+                val uiModel = convertToUiModel(false, *selectedJokes.toTypedArray())
                 if (jokePosition in uiModel.indices) {
                     _joke.value = uiModel[jokePosition]
                 } else {

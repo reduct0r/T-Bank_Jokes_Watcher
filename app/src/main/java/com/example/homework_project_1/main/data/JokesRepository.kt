@@ -52,6 +52,7 @@ object JokesRepository {
                         flags = Flags(false, false, false, false, false, false),
                         safe = true,
                         lang = "en",
+                        source = JokeSource.DEFAULT
                     )
                 )
             }

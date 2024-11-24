@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
@@ -30,7 +31,7 @@ class JokeListViewModel : ViewModel() {
             _isLoading.value = true
             try {
                 val data = JokesGenerator.generateJokesData()
-                val uiModel = convertToUiModel(data, false)
+                val uiModel = convertToUiModel(false, *data.toTypedArray())
                 _jokes.value = uiModel
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error"
@@ -65,12 +66,12 @@ class JokeListViewModel : ViewModel() {
             _isLoading.value = true
 
             JokesRepository.getUserJokes().observeForever { newJokes ->
-                val lastJoke =  newJokes.last()
+                val lastJoke = newJokes.last()
                 if (_jokes.value != null) {
-                    val modelUI = (convertToUiModel(listOf(lastJoke), false))
+                    val modelUI = convertToUiModel(false, lastJoke)
                     _jokes.value = _jokes.value?.plus(modelUI)
                 } else {
-                    _jokes.value = convertToUiModel(listOf(lastJoke), false)
+                    _jokes.value = convertToUiModel(false, lastJoke)
                 }
             }
             _isLoading.value = false

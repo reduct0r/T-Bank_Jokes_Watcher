@@ -26,7 +26,7 @@ class JokeListFragment : Fragment() {
         JokesViewModelFactory()
     }
 
-    private val adapter = ViewTypedListAdapter { joke ->
+    private val adapter = ViewTypedListAdapter { jokePos ->
         parentFragmentManager.beginTransaction()
             .setCustomAnimations(
                 R.anim.slide_in_right,
@@ -34,7 +34,7 @@ class JokeListFragment : Fragment() {
                 R.anim.slide_in_left,
                 R.anim.slide_out_right
             )
-            .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke))
+            .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(jokePos))
             .addToBackStack(null)
             .commit()
     }

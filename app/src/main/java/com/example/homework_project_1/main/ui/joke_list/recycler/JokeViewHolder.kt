@@ -2,6 +2,7 @@ package com.example.homework_project_1.main.ui.joke_list.recycler
 
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
+import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.JokeItemBinding
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.ViewTyped
@@ -18,16 +19,20 @@ class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHol
             bindAvatar(joke.avatar)
         }
 
-//        when (joke.source) {
-//            JokeSource.USER -> {
-//                itemView.sourceLabel.text = "Собственная"
-//                itemView.sourceLabelBG.setTextColor(itemView.context.getColor(R.color.green))
-//            }
-//            JokeSource.NETWORK -> {
-//                itemView.sourceLabel.text = "Сеть"
-//                itemView.sourceLabelBG.setTextColor(itemView.context.getColor(R.color.blue))
-//            }
-//        }
+        when (joke.source) {
+            JokeSource.USER -> {
+                binding.sourceLabel.text = "Own"
+                binding.sourceLabel.setTextColor(binding.root.context.getColor(R.color.purple_200))
+            }
+            JokeSource.NETWORK -> {
+                binding.sourceLabel.text = "Network"
+                binding.sourceLabel.setTextColor(binding.root.context.getColor(R.color.teal_200))
+            }
+            JokeSource.DEFAULT -> {
+                binding.sourceLabel.text = "Default"
+                binding.sourceLabel.setTextColor(binding.root.context.getColor(R.color.black))
+            }
+        }
     }
 
     private fun bindQuestion(question: String){

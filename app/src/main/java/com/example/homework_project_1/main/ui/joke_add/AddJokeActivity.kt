@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityAddJokeBinding
+import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.JokesRepository
 
 class AddJokeActivity : AppCompatActivity() {
@@ -94,7 +95,8 @@ class AddJokeActivity : AppCompatActivity() {
                     question = question,
                     answer = answer,
                     category = selectedCategory,
-                    avatarUri = selectedImageUri
+                    avatarUri = selectedImageUri,
+                    source = JokeSource.USER
                 )
                 Toast.makeText(this, getString(R.string.joke_add_in_background), Toast.LENGTH_SHORT).show()
                 finish()

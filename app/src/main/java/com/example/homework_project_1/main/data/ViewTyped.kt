@@ -5,6 +5,7 @@ import androidx.annotation.IdRes
 import com.example.homework_project_1.main.data.models.Flags
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import android.os.Parcelable
 
 @Serializable
 data class JokesData(
@@ -25,6 +26,7 @@ data class JokeDTO(
 )
 
 // Интерфейс для отображения элементов списка
+@Serializable
 sealed interface ViewTyped {
     // Класс шутки
     data class JokeUIModel(
@@ -36,7 +38,8 @@ sealed interface ViewTyped {
         val answer: String,
         var isFavorite: Boolean = false,
         val source: JokeSource
-    ) : ViewTyped
+
+    ) : ViewTyped, java.io.Serializable
 
     // Класс заголовка
     data class Header(
@@ -56,6 +59,7 @@ data class Joke(
     val category: String,
     val question: String,
     val answer: String,
+    val source: JokeSource,
 
     // Поля из запроса
     val type: String,
@@ -65,11 +69,12 @@ data class Joke(
 )
 
 enum class JokeSource {
+    DEFAULT,
     USER,
     NETWORK
 }
 
-fun convertToUiModel(dataList: List<Joke>, isFavorite: Boolean): List<ViewTyped.JokeUIModel> {
+fun convertToUiModel(isFavorite: Boolean, vararg dataList: Joke): List<ViewTyped.JokeUIModel> {
     return dataList.map { data ->
         ViewTyped.JokeUIModel(
             id = data.id,
@@ -79,7 +84,7 @@ fun convertToUiModel(dataList: List<Joke>, isFavorite: Boolean): List<ViewTyped.
             question = data.question,
             answer = data.answer,
             isFavorite = isFavorite,
-            source = JokeSource.USER
+            source = data.source
         )
     }
 }

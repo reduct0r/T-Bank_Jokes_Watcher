@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.HeaderItemBinding
 import com.example.homework_project_1.databinding.JokeItemBinding
+import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.ViewTyped.*
 import com.example.homework_project_1.main.ui.joke_list.recycler.HeaderViewHolder
