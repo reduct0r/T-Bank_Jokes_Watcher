@@ -1,9 +1,7 @@
 package com.example.homework_project_1.main.data.model
 
-import android.net.Uri
 import androidx.annotation.IdRes
 import com.example.homework_project_1.main.data.JokeSource
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable

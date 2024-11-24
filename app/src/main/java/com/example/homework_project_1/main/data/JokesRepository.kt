@@ -6,26 +6,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.homework_project_1.main.data.model.FlagsDTO
 import com.example.homework_project_1.main.data.model.JokeDTO
-import io.ktor.client.call.body
-import io.ktor.client.request.get
-import io.ktor.client.request.parameter
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import java.util.UUID
 
 object JokesRepository {
     private val defaultJokesList = mutableListOf<JokeDTO>()
     private val userJokesList = mutableListOf<JokeDTO>()
-    private val networkJokesList = mutableListOf<JokeDTO>()
     private val categories = mutableSetOf<String>()
     
 
     private val _userJokesLiveData = MutableLiveData<List<JokeDTO>>()
-    val userJokesLiveData: LiveData<List<JokeDTO>> get() = _userJokesLiveData
-
-    private val _jokesLiveData = MutableLiveData<List<ViewTyped>>()
-    val jokesLiveData: LiveData<List<ViewTyped>> get() = _jokesLiveData
+    //val userJokesLiveData: LiveData<List<JokeDTO>> get() = _userJokesLiveData
 
     fun parseJSON(context: Context) {
         val jokesData = JsonReader.readJokesFromAsset(context)

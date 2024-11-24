@@ -2,12 +2,10 @@ package com.example.homework_project_1.main.ui.joke_add
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.JokeSource
-import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.model.FlagsDTO
 import com.example.homework_project_1.main.data.model.JokeDTO

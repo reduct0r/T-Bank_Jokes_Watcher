@@ -19,8 +19,6 @@ abstract class EndlessRecyclerViewScrollListener(
 
     override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(view, dx, dy)
-
-
         val totalItemCount = layoutManager.itemCount // Общее количество элементов в наборе данных
 
         // Последняя видимая позиция элемента
