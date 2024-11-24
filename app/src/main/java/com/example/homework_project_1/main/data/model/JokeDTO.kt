@@ -14,7 +14,7 @@ data class JokeDTO(
     val category: String,
     val question: String,
     val answer: String,
-    val source: JokeSource,
+    var source: JokeSource,
 
     // Доп поля из запроса
     val type: String,

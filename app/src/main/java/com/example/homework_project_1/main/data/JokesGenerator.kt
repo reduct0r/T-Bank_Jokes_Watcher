@@ -72,8 +72,12 @@ object JokesGenerator {
         return selectedJokes.toList()
     }
 
-    fun addToSelectedJokes(joke: JokeDTO, index: Int) {
-        selectedJokes.add(joke)
-        usedJokesIndices.add(index)
+    fun addToSelectedJokes(vararg joke: JokeDTO, index: Int) {
+        joke.forEach {
+            selectedJokes.add(it)
+        }
+        if (index != -1) {
+            usedJokesIndices.add(index)
+        }
     }
 }

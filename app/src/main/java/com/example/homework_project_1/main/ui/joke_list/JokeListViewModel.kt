@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
@@ -57,13 +58,26 @@ class JokeListViewModel : ViewModel() {
         _isLoadingEl.value = true
         viewModelScope.launch {
             try {
-                // Fetch 5 more jokes
                 val newJokes = JokeRepositoryImpl.fetchJokes(amount = 5)
-                val uiModels = convertToUiModel(false, *newJokes.toTypedArray())
 
-                // Append the new jokes to the existing list
+                newJokes.forEach { joke ->
+                    if (joke.avatar == null && joke.avatarUri == null) {
+                        val avatars = AvatarProvider.getAvatarsByCategory(joke.category)
+                        val usedAvatars = mutableSetOf<Int>()
+                        val availableAvatars = avatars.filter { it !in usedAvatars }
+                        val selectedAvatar = if (availableAvatars.isNotEmpty()) {
+                            availableAvatars.random()
+                        } else {
+                            AvatarProvider.getDefaultAvatars().random()
+                        }
+                        joke.avatar = selectedAvatar
+                    }
+                }
+
+                val uiModels = convertToUiModel(false, *newJokes.toTypedArray())
                 val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
                 _jokes.value = updatedJokes
+                JokesGenerator.addToSelectedJokes(*newJokes.toTypedArray(), index = -1)
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error occurred while loading more jokes."
             } finally {

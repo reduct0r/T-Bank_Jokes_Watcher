@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.convertToUiModel
@@ -22,6 +23,7 @@ class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
             try {
                 val selectedJokes = JokesGenerator.getSelectedJokes()
                 val uiModel = convertToUiModel(false, *selectedJokes.toTypedArray())
+
                 if (jokePosition in uiModel.indices) {
                     _joke.value = uiModel[jokePosition]
                 } else {

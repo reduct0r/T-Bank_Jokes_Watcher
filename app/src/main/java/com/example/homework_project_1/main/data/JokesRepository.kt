@@ -76,7 +76,7 @@ object JokesRepository {
         if (joke.category !in categories ) {
             categories.add(joke.category)
         }
-        JokesGenerator.addToSelectedJokes(joke, userJokesList.size + defaultJokesList.size - 1)
+        JokesGenerator.addToSelectedJokes(joke, index = userJokesList.size + defaultJokesList.size - 1)
     }
 
 
