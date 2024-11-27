@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.ui.joke_list
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -38,36 +39,41 @@ class JokeListViewModel : ViewModel() {
 
     fun generateJokes() {
         viewModelScope.launch {
-
-            _isLoading.value = true
+            Log.d("mylog generateJokes()", "Loading")
+            _isLoading.postValue(true)
             try {
                 val data = JokesGenerator.generateJokesData()
 
                 val uiModel = data.convertToUIModel(false)
-                _jokes.value = uiModel
+                _jokes.postValue(uiModel)
+                Log.d("mylog generateJokes()", "Loaded")
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error"
             } finally {
-                _isLoading.value = false
+                _isLoading.postValue(false)
             }
         }
     }
 
     fun loadMoreJokes() {
+        if (_isLoadingEl.value == true) return
+
         viewModelScope.launch {
+            Log.d("mylog loadMoreJokes()", "Loading")
             _isLoadingEl.value = true
             try {
                 var newJokes = JokeRepositoryImpl.fetchJokes(amount = 5)
-                delay(500)
+                //delay(1000)
 
                 newJokes = JokesGenerator.setAvatar(newJokes)
 
                 val uiModels = newJokes.convertToUIModel(false)
 
                 val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
-                _jokes.value = updatedJokes
+                _jokes.postValue(updatedJokes)
 
                 newJokes.forEach { joke -> JokesGenerator.addToSelectedJokes(joke, index = -1) }
+                Log.d("mylog loadMoreJokes()", "Loaded")
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error occurred while loading more jokes."
             } finally {
@@ -83,8 +89,8 @@ class JokeListViewModel : ViewModel() {
 
     // Сброс показанных шуток
     fun resetJokes() {
-        JokesGenerator.reset()
         //_jokes.value = emptyList()
+        JokesGenerator.reset()
     }
 
     // Наблюдение за добавлением новых шуток

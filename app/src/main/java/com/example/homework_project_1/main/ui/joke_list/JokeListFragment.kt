@@ -61,13 +61,11 @@ class JokeListFragment : Fragment() {
 
         // Наблюдение за данными шуток
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->
+            adapter.submitList(jokes)
             if (jokes.isEmpty()) {
                 showError("No new jokes are available.")
-                viewModel.resetJokes()
                 binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
                 binding.progressBar.visibility = View.GONE
-            } else {
-                adapter.submitList(jokes)
             }
         }
 
@@ -102,7 +100,10 @@ class JokeListFragment : Fragment() {
             lifecycleScope.launch {
                 scrollListener.resetState()
                 viewModel.generateJokes()
-                //binding.recyclerView.scrollToPosition(0)
+
+                if (binding.buttonGenerateJokes.text == getString(R.string.reset_used_jokes)) {
+                    viewModel.resetJokes()
+                }
             }
         }
 
