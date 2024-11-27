@@ -3,32 +3,49 @@ package com.example.homework_project_1.main.ui.joke_details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.data.JokesGenerator
-import com.example.homework_project_1.main.data.ViewTyped.Joke
+import com.example.homework_project_1.main.data.ViewTyped
+import com.example.homework_project_1.main.data.convertToUiModel
+import kotlinx.coroutines.launch
 
 class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
-    private val _joke = MutableLiveData<Joke>()
-    val joke: LiveData<Joke> get() = _joke
+    private val _joke = MutableLiveData<ViewTyped.JokeUIModel>()
+    val joke: LiveData<ViewTyped.JokeUIModel> get() = _joke
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
     // Загрузка шутки
     fun loadJoke() {
-        val selectedJokes = JokesGenerator.getSelectedJokes()
-        if (jokePosition in selectedJokes.indices) {
-            val item = selectedJokes[jokePosition]
-            if (item is Joke) {
-                _joke.value = item
-            } else {
-                _error.value = "Incorrect joke type."
+        viewModelScope.launch {
+            try {
+                val selectedJokes = JokesGenerator.getSelectedJokes()
+                val uiModel = convertToUiModel(selectedJokes, false)
+                if (jokePosition in uiModel.indices) {
+                    _joke.value = uiModel[jokePosition]
+                } else {
+                    _error.value = "Incorrect position."
+                }
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Unknown error"
             }
-        } else {
-            _error.value = "Incorrect position."
         }
     }
 
     fun getPosition(): Int {
         return jokePosition
+    }
+
+    fun addToFavorites(jokeUI: ViewTyped.JokeUIModel) {
+        viewModelScope.launch {
+            try {
+                jokeUI.isFavorite = true
+                // TODO: add to favorites
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Unknown error"
+            }
+        }
+
     }
 }

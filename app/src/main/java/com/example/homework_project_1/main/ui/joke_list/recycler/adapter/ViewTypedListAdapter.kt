@@ -7,12 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.databinding.HeaderItemBinding
 import com.example.homework_project_1.databinding.JokeItemBinding
 import com.example.homework_project_1.main.data.ViewTyped
+import com.example.homework_project_1.main.data.ViewTyped.*
 import com.example.homework_project_1.main.ui.joke_list.recycler.HeaderViewHolder
 import com.example.homework_project_1.main.ui.joke_list.recycler.JokeViewHolder
 import com.example.homework_project_1.main.ui.joke_list.recycler.util.ViewTypedCallback
 
 class ViewTypedListAdapter(
-    private val clickListener: (Int) -> Unit // Слушатель для обработки клика по позиции шутки
+    private val clickListener: (Int) -> Unit
 ) : ListAdapter<ViewTyped, RecyclerView.ViewHolder>(ViewTypedCallback()) {
 
     companion object {
@@ -44,15 +45,15 @@ class ViewTypedListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
-            is ViewTyped.Joke -> (holder as JokeViewHolder).bind(item)
-            is ViewTyped.Header -> (holder as HeaderViewHolder).bindHeader(item)
+            is JokeUIModel -> (holder as JokeViewHolder).bind(item)
+            is Header -> (holder as HeaderViewHolder)
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is ViewTyped.Joke -> JOKE_VIEW_TYPE
-            is ViewTyped.Header -> HEADER_VIEW_TYPE
+            is JokeUIModel -> JOKE_VIEW_TYPE
+            is Header -> HEADER_VIEW_TYPE
             else -> throw IllegalArgumentException("Unknown type!")
         }
     }

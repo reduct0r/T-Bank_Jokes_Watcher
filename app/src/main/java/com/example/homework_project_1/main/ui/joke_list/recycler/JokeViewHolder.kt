@@ -1,16 +1,21 @@
 package com.example.homework_project_1.main.ui.joke_list.recycler
 
+import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.databinding.JokeItemBinding
 import com.example.homework_project_1.main.data.ViewTyped
 
-// Класс для отображения шуток
 class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHolder(binding.root) {
-    fun bind(joke: ViewTyped.Joke) {
+    fun bind(joke: ViewTyped.JokeUIModel) {
         bindQuestion(joke.question)
         bindAnswer(joke.answer)
         bindTitle(joke.category)
-        bindAvatar(joke.avatar)
+
+        if (joke.avatarUri != null) {
+            bindURIAvatar(joke.avatarUri)
+        } else {
+            bindAvatar(joke.avatar)
+        }
     }
 
     private fun bindQuestion(question: String){
@@ -28,6 +33,12 @@ class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHol
     private fun bindAvatar(id: Int?){
         id?.let {
             binding.avatar.setImageResource(it)
+        }
+    }
+
+    private fun bindURIAvatar(uri: Uri?){
+        uri?.let {
+            binding.avatar.setImageURI(it)
         }
     }
 }

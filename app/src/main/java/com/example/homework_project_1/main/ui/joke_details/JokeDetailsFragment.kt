@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeDetailsBinding
 import com.example.homework_project_1.main.data.ViewTyped
 
@@ -44,7 +43,9 @@ class JokeDetailsFragment : Fragment() {
     // Настройка данных и обработка событий
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         viewModel.loadJoke()
+
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
         if (viewModel.getPosition() == -1) {
@@ -61,8 +62,11 @@ class JokeDetailsFragment : Fragment() {
             handleError(errorMessage)
         }
 
-        // Установка текста на кнопку "Добавить в избранное"
-        binding.addToFavorites.text = getString(R.string.add_to_favorites)
+        binding.addToFavorites.setOnClickListener {
+            Toast.makeText(requireContext(), "Added to favorites (TEST)", Toast.LENGTH_SHORT).show()
+            viewModel.addToFavorites(viewModel.joke.value!!)
+        }
+
         // Обработка нажатия на кнопку "Назад"
         binding.buttonBack.setOnClickListener {
             parentFragmentManager.popBackStack()
@@ -70,11 +74,14 @@ class JokeDetailsFragment : Fragment() {
     }
 
     // Установка данных в элементы экрана
-    private fun setupJokesData(item: ViewTyped.Joke) {
+    private fun setupJokesData(item: ViewTyped.JokeUIModel) {
         with(binding) {
             question.text = item.question
             answer.text = item.answer
             category.text = item.category
+            if (item.avatarUri != null) {
+                avatar.setImageURI(item.avatarUri)
+            } else
             item.avatar?.let {
                 avatar.setImageResource(it)
             }
