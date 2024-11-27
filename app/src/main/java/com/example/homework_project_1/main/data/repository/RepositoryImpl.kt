@@ -9,14 +9,10 @@ object JokeRepositoryImpl : Repository {
     private val apiService = ApiServiceImpl.getInstance()
 
     override suspend fun fetchJokes(amount: Int): List<JokeDTO> {
-        return try {
-            apiService.getJokes(amount).jokes.map { jokeEntity ->
-                jokeEntity.toDto(flags = jokeEntity.flags).apply {
-                    source = JokeSource.NETWORK
-                }
+        return apiService.getJokes(amount).jokes.map { jokeEntity ->
+            jokeEntity.toDto(flags = jokeEntity.flags).apply {
+                source = JokeSource.NETWORK
             }
-        } catch (e: Exception) {
-            emptyList()
         }
     }
 }

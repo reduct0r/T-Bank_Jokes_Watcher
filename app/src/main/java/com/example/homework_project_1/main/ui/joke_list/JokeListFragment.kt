@@ -98,7 +98,6 @@ class JokeListFragment : Fragment() {
         // Обработка нажатия на кнопку генерации шуток
         binding.buttonGenerateJokes.setOnClickListener {
             lifecycleScope.launch {
-                scrollListener.resetState()
                 viewModel.generateJokes()
 
                 if (binding.buttonGenerateJokes.text == getString(R.string.reset_used_jokes)) {
@@ -116,6 +115,10 @@ class JokeListFragment : Fragment() {
         scrollListener = object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!) {
             override fun onLoadMore() {
                 viewModel.loadMoreJokes()
+            }
+
+            override fun isLoading(): Boolean? {
+                return viewModel.isLoadingEl.value
             }
         }
         binding.recyclerView.addOnScrollListener(scrollListener)
