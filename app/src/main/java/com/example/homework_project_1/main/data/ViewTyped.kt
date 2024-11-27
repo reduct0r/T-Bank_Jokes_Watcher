@@ -39,17 +39,3 @@ enum class JokeSource {
     NETWORK
 }
 
-fun convertToUiModel(isFavorite: Boolean, vararg dataList: JokeDTO): List<ViewTyped.JokeUIModel> {
-    return dataList.map { data ->
-        ViewTyped.JokeUIModel(
-            id = data.id,
-            category = data.category,
-            question = data.question,
-            answer = data.answer,
-            isFavorite = isFavorite,
-            source = data.source,
-            avatar = data.avatar,
-            avatarUri = data.avatarUri?.toUri(),
-        )
-    }
-}

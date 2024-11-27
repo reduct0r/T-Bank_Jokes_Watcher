@@ -72,12 +72,28 @@ object JokesGenerator {
         return selectedJokes.toList()
     }
 
-    fun addToSelectedJokes(vararg joke: JokeDTO, index: Int) {
-        joke.forEach {
-            selectedJokes.add(it)
-        }
+    fun addToSelectedJokes(joke: JokeDTO, index: Int) {
+            selectedJokes.add(joke)
+
         if (index != -1) {
             usedJokesIndices.add(index)
         }
+    }
+
+    fun setAvatar(newJokes: List<JokeDTO>): List<JokeDTO> {
+        newJokes.forEach { joke ->
+            if (joke.avatar == null && joke.avatarUri == null) {
+                val avatars = AvatarProvider.getAvatarsByCategory(joke.category)
+                val usedAvatars = mutableSetOf<Int>()
+                val availableAvatars = avatars.filter { it !in usedAvatars }
+                val selectedAvatar = if (availableAvatars.isNotEmpty()) {
+                    availableAvatars.random()
+                } else {
+                    AvatarProvider.getDefaultAvatars().random()
+                }
+                joke.avatar = selectedAvatar
+            }
+        }
+        return newJokes
     }
 }

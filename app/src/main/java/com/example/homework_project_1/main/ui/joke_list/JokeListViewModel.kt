@@ -2,16 +2,18 @@ package com.example.homework_project_1.main.ui.joke_list
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.data.convertToUiModel
+import com.example.homework_project_1.main.data.model.JokeDTO
+import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import com.example.homework_project_1.main.data.repository.JokeRepositoryImpl
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
 
 class JokeListViewModel : ViewModel() {
 
@@ -27,17 +29,21 @@ class JokeListViewModel : ViewModel() {
     private val _isLoadingEl = MutableLiveData<Boolean>()
     val isLoadingEl: LiveData<Boolean> = _isLoadingEl
 
+
+    private var jokeObserver: Observer<List<JokeDTO>>? = null
+
     init {
         observeNewJoke()
     }
 
     fun generateJokes() {
-        if (_isLoadingEl.value == true) return
         viewModelScope.launch {
+
             _isLoading.value = true
             try {
                 val data = JokesGenerator.generateJokesData()
-                val uiModel = convertToUiModel(false, *data.toTypedArray())
+
+                val uiModel = data.convertToUIModel(false)
                 _jokes.value = uiModel
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error"
@@ -48,32 +54,20 @@ class JokeListViewModel : ViewModel() {
     }
 
     fun loadMoreJokes() {
-        if (_isLoading.value == true) return
-
-        _isLoadingEl.value = true
         viewModelScope.launch {
+            _isLoadingEl.value = true
             try {
-                val newJokes = JokeRepositoryImpl.fetchJokes(amount = 5)
+                var newJokes = JokeRepositoryImpl.fetchJokes(amount = 5)
                 delay(500)
 
-                newJokes.forEach { joke ->
-                    if (joke.avatar == null && joke.avatarUri == null) {
-                        val avatars = AvatarProvider.getAvatarsByCategory(joke.category)
-                        val usedAvatars = mutableSetOf<Int>()
-                        val availableAvatars = avatars.filter { it !in usedAvatars }
-                        val selectedAvatar = if (availableAvatars.isNotEmpty()) {
-                            availableAvatars.random()
-                        } else {
-                            AvatarProvider.getDefaultAvatars().random()
-                        }
-                        joke.avatar = selectedAvatar
-                    }
-                }
+                newJokes = JokesGenerator.setAvatar(newJokes)
 
-                val uiModels = convertToUiModel(false, *newJokes.toTypedArray())
+                val uiModels = newJokes.convertToUIModel(false)
+
                 val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
                 _jokes.value = updatedJokes
-                JokesGenerator.addToSelectedJokes(*newJokes.toTypedArray(), index = -1)
+
+                newJokes.forEach { joke -> JokesGenerator.addToSelectedJokes(joke, index = -1) }
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error occurred while loading more jokes."
             } finally {
@@ -81,7 +75,6 @@ class JokeListViewModel : ViewModel() {
             }
         }
     }
-
 
     // Получение списка сгенерированных шуток
     fun getRenderedJokesList(): List<ViewTyped.JokeUIModel> {
@@ -96,17 +89,21 @@ class JokeListViewModel : ViewModel() {
 
     // Наблюдение за добавлением новых шуток
     private fun observeNewJoke() {
-        JokesRepository.getUserJokes().observeForever { newJokes ->
-            val lastJoke = newJokes.last()
-            val modelUI = convertToUiModel(false, lastJoke)
-            val updatedJokes = (_jokes.value ?: emptyList()) + modelUI
-            _jokes.value = updatedJokes
+        jokeObserver = Observer { newJokes ->
+            if (newJokes.isNotEmpty()) {
+                val lastJoke = newJokes.last()
+                val modelUI = lastJoke.convertToUIModel(false)
+                val updatedJokes = (_jokes.value ?: emptyList()) + modelUI
+                _jokes.value = updatedJokes
+            }
         }
+        JokesRepository.getUserJokes().observeForever(jokeObserver!!)
     }
 
     override fun onCleared() {
         super.onCleared()
-        JokesRepository.getUserJokes().removeObserver { }
+        jokeObserver?.let {
+            JokesRepository.getUserJokes().removeObserver(it)
+        }
     }
-
 }
