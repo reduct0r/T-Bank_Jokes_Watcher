@@ -20,11 +20,7 @@ abstract class EndlessRecyclerViewScrollListener(
             else -> throw UnsupportedOperationException("Unsupported layout manager.")
         }
 
-        if (lastVisibleItemPosition + visibleThreshold >= totalItemCount - 1) {
-            _isEndOfList = true
-        } else {
-            _isEndOfList = false
-        }
+        _isEndOfList = lastVisibleItemPosition + visibleThreshold >= totalItemCount - 1
     }
 
     fun isEndOfList(): Boolean {

@@ -34,7 +34,14 @@ class AddJokeWorker(
             category = category,
             avatarUri = avatarUri?.toString(),
             avatar = if (avatarUri == null) AvatarProvider.getAvatarsByCategory(category).random() else null,
-            flags = FlagsDTO(false, false, false, false, false, false),
+            flags = FlagsDTO(
+                nsfw = false,
+                religious = false,
+                political = false,
+                racist = false,
+                sexist = false,
+                explicit = false
+            ),
             lang = "en",
             source = source
         )

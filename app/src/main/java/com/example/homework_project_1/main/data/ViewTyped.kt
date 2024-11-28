@@ -2,11 +2,7 @@ package com.example.homework_project_1.main.data
 
 import android.net.Uri
 import androidx.annotation.IdRes
-import androidx.core.net.toUri
-import com.example.homework_project_1.main.data.model.JokeDTO
 import kotlinx.serialization.Serializable
-import com.example.homework_project_1.main.data.model.JokeEntity
-import kotlinx.serialization.Contextual
 
 // UI-Интерфейс для отображения элементов списка
 @Serializable

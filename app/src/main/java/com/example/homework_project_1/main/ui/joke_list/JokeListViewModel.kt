@@ -1,6 +1,5 @@
 package com.example.homework_project_1.main.ui.joke_list
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -12,7 +11,6 @@ import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import com.example.homework_project_1.main.data.repository.JokeRepositoryImpl
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class JokeListViewModel : ViewModel() {
@@ -29,7 +27,7 @@ class JokeListViewModel : ViewModel() {
     private val _isLoadingEl = MutableLiveData<Boolean>()
     val isLoadingEl: LiveData<Boolean> = _isLoadingEl
 
-    private val _isLoadingAdded = MutableLiveData<Boolean>(false)
+    private val _isLoadingAdded = MutableLiveData(false)
     val isLoadingAdded: LiveData<Boolean> get() = _isLoadingAdded
 
     fun setLoadingAdded(isAdded: Boolean) {
