@@ -124,6 +124,7 @@ class JokeListFragment : Fragment() {
             startActivity(intent)
         }
 
+        // Обработка скролла, подгрузка начинается при достижении 4-го элемента до конца списка
         scrollListener = object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!, 4) {
             override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(view, dx, dy)
@@ -133,8 +134,6 @@ class JokeListFragment : Fragment() {
             }
         }
         binding.recyclerView.addOnScrollListener(scrollListener)
-
-
     }
 
     private fun createRecyclerViewList() {

@@ -14,7 +14,7 @@ object JokesGenerator {
     private var usedJokesIndices = mutableSetOf<Int>()                  // Индексы использованных шуток
 
     // Генерация данных для списка из рандомных шуток без повторения
-    suspend fun generateJokesData(): List<JokeDTO> {
+    suspend fun generateJokesData(jokesAmount: Int = 15): List<JokeDTO> {
         _loading.value = true
         withContext(Dispatchers.IO) {
             jokesList = JokesRepository.getJokes()
@@ -27,7 +27,7 @@ object JokesGenerator {
         var attempts = 0
         val maxAttempts = jokesList.size * 3
 
-        while (newSelectedJokes.size < 20 && jokesList.isNotEmpty() && attempts < maxAttempts) {
+        while (newSelectedJokes.size < jokesAmount && jokesList.isNotEmpty() && attempts < maxAttempts) {
             attempts++
 
             val randomIndex = Random.nextInt(jokesList.size)
@@ -72,11 +72,13 @@ object JokesGenerator {
         return selectedJokes.toList()
     }
 
+    // Добавление шутки в список выбранных
     fun addToSelectedJokes(joke: JokeDTO, index: Int) {
-            selectedJokes.add(joke)
-
         if (index != -1) {
+            selectedJokes.add(0, joke)
             usedJokesIndices.add(index)
+        } else {
+            selectedJokes.add(joke)
         }
     }
 

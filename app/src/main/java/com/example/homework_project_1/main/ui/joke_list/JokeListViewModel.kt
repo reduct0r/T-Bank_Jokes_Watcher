@@ -36,6 +36,7 @@ class JokeListViewModel : ViewModel() {
 
     init {
         _isLoadingEl.value = false
+        generateJokes()
         observeNewJoke()
     }
 
@@ -103,7 +104,7 @@ class JokeListViewModel : ViewModel() {
             if (newJokes.isNotEmpty()) {
                 val lastJoke = newJokes.last()
                 val modelUI = lastJoke.convertToUIModel(false)
-                val updatedJokes = (_jokes.value ?: emptyList()) + modelUI
+                val updatedJokes = listOf(modelUI) + (_jokes.value ?: emptyList())
                 _jokes.value = updatedJokes
             }
         }

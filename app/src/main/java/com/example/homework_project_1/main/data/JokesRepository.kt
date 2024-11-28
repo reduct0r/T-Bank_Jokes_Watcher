@@ -58,7 +58,7 @@ object JokesRepository {
     }
 
     suspend fun addNewJoke(joke: JokeDTO) {
-        delay(5000)
+        delay(2000)
         userJokesList.add(joke)
         _userJokesLiveData.postValue(userJokesList.toList())
 
