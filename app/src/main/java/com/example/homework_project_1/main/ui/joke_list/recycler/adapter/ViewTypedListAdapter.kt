@@ -93,6 +93,10 @@ class ViewTypedListAdapter(
     }
 
     fun getIsLoadingAdded(): Boolean {
-        return currentList.last() is Loading
+        return if (currentList.isEmpty()) {
+            false
+        } else {
+            currentList.last() is Loading
+        }
     }
 }

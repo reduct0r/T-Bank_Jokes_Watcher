@@ -12,6 +12,7 @@ class JokeListActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         JokesRepository.parseJSON(this)
+
         // Загрузка начального фрагмента только один раз
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

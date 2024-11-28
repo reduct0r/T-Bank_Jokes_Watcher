@@ -32,4 +32,5 @@
     <string name="own">Own</string>
     <string name="network">Network</string>
     <string name="default_label">Default</string>
+    <string name="unknown">Unknown</string>
 </resources>

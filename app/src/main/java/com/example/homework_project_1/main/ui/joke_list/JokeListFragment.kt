@@ -2,9 +2,6 @@ package com.example.homework_project_1.main.ui.joke_list
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +60,7 @@ class JokeListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         createRecyclerViewList()
-        (requireActivity() as AppCompatActivity).supportActionBar?.show()
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
         // Наблюдение за данными шуток
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->
@@ -111,9 +108,11 @@ class JokeListFragment : Fragment() {
         // Обработка нажатия на кнопку генерации шуток
         binding.buttonGenerateJokes.setOnClickListener {
             lifecycleScope.launch {
-                viewModel.generateJokes()
                 if (binding.buttonGenerateJokes.text == getString(R.string.reset_used_jokes)) {
                     viewModel.resetJokes()
+                    viewModel.generateJokes()
+                } else {
+                    viewModel.generateJokes()
                 }
             }
         }

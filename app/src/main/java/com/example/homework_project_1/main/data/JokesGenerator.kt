@@ -7,9 +7,9 @@ import kotlin.random.Random
 
 // Класс для генерации шуток
 object JokesGenerator {
-    private var jokesList: List<JokeDTO> = emptyList()                     // Список всех шуток
+    private var jokesList: List<JokeDTO> = emptyList()                  // Список всех шуток
     private val _loading = MutableLiveData<Boolean>()
-    private var selectedJokes = mutableListOf<JokeDTO>()                   // Список выбранных шуток
+    private var selectedJokes = mutableListOf<JokeDTO>()                // Список выбранных шуток
     private var ind = 0                                                 // Уникальный индекс (счетчик) для шуток
     private var usedJokesIndices = mutableSetOf<Int>()                  // Индексы использованных шуток
 
@@ -59,7 +59,6 @@ object JokesGenerator {
         selectedJokes = newSelectedJokes
         return selectedJokes
     }
-
 
     // Сброс использованных шуток
     fun reset() {
