@@ -38,15 +38,16 @@ class JokeListViewModel : ViewModel() {
     }
 
     fun generateJokes() {
+        if (_isLoadingEl.value == true) return
         viewModelScope.launch {
-            Log.d("mylog generateJokes()", "Loading")
+            Log.d("mylog generateJokes()", "Generating")
             _isLoading.postValue(true)
             try {
-                val data = JokesGenerator.generateJokesData()
+                val data = JokesGenerator.generateJokesData(3)
 
                 val uiModel = data.convertToUIModel(false)
                 _jokes.postValue(uiModel)
-                Log.d("mylog generateJokes()", "Loaded")
+                Log.d("mylog generateJokes()", "Generated")
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error"
             } finally {
@@ -73,10 +74,9 @@ class JokeListViewModel : ViewModel() {
                 _jokes.postValue(updatedJokes)
 
                 newJokes.forEach { joke -> JokesGenerator.addToSelectedJokes(joke, index = -1) }
-                Log.d("mylog loadMoreJokes()", "Loaded")
+                Log.d("mylog loadMoreJokes()", "Loaded ==== ${newJokes.size}")
             } catch (e: Exception) {
-                _error.value = e.message ?: "Unknown error occurred while loading more jokes."
-                delay(2000)
+                _error.value =  "Unknown error occurred while loading more jokes."
                 Log.d("mylog loadMoreJokes()", "Error")
             } finally {
                 _isLoadingEl.value = false
