@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.ui.joke_list.recycler.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -91,5 +92,9 @@ class ViewTypedListAdapter(
                 submitList(currentList)
             }
         }
+    }
+
+    fun getIsLoadingAdded(): Boolean {
+        return currentList.last() is Loading
     }
 }

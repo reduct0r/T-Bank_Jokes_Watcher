@@ -34,6 +34,7 @@ class JokeListViewModel : ViewModel() {
     private var jokeObserver: Observer<List<JokeDTO>>? = null
 
     init {
+        _isLoadingEl.value = false
         observeNewJoke()
     }
 
@@ -60,10 +61,10 @@ class JokeListViewModel : ViewModel() {
 
         viewModelScope.launch {
             Log.d("mylog loadMoreJokes()", "Loading")
+
             _isLoadingEl.value = true
             try {
-                var newJokes = JokeRepositoryImpl.fetchJokes(amount = 5)
-                //delay(1000)
+                var newJokes = JokeRepositoryImpl.fetchJokes(amount = 10)
 
                 newJokes = JokesGenerator.setAvatar(newJokes)
 
@@ -76,6 +77,7 @@ class JokeListViewModel : ViewModel() {
                 Log.d("mylog loadMoreJokes()", "Loaded")
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error occurred while loading more jokes."
+                delay(5000)
             } finally {
                 _isLoadingEl.value = false
             }

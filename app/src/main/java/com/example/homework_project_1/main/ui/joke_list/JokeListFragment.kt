@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
 import com.example.homework_project_1.main.ui.joke_add.AddJokeActivity
@@ -61,11 +62,13 @@ class JokeListFragment : Fragment() {
 
         // Наблюдение за данными шуток
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->
-            adapter.submitList(jokes)
             if (jokes.isEmpty()) {
                 showError("No new jokes are available.")
                 binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
                 binding.progressBar.visibility = View.GONE
+            }
+            else {
+                adapter.submitList(jokes)
             }
         }
 
@@ -88,7 +91,7 @@ class JokeListFragment : Fragment() {
 
         // Наблюдение за состоянием загрузки новых шуток из api
         viewModel.isLoadingEl.observe(viewLifecycleOwner) { isLoadingEl: Boolean ->
-            if (isLoadingEl) {
+            if (isLoadingEl && !adapter.getIsLoadingAdded()) {
                 adapter.addLoadingFooter()
             } else {
                 adapter.removeLoadingFooter()
@@ -99,7 +102,6 @@ class JokeListFragment : Fragment() {
         binding.buttonGenerateJokes.setOnClickListener {
             lifecycleScope.launch {
                 viewModel.generateJokes()
-
                 if (binding.buttonGenerateJokes.text == getString(R.string.reset_used_jokes)) {
                     viewModel.resetJokes()
                 }
@@ -112,16 +114,18 @@ class JokeListFragment : Fragment() {
             startActivity(intent)
         }
 
-        scrollListener = object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!) {
-            override fun onLoadMore() {
-                viewModel.loadMoreJokes()
+        scrollListener = object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!, 4) {
+            override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(view, dx, dy)
+                if (isEndOfList() && !viewModel.isLoadingEl.value!! ) {
+                    viewModel.loadMoreJokes()
+                }
             }
 
-            override fun isLoading(): Boolean? {
-                return viewModel.isLoadingEl.value
-            }
         }
         binding.recyclerView.addOnScrollListener(scrollListener)
+
+
     }
 
     private fun createRecyclerViewList() {

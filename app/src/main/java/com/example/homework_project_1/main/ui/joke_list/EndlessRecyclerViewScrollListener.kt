@@ -5,15 +5,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 abstract class EndlessRecyclerViewScrollListener(
-    private val layoutManager: RecyclerView.LayoutManager
+    private val layoutManager: RecyclerView.LayoutManager,
+    private val visibleThreshold: Int = 1   // Минимальное количество элементов, которые должны быть ниже текущей позиции прокрутки перед загрузкой дополнительных данных
 ) : RecyclerView.OnScrollListener() {
 
-    // Минимальное количество элементов, которые должны быть ниже текущей позиции прокрутки перед загрузкой дополнительных данных
-    private val visibleThreshold = 4
+    private var _isEndOfList = false    // Флаг того, что список дошел до конца
 
     override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(view, dx, dy)
-        val totalItemCount = layoutManager.itemCount // Общее количество элементов в наборе данных
+        val totalItemCount = layoutManager.itemCount    // Общее количество элементов в списке
 
         // Последняя видимая позиция элемента
         val lastVisibleItemPosition = when (layoutManager) {
@@ -21,11 +21,14 @@ abstract class EndlessRecyclerViewScrollListener(
             else -> throw UnsupportedOperationException("Unsupported layout manager.")
         }
 
-        if (lastVisibleItemPosition >= totalItemCount - visibleThreshold &&  (isLoading() == null || isLoading() == false)) {
-            onLoadMore()
+        if (lastVisibleItemPosition + visibleThreshold >= totalItemCount - 1) {
+            _isEndOfList = true
+        } else {
+            _isEndOfList = false
         }
     }
 
-    abstract fun onLoadMore()
-    abstract fun isLoading(): Boolean?
+    fun isEndOfList(): Boolean {
+        return _isEndOfList
+    }
 }
