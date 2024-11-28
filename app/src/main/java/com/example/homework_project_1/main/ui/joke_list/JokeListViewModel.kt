@@ -1,7 +1,5 @@
 package com.example.homework_project_1.main.ui.joke_list
 
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +14,6 @@ import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertT
 import com.example.homework_project_1.main.data.repository.JokeRepositoryImpl
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
 
 class JokeListViewModel : ViewModel() {
 

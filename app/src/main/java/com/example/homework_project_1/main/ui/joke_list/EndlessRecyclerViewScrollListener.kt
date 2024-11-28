@@ -1,6 +1,5 @@
 package com.example.homework_project_1.main.ui.joke_list
 
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 

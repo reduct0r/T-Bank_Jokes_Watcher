@@ -1,8 +1,6 @@
 package com.example.homework_project_1.main.ui.joke_list.recycler
 
-import android.graphics.drawable.GradientDrawable
 import android.net.Uri
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.JokeItemBinding
