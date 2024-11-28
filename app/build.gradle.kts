@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.homework_project_1"
-        minSdk = 28
+        minSdk = 29
         //noinspection OldTargetApi
         targetSdk = 34
         versionCode = 1

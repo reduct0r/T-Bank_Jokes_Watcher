@@ -29,6 +29,12 @@ class JokeListViewModel : ViewModel() {
     private val _isLoadingEl = MutableLiveData<Boolean>()
     val isLoadingEl: LiveData<Boolean> = _isLoadingEl
 
+    private val _isLoadingAdded = MutableLiveData<Boolean>(false)
+    val isLoadingAdded: LiveData<Boolean> get() = _isLoadingAdded
+
+    fun setLoadingAdded(isAdded: Boolean) {
+        _isLoadingAdded.value = isAdded
+    }
     private var jokeObserver: Observer<List<JokeDTO>>? = null
 
     init {
@@ -40,14 +46,12 @@ class JokeListViewModel : ViewModel() {
     fun generateJokes() {
         if (_isLoadingEl.value == true) return
         viewModelScope.launch {
-            Log.d("mylog generateJokes()", "Generating")
             _isLoading.postValue(true)
             try {
-                val data = JokesGenerator.generateJokesData(3)
+                val data = JokesGenerator.generateJokesData(15)
 
                 val uiModel = data.convertToUIModel(false)
                 _jokes.postValue(uiModel)
-                Log.d("mylog generateJokes()", "Generated")
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error"
             } finally {
@@ -60,8 +64,6 @@ class JokeListViewModel : ViewModel() {
         if (_isLoadingEl.value == true) return
 
         viewModelScope.launch {
-            Log.d("mylog loadMoreJokes()", "Loading")
-
             _isLoadingEl.value = true
             try {
                 var newJokes = JokeRepositoryImpl.fetchJokes(amount = 10)
@@ -74,10 +76,8 @@ class JokeListViewModel : ViewModel() {
                 _jokes.postValue(updatedJokes)
 
                 newJokes.forEach { joke -> JokesGenerator.addToSelectedJokes(joke, index = -1) }
-                Log.d("mylog loadMoreJokes()", "Loaded ==== ${newJokes.size}")
             } catch (e: Exception) {
                 _error.value =  "Unknown error occurred while loading more jokes."
-                Log.d("mylog loadMoreJokes()", "Error")
             } finally {
                 _isLoadingEl.value = false
             }
