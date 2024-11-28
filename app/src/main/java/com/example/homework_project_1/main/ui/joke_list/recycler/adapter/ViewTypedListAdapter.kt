@@ -68,9 +68,7 @@ class ViewTypedListAdapter(
             is JokeUIModel -> JOKE_VIEW_TYPE
             is Header -> HEADER_VIEW_TYPE
             is Loading -> LOADING_VIEW_TYPE
-            else -> LOADING_VIEW_TYPE
-            //else -> throw IllegalArgumentException("Unknown type!")
-            //TODO: add loading view type
+            else -> throw IllegalArgumentException("Unknown type!")
         }
     }
 

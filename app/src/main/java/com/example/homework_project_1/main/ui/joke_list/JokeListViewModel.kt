@@ -1,5 +1,7 @@
 package com.example.homework_project_1.main.ui.joke_list
 
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -29,7 +31,6 @@ class JokeListViewModel : ViewModel() {
 
     private val _isLoadingEl = MutableLiveData<Boolean>()
     val isLoadingEl: LiveData<Boolean> = _isLoadingEl
-
 
     private var jokeObserver: Observer<List<JokeDTO>>? = null
 
@@ -77,7 +78,8 @@ class JokeListViewModel : ViewModel() {
                 Log.d("mylog loadMoreJokes()", "Loaded")
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error occurred while loading more jokes."
-                delay(5000)
+                delay(2000)
+                Log.d("mylog loadMoreJokes()", "Error")
             } finally {
                 _isLoadingEl.value = false
             }

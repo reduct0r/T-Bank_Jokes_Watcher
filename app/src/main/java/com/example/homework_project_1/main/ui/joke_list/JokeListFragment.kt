@@ -2,6 +2,8 @@ package com.example.homework_project_1.main.ui.joke_list
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -27,6 +29,9 @@ class JokeListFragment : Fragment() {
     private val viewModel: JokeListViewModel by viewModels {
         JokesViewModelFactory()
     }
+
+    private var lastErrorTime: Long = 0
+    private val errorInterval: Long = 3000 // Интервал
 
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
@@ -74,7 +79,12 @@ class JokeListFragment : Fragment() {
 
         // Наблюдение за ошибками
         viewModel.error.observe(viewLifecycleOwner) {
-            showError(it)
+            val currentTime = System.currentTimeMillis()
+            if (currentTime - lastErrorTime >= errorInterval) {
+                showError(it)
+                lastErrorTime = currentTime
+            }
+            binding.recyclerView.scrollBy(0, -5)
         }
 
         // Наблюдение за состоянием загрузки
@@ -117,11 +127,10 @@ class JokeListFragment : Fragment() {
         scrollListener = object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!, 4) {
             override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(view, dx, dy)
-                if (isEndOfList() && !viewModel.isLoadingEl.value!! ) {
+                if (isEndOfList() && !viewModel.isLoadingEl.value!!) {
                     viewModel.loadMoreJokes()
                 }
             }
-
         }
         binding.recyclerView.addOnScrollListener(scrollListener)
 
