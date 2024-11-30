@@ -32,6 +32,8 @@ sealed interface ViewTyped {
 enum class JokeSource {
     DEFAULT,
     USER,
-    NETWORK
+    NETWORK,
+    DATABASE,
+    CACHE
 }
 

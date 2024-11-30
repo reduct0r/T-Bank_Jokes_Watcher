@@ -5,7 +5,7 @@ import com.example.homework_project_1.main.data.api.ApiServiceImpl
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.toDto
 
-object JokeRepositoryImpl : Repository {
+object RepositoryImpl : Repository {
     private val apiService = ApiServiceImpl.getInstance()
 
     override suspend fun fetchJokes(amount: Int): List<JokeDTO> {

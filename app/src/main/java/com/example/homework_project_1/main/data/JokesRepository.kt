@@ -1,15 +1,11 @@
 package com.example.homework_project_1.main.data
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.room.Room
-import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
-import com.example.homework_project_1.main.data.model.FlagsDTO
+import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
-import io.ktor.http.ContentType
 import kotlinx.coroutines.delay
 import java.util.UUID
 
@@ -40,7 +36,7 @@ object JokesRepository {
                         category = category.name,
                         question = jokeDto.question,
                         answer = jokeDto.answer,
-                        flags = FlagsDTO(
+                        flags = Flags(
                             nsfw = false,
                             religious = false,
                             political = false,

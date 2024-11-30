@@ -9,11 +9,14 @@ import androidx.room.Update
 @Dao
 interface JokeDAO {
     @Insert
-    suspend fun insert(joke: JokeEntity)
+    suspend fun insert(joke: JokeDbEntity)
+
     @Update
-    suspend fun update(joke: JokeEntity)
+    suspend fun update(joke: JokeDbEntity)
+
     @Delete
-    suspend fun delete(joke: JokeEntity)
+    suspend fun delete(joke: JokeDbEntity)
+
     @Query("SELECT * FROM jokes")
-    suspend fun getAllUsers(): List<JokeEntity>
+    suspend fun getAllJokes(): List<JokeDbEntity>
 }

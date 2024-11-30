@@ -7,7 +7,7 @@ import androidx.work.WorkerParameters
 import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.JokesRepository
-import com.example.homework_project_1.main.data.model.FlagsDTO
+import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -34,7 +34,7 @@ class AddJokeWorker(
             category = category,
             avatarUri = avatarUri?.toString(),
             avatar = if (avatarUri == null) AvatarProvider.getAvatarsByCategory(category).random() else null,
-            flags = FlagsDTO(
+            flags = Flags(
                 nsfw = false,
                 religious = false,
                 political = false,

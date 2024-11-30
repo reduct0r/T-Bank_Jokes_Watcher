@@ -17,7 +17,7 @@ data class JokeDTO(
     var source: JokeSource,
 
     // Доп поля из запроса
-    val flags: FlagsDTO,
+    val flags: Flags,
     val lang: String
 ) {
 
@@ -49,6 +49,17 @@ data class JokeDTO(
                 )
             }
         }
+
+        private fun JokeDTO.toEntity(safe: Boolean, type: String) = JokeApiEntity(
+            id = id,
+            category = category,
+            setup = question,
+            delivery = answer,
+            lang = lang,
+            flags = flags,
+            safe = safe,
+            type = type
+        )
     }
 
 }

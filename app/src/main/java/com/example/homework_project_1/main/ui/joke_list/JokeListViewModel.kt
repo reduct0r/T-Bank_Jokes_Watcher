@@ -10,7 +10,7 @@ import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
-import com.example.homework_project_1.main.data.repository.JokeRepositoryImpl
+import com.example.homework_project_1.main.data.repository.RepositoryImpl
 import kotlinx.coroutines.launch
 
 class JokeListViewModel : ViewModel() {
@@ -64,7 +64,7 @@ class JokeListViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoadingEl.value = true
             try {
-                var newJokes = JokeRepositoryImpl.fetchJokes(amount = 10)
+                var newJokes = RepositoryImpl.fetchJokes(amount = 10)
 
                 newJokes = JokesGenerator.setAvatar(newJokes)
 

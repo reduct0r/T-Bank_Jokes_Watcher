@@ -1,8 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.9.0"
-    id("org.jetbrains.kotlin.kapt") version "1.9.0"
+    id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.devtools.ksp")
 }
 android {
     namespace = "com.example.homework_project_1"
@@ -28,6 +28,7 @@ android {
             )
         }
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
@@ -35,11 +36,13 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
     buildToolsVersion = "34.0.0"
 
-    kapt {
-        correctErrorTypes = true
-    }
 }
 
 dependencies {
@@ -77,6 +80,8 @@ dependencies {
     // For shimmer effect (loader)
     implementation(libs.shimmer)
 
+    // Room
     implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 }

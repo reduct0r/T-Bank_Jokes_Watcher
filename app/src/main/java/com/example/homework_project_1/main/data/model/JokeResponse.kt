@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class JokeResponse(
     val error: Boolean,
     val amount: Int,
-    val jokes: List<JokeEntity>
+    val jokes: List<JokeApiEntity>
 )
