@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "jokes")
-data class JokeEntity (
+@Entity(tableName = "jokesCache")
+data class JokeCacheEntity (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int = 0,
@@ -24,7 +24,7 @@ data class JokeEntity (
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as JokeEntity
+        other as JokeCacheEntity
 
         if (id != other.id) return false
         if (category != other.category) return false
