@@ -76,4 +76,7 @@ dependencies {
 
     // For shimmer effect (loader)
     implementation(libs.shimmer)
+
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
 }
