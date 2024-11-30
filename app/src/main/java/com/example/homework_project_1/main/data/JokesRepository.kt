@@ -1,11 +1,15 @@
 package com.example.homework_project_1.main.data
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.room.Room
+import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.FlagsDTO
 import com.example.homework_project_1.main.data.model.JokeDTO
+import io.ktor.http.ContentType
 import kotlinx.coroutines.delay
 import java.util.UUID
 
@@ -13,7 +17,8 @@ object JokesRepository {
     private val defaultJokesList = mutableListOf<JokeDTO>()
     private val userJokesList = mutableListOf<JokeDTO>()
     private val categories = mutableSetOf<String>()
-    
+
+
 
     private val _userJokesLiveData = MutableLiveData<List<JokeDTO>>()
     //val userJokesLiveData: LiveData<List<JokeDTO>> get() = _userJokesLiveData
