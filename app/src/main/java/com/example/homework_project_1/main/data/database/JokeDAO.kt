@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.data.database
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -7,7 +8,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import java.time.ZoneOffset
 
 @Dao
 interface JokeDAO {
@@ -29,8 +29,8 @@ interface JokeDAO {
     @Query("SELECT * FROM jokes ORDER BY RANDOM() LIMIT :amount")
     suspend fun getRandomJokes(amount: Int): List<JokeDbEntity>
 
-    @Query("SELECT * FROM jokes WHERE source = 'Own'")
-    suspend fun getUserJokes(): List<JokeDbEntity>
+    @Query("SELECT * FROM jokes WHERE source = 'USER'")
+    fun getUserJokes(): Flow<List<JokeDbEntity>>
 
     @Query("DELETE FROM sqlite_sequence WHERE name = 'jokes'")
     suspend fun resetJokesSequence()

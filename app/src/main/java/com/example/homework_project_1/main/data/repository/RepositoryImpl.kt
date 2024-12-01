@@ -2,6 +2,7 @@ package com.example.homework_project_1.main.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.api.ApiServiceImpl
@@ -10,14 +11,15 @@ import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeApiEntity
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toDbEntity
+
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 object RepositoryImpl : Repository {
 
     private val apiJokeSource = ApiJokeSource(ApiServiceImpl.getInstance())
     private val dbJokeSource = DbJokeSource(JokesWatcherDatabase.getInstance(App.instance))
 
-    private val _userJokesLiveData = MutableLiveData<List<JokeDTO>>()
     private val userJokesList = mutableListOf<JokeDTO>()
 
     private val categories = mutableSetOf<String>()
@@ -32,12 +34,12 @@ object RepositoryImpl : Repository {
     }
 
     // Database
-    suspend fun getDbUserJokes(): List<JokeDTO> {
-        return dbJokeSource.getDbUserJokes().map { it.toDto() }
-    }
-
-    fun getUserJokesLiveData(): LiveData<List<JokeDTO>> {
-        return _userJokesLiveData
+    fun getDbUserJokes(): Flow<List<JokeDTO>> {
+        return dbJokeSource.getDbUserJokes().map { jokeDbEntityList ->
+            jokeDbEntityList.map { jokeDbEntity ->
+                jokeDbEntity.toDto().also { it.source = JokeSource.USER }
+            }
+        }
     }
 
     override suspend fun dropJokesTable() {
@@ -48,8 +50,6 @@ object RepositoryImpl : Repository {
     }
 
     override suspend fun insertDbJoke(joke: JokeDTO) {
-        userJokesList.add(joke)
-        _userJokesLiveData.postValue(userJokesList.toList())
         dbJokeSource.setDbJoke(joke.toDbEntity(App.instance))
 
         if (joke.category !in categories ) {

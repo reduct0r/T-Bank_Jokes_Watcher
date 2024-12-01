@@ -71,6 +71,8 @@ class JokeListFragment : Fragment() {
 
         // Наблюдение за данными шуток
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->
+            adapter.submitList(jokes)
+
             if (jokes.isEmpty()) {
                 showError("No new jokes are available.")
                 binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)

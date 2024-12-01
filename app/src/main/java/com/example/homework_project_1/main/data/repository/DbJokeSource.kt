@@ -1,16 +1,14 @@
 package com.example.homework_project_1.main.data.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
-import com.example.homework_project_1.main.data.model.JokeDTO
+import kotlinx.coroutines.flow.Flow
 
 class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
 
     private val shownJokes = mutableSetOf<Int>()
 
-    suspend fun getDbUserJokes() : List<JokeDbEntity>{
+    fun getDbUserJokes() : Flow<List<JokeDbEntity>> {
         return jokeDb.jokeDao().getUserJokes()
     }
 

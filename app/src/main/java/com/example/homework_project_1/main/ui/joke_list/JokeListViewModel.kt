@@ -13,6 +13,7 @@ import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import com.example.homework_project_1.main.data.repository.RepositoryImpl
+import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 
 class JokeListViewModel : ViewModel() {
@@ -41,7 +42,6 @@ class JokeListViewModel : ViewModel() {
         _isLoadingEl.value = false
         generateJokes()
         observeNewJoke()
-
     }
 
     fun generateJokes() {
@@ -120,25 +120,22 @@ class JokeListViewModel : ViewModel() {
 
     // Наблюдение за добавлением новых шуток
     private fun observeNewJoke() {
-        jokeObserver = Observer { newJokes ->
-            if (newJokes.isNotEmpty()) {
-                val lastJoke = newJokes.last()
-                val modelUI = lastJoke.convertToUIModel(false)
-                val updatedJokes = listOf(modelUI) + (_jokes.value ?: emptyList())
-                _jokes.value = updatedJokes
-
+        viewModelScope.launch {
+            RepositoryImpl.getDbUserJokes()
+                .drop(1) // Пропускаем первый эмит, содержащий существующие шутки
+                .collect { newJokes ->
+                if (newJokes.isNotEmpty()) {
+                    val lastJoke = newJokes.last()
+                    val modelUI = lastJoke.convertToUIModel(false)
+                    val updatedJokes =  listOf(modelUI) + (_jokes.value ?: emptyList())
+                    _jokes.postValue(updatedJokes)
+                }
             }
-
-            //JokesRepository.getUserJokes().observeForever(jokeObserver!!)
         }
-        RepositoryImpl.getUserJokesLiveData().observeForever(jokeObserver!!)
     }
 
     override fun onCleared() {
         super.onCleared()
-        jokeObserver?.let {
-            RepositoryImpl.getUserJokesLiveData().removeObserver(it)
-        }
     }
 }
 
