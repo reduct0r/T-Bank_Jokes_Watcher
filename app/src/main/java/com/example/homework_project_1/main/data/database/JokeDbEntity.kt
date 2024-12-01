@@ -6,13 +6,12 @@ import androidx.room.PrimaryKey
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
-import kotlinx.serialization.Serializable
 
 @Entity(tableName = "jokes")
 data class JokeDbEntity (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int,
+    val id: Int? = null,
     @ColumnInfo(name = "category")
     val category: String,
     @ColumnInfo(name = "question")
@@ -28,7 +27,7 @@ data class JokeDbEntity (
 ) {
     fun toDto(): JokeDTO {
         return JokeDTO(
-            id = id,
+            id = id ?: 0,
             avatar = null,
             avatarUri = null,
             category = category,
@@ -51,6 +50,7 @@ data class JokeDbEntity (
         if (question != other.question) return false
         if (answer != other.answer) return false
         if (source != other.source) return false
+        if (flags != other.flags) return false
         if (avatar != null) {
             if (other.avatar == null) return false
             if (!avatar.contentEquals(other.avatar)) return false
@@ -60,12 +60,15 @@ data class JokeDbEntity (
     }
 
     override fun hashCode(): Int {
-        var result = id
+        var result = id ?: 0
         result = 31 * result + category.hashCode()
         result = 31 * result + question.hashCode()
         result = 31 * result + answer.hashCode()
         result = 31 * result + source.hashCode()
+        result = 31 * result + flags.hashCode()
         result = 31 * result + (avatar?.contentHashCode() ?: 0)
         return result
     }
+
+
 }

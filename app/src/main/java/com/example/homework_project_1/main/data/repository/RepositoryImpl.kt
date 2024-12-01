@@ -8,12 +8,12 @@ import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeApiEntity
+import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toDbEntity
 
 object RepositoryImpl : Repository {
 
     private val apiJokeSource = ApiJokeSource(ApiServiceImpl.getInstance())
     private val dbJokeSource = DbJokeSource(JokesWatcherDatabase.getInstance(App.instance))
-
 
     // API
     override suspend fun fetchApiJokes(amount: Int): List<JokeDTO> {
@@ -25,22 +25,22 @@ object RepositoryImpl : Repository {
     }
 
     // Database
+    override suspend fun existsDbJoke(id: Int): Boolean {
+        return dbJokeSource.exists(id)
+    }
+
+    override suspend fun dropJokesTable() {
+        dbJokeSource.dropJokesTable()
+    }
+
+    override suspend fun insertDbJoke(joke: JokeDTO) {
+        dbJokeSource.setDbJoke(joke.toDbEntity(App.instance))
+    }
+
     override suspend fun fetchDbJoke(id: Int): JokeDTO {
         return dbJokeSource.getDbJokeById(id).toDto().apply {
                 source = JokeSource.DATABASE
             }
-//        catch (e: Exception) {
-//            JokeDTO(1,
-//                null,
-//                null,
-//                JokeSource.DATABASE.toString(),
-//                "Error",
-//                "Error",
-//                JokeSource.DATABASE,
-//                Flags(false, false, false, false, false, false),
-//                "Error",
-//            )
-//        }
     }
 
     override suspend fun fetchAllDbJokes(amount: Int): List<JokeDTO> {

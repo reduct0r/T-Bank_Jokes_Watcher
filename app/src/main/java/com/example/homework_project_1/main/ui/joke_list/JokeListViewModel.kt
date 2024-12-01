@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.ui.joke_list
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -49,12 +50,22 @@ class JokeListViewModel : ViewModel() {
             //RepositoryImpl.fetchDbJoke(1)
             _isLoading.postValue(true)
             try {
-                val data = JokesGenerator.generateJokesData(15)
+                RepositoryImpl.dropJokesTable()
 
+                val data = JokesGenerator.generateJokesData(15)
                 val uiModel = data.convertToUIModel(false)
                 _jokes.postValue(uiModel)
+
+                data.forEach { joke ->
+                    RepositoryImpl.insertDbJoke(joke)
+                }
+                for (i in 1..14) {
+                    Log.d("myLog", RepositoryImpl.fetchDbJoke(i).toString())
+                }
+
             } catch (e: Exception) {
-                _error.value = e.message ?: "Unknown error"
+                _error.value = e.message ?: "Unknown error while generating jokes."
+                Log.e("mylog", "Error while generating jokes", e)
             } finally {
                 _isLoading.postValue(false)
             }

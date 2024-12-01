@@ -10,7 +10,7 @@ import com.example.homework_project_1.main.data.api.ApiClient
 import com.example.homework_project_1.main.data.api.ApiServiceImpl
 
 
-@Database(entities = [JokeDbEntity::class], version = 1)
+@Database(entities = [JokeDbEntity::class], version = 2)
 @TypeConverters(Converters::class)
 abstract class JokesWatcherDatabase : RoomDatabase() {
     abstract fun jokeDao(): JokeDAO
@@ -25,7 +25,9 @@ abstract class JokesWatcherDatabase : RoomDatabase() {
                     context.applicationContext,
                     JokesWatcherDatabase::class.java,
                     "jokes_watcher_database"
-                ).build().also { INSTANCE = it }
+                )
+                .fallbackToDestructiveMigration()
+                .build().also { INSTANCE = it }
             }
         }
     }

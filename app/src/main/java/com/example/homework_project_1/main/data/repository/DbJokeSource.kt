@@ -6,6 +6,22 @@ import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
 
     // Database
+    suspend fun exists(id: Int): Boolean {
+        // Вернуть true, если запись с данным id уже есть
+        val cursor = jokeDb.query("SELECT 1 FROM jokes WHERE id = ?", arrayOf(id.toString()))
+        val exists = cursor.count > 0
+        cursor.close()
+        return exists
+    }
+
+    suspend fun dropJokesTable() {
+        jokeDb.jokeDao().dropJokesTable()
+    }
+
+    suspend fun setDbJoke(joke: JokeDbEntity) {
+        jokeDb.jokeDao().insert(joke)
+    }
+
     suspend fun getDbJokeById(id: Int): JokeDbEntity {
         return jokeDb.jokeDao().getJokeById(id)
     }

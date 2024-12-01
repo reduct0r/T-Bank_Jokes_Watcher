@@ -26,4 +26,7 @@ interface JokeDAO {
     @Query("SELECT * FROM jokes ORDER BY RANDOM() LIMIT :amount")
     suspend fun getRandomJokes(amount: Int): List<JokeDbEntity>
 
+    @Query("DELETE FROM jokes")
+    suspend fun dropJokesTable()
+
 }
