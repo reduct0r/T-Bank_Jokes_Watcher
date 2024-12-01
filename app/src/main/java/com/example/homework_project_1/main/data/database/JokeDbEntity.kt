@@ -23,7 +23,9 @@ data class JokeDbEntity (
     @ColumnInfo(name = "flags")
     val flags: Flags,
     @ColumnInfo(name = "avatar")
-    val avatarByteArr: ByteArray?
+    val avatarByteArr: ByteArray?,
+    @ColumnInfo(name = "isShown")
+    val isShown: Boolean = false
 ) {
 
     fun toDto(): JokeDTO {

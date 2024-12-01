@@ -26,8 +26,8 @@ interface JokeDAO {
     @Query("SELECT * FROM jokes WHERE id = :id")
     suspend fun getJokeById(id: Int): JokeDbEntity
 
-    @Query("SELECT * FROM jokes ORDER BY RANDOM() LIMIT :amount")
-    suspend fun getRandomJokes(amount: Int): List<JokeDbEntity>
+    @Query("SELECT * FROM jokes WHERE isShown = 0 ORDER BY RANDOM() LIMIT :limit")
+    suspend fun getRandomJokes(limit: Int): List<JokeDbEntity>
 
     @Query("SELECT * FROM jokes WHERE source = 'USER'")
     fun getUserJokes(): Flow<List<JokeDbEntity>>
@@ -38,4 +38,12 @@ interface JokeDAO {
     @Query("DELETE FROM jokes")
     suspend fun dropJokesTable()
 
+    @Query("UPDATE jokes SET isShown = :mark WHERE id IN (:ids)")
+    suspend fun markShown(mark: Boolean, ids: List<Int>)
+
+    @Query("UPDATE jokes SET isShown = 0")
+    suspend fun markUnShown()
+
+    @Query("SELECT DISTINCT category FROM jokes")
+    suspend fun getCategories(): List<String>
 }

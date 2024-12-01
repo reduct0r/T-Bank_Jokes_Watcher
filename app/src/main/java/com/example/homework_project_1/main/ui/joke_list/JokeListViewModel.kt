@@ -13,6 +13,7 @@ import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import com.example.homework_project_1.main.data.repository.RepositoryImpl
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 
@@ -36,7 +37,6 @@ class JokeListViewModel : ViewModel() {
     fun setLoadingAdded(isAdded: Boolean) {
         _isLoadingAdded.value = isAdded
     }
-    private var jokeObserver: Observer<List<JokeDTO>>? = null
 
     init {
         _isLoadingEl.value = false
@@ -47,32 +47,24 @@ class JokeListViewModel : ViewModel() {
     fun generateJokes() {
         if (_isLoadingEl.value == true) return
         viewModelScope.launch {
-            //RepositoryImpl.fetchDbJoke(1)
             _isLoading.postValue(true)
             try {
-                //RepositoryImpl.dropJokesTable()
-                //RepositoryImpl.resetJokesSequence()
+//                RepositoryImpl.dropJokesTable()
+//                RepositoryImpl.resetJokesSequence()
+//                val data = JokesGenerator.generateJokesData(35)
+//                                data.forEach { joke ->
+//                    RepositoryImpl.insertDbJoke(joke)
+//                }
 
-                //val data = JokesGenerator.generateJokesData(1)
-                var data = RepositoryImpl.fetchRandomDbJokes(2)
+                var data = RepositoryImpl.fetchRandomDbJokes(10)
                 data = JokesGenerator.setAvatar(data)
 
                 val uiModel = data.convertToUIModel(false)
                 _jokes.postValue(uiModel)
-
-//                data.forEach { joke ->
-//                    RepositoryImpl.insertDbJoke(joke)
-//                }
-
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error while generating jokes."
-                Log.e("mylog", "Error while generating jokes", e)
             } finally {
                 _isLoading.postValue(false)
-
-//                for (i in 1..6) {
-//                    Log.d("myLog", RepositoryImpl.fetchDbJoke(i).toString())
-//                }
             }
         }
     }
@@ -114,7 +106,9 @@ class JokeListViewModel : ViewModel() {
     // Сброс показанных шуток
     fun resetJokes() {
         //_jokes.value = emptyList()
-        RepositoryImpl.resetUsedJokes()
+        viewModelScope.launch {
+            RepositoryImpl.resetUsedJokes()
+        }
         JokesGenerator.reset()
     }
 

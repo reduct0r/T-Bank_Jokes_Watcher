@@ -10,7 +10,7 @@ import com.example.homework_project_1.main.data.api.ApiClient
 import com.example.homework_project_1.main.data.api.ApiServiceImpl
 
 
-@Database(entities = [JokeDbEntity::class], version = 2)
+@Database(entities = [JokeDbEntity::class], version = 3)
 @TypeConverters(Converters::class)
 abstract class JokesWatcherDatabase : RoomDatabase() {
     abstract fun jokeDao(): JokeDAO

@@ -66,27 +66,5 @@ object JokesRepository {
         return defaultJokesList + userJokesList
     }
 
-    suspend fun addNewJoke(joke: JokeDTO) {
-        delay(2000)
-        userJokesList.add(joke)
-        _userJokesLiveData.postValue(userJokesList.toList())
 
-        if (joke.category !in categories ) {
-            categories.add(joke.category)
-        }
-        JokesGenerator.addToSelectedJokes(joke, index = userJokesList.size + defaultJokesList.size - 1)
-    }
-
-
-    fun getUserJokes(): LiveData<List<JokeDTO>> {
-        return _userJokesLiveData
-    }
-
-    fun getCategories(): List<String> {
-        return categories.toList().sorted()
-    }
-
-    fun addNewCategory(newCategory: String) {
-        categories.add(newCategory)
-    }
 }

@@ -1,16 +1,13 @@
 package com.example.homework_project_1.main.data.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.api.ApiServiceImpl
-import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeApiEntity
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toDbEntity
+import kotlinx.coroutines.delay
 
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -19,8 +16,6 @@ object RepositoryImpl : Repository {
 
     private val apiJokeSource = ApiJokeSource(ApiServiceImpl.getInstance())
     private val dbJokeSource = DbJokeSource(JokesWatcherDatabase.getInstance(App.instance))
-
-    private val userJokesList = mutableListOf<JokeDTO>()
 
     private val categories = mutableSetOf<String>()
 
@@ -72,25 +67,29 @@ object RepositoryImpl : Repository {
     }
 
     override suspend fun fetchRandomDbJokes(amount: Int): List<JokeDTO> {
+        delay(500)
         return dbJokeSource.getRandomDbJokes(amount).map { jokeEntity ->
-            jokeEntity.toDto().apply {
-                source = JokeSource.DATABASE
-            }
+            jokeEntity.toDto()
         }
     }
 
-    fun getCategories(): List<String> {
-        return categories.toList().sorted()
+    suspend fun getCategories(): List<String> {
+        return dbJokeSource.getCategories()
     }
 
-    fun resetUsedJokes(){
+    fun addNewCategory(newCategory: String) {
+        categories.add(newCategory)
+    }
+
+    suspend fun resetUsedJokes(){
         dbJokeSource.resetUsedJokes()
     }
 
+
     // Database Cache
     override suspend fun fetchCacheJoke(id: Int): JokeDTO {
-        return dbJokeSource.getCachedJokeById(id).first().toDto().apply {
-            source = JokeSource.CACHE
+        return dbJokeSource.getCachedJokeById(id).toDto().apply {
+            source = JokeSource.DATABASE
         }
     }
 
@@ -109,10 +108,6 @@ object RepositoryImpl : Repository {
                 source = JokeSource.CACHE
             }
         }
-    }
-
-    fun getStr(): String {
-        return "str"
     }
 
 }

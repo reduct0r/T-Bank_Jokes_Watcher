@@ -113,7 +113,8 @@ data class JokeDTO(
                 answer = answer,
                 flags = flags,
                 avatarByteArr = avatarByteArr,
-                source = source.toString()
+                source = source.toString(),
+                isShown = false
             )
         }
 

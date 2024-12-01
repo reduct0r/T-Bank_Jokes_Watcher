@@ -1,15 +1,21 @@
 package com.example.homework_project_1.main.data.repository
 
+import android.util.Log
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import kotlinx.coroutines.flow.Flow
 
 class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
 
-    private val shownJokes = mutableSetOf<Int>()
+    private val shownJokes = mutableListOf<Int>()
+    private val shownCachedJokes = mutableSetOf<Int>()
 
     fun getDbUserJokes() : Flow<List<JokeDbEntity>> {
         return jokeDb.jokeDao().getUserJokes()
+    }
+
+    suspend fun getCategories(): List<String> {
+        return jokeDb.jokeDao().getCategories()
     }
 
     suspend fun resetJokesSequence() {
@@ -29,15 +35,15 @@ class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
     }
 
     suspend fun getRandomDbJokes(amount: Int): List<JokeDbEntity> {
-        val allJokes = jokeDb.jokeDao().getRandomJokes(amount * 2)
-        val result = allJokes.filterNot { shownJokes.contains(it.id) }
-            .take(amount) // Оставим только те, которые ещё не были показаны
-        // Сохраним id показанных
-        shownJokes.addAll(result.map { it.id!! })
-        return result
+        val jokes = jokeDb.jokeDao().getRandomJokes(amount)
+        jokes.forEach{shownJokes.add(it.id!!)}
+
+        jokeDb.jokeDao().markShown(true, shownJokes) // Обновляем статус в базе
+        return jokes
     }
 
-    fun resetUsedJokes() {
+    suspend fun resetUsedJokes() {
+        jokeDb.jokeDao().markUnShown()
         shownJokes.clear()
     }
 
@@ -50,13 +56,19 @@ class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
         return jokeDb.jokeDao().getAllJokes()
     }
 
-    suspend fun getCachedJokeById(id: Int): List<JokeDbEntity> {
-        return jokeDb.jokeDao().getAllJokes()
+    suspend fun getCachedJokeById(id: Int): JokeDbEntity {
+        return jokeDb.jokeDao().getJokeById(id)
     }
 
     suspend fun getRandomCachedJokes(amount: Int): List<JokeDbEntity> {
-        return jokeDb.jokeDao().getRandomJokes(amount)
+        val allJokes = jokeDb.jokeDao().getRandomJokes(amount * 2)
+        val result = allJokes.filterNot { shownCachedJokes.contains(it.id) }
+            .take(amount)
+        shownCachedJokes.addAll(result.map { it.id!! })
+        return result
     }
 
-
+    fun resetUsedCachedJokes() {
+        shownCachedJokes.clear()
+    }
 }

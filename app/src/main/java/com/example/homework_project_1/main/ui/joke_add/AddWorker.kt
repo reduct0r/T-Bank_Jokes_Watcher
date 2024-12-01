@@ -4,23 +4,15 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.lifecycle.viewModelScope
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.repository.RepositoryImpl
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.UUID
 
-// Для фонового добавления шутки в хранилище (когда activity закрыта)
+// Для фонового добавления шутки в хранилище
 class AddJokeWorker(
     context: Context,
     params: WorkerParameters
