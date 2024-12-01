@@ -23,8 +23,7 @@ class AddJokeWorker(
         val question = inputData.getString("question") ?: return Result.failure()
         val answer = inputData.getString("answer") ?: return Result.failure()
         val category = inputData.getString("category") ?: return Result.failure()
-        val avatarUriString = inputData.getString("avatarUri")
-        val avatarUri = avatarUriString?.let { Uri.parse(it) }
+        val avatarByteArrString = inputData.getByteArray("avatarByteArr")
         val source = inputData.getString("source")?.let { JokeSource.valueOf(it) } ?: return Result.failure()
 
         val joke = JokeDTO(
@@ -32,8 +31,8 @@ class AddJokeWorker(
             question = question,
             answer = answer,
             category = category,
-            avatarUri = avatarUri?.toString(),
-            avatar = if (avatarUri == null) AvatarProvider.getAvatarsByCategory(category).random() else null,
+            avatarByteArr = avatarByteArrString,
+            avatar = if (avatarByteArrString == null) AvatarProvider.getAvatarsByCategory(category).random() else null,
             flags = Flags(
                 nsfw = false,
                 religious = false,

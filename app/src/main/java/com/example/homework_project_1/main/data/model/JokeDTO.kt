@@ -3,12 +3,16 @@ package com.example.homework_project_1.main.data.model
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.annotation.IdRes
 import androidx.core.net.toUri
+import androidx.room.TypeConverters
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.ViewTyped
+import com.example.homework_project_1.main.data.database.Converters
 import com.example.homework_project_1.main.data.database.JokeDbEntity
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -17,7 +21,7 @@ import java.io.InputStream
 data class JokeDTO(
     var id: Int,
     @IdRes var avatar: Int?,
-    val avatarUri: String? = null, // C Uri? на String? для сериализации
+    val avatarByteArr: ByteArray?,
     val category: String,
     val question: String,
     val answer: String,
@@ -27,21 +31,39 @@ data class JokeDTO(
     val flags: Flags,
     val lang: String
 ) {
-    @SuppressLint("Recycle")
-    fun uriToByteArray(context: Context, uri: Uri): ByteArray? {
-        return try {
-            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-            val byteBuffer = ByteArrayOutputStream()
-            val buffer = ByteArray(10240)
-            var len: Int
-            while (inputStream?.read(buffer).also { len = it ?: -1 } != -1) {
-                byteBuffer.write(buffer, 0, len)
-            }
-            byteBuffer.toByteArray()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as JokeDTO
+
+        if (id != other.id) return false
+        if (avatar != other.avatar) return false
+        if (avatarByteArr != null) {
+            if (other.avatarByteArr == null) return false
+            if (!avatarByteArr.contentEquals(other.avatarByteArr)) return false
+        } else if (other.avatarByteArr != null) return false
+        if (category != other.category) return false
+        if (question != other.question) return false
+        if (answer != other.answer) return false
+        if (source != other.source) return false
+        if (flags != other.flags) return false
+        if (lang != other.lang) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + (avatar ?: 0)
+        result = 31 * result + (avatarByteArr?.contentHashCode() ?: 0)
+        result = 31 * result + category.hashCode()
+        result = 31 * result + question.hashCode()
+        result = 31 * result + answer.hashCode()
+        result = 31 * result + source.hashCode()
+        result = 31 * result + flags.hashCode()
+        result = 31 * result + lang.hashCode()
+        return result
     }
 
     companion object {
@@ -53,7 +75,7 @@ data class JokeDTO(
                 isFavorite = isFavorite,
                 source = source,
                 avatar = avatar,
-                avatarUri = avatarUri?.toUri(),
+                avatarByteArr = avatarByteArr,
             )
         }
 
@@ -66,9 +88,10 @@ data class JokeDTO(
                     isFavorite = isFavorite,
                     source = joke.source,
                     avatar = joke.avatar,
-                    avatarUri = joke.avatarUri?.toUri()
+                    avatarByteArr = joke.avatarByteArr
                 )
             }
+
         }
 
         fun JokeDTO.toApiEntity(safe: Boolean, type: String) = JokeApiEntity(
@@ -83,22 +106,17 @@ data class JokeDTO(
         )
 
         fun JokeDTO.toDbEntity(context: Context): JokeDbEntity {
-            val avatarBytes: ByteArray? = avatarUri?.toUri()?.let { uri ->
-                uriToByteArray(context, uri)
-            }
-
             return JokeDbEntity(
                 id = null,
                 category = category,
                 question = question,
                 answer = answer,
                 flags = flags,
-                avatar = avatarBytes,
+                avatarByteArr = avatarByteArr,
                 source = source.toString()
             )
         }
-    }
 
-}
+}}
 
 

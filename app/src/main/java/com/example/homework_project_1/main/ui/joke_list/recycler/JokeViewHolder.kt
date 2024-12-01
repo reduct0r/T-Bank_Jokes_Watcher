@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.ui.joke_list.recycler
 
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.R
@@ -13,8 +14,8 @@ class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHol
         bindAnswer(joke.answer)
         bindTitle(joke.category)
 
-        if (joke.avatarUri != null) {
-            bindURIAvatar(joke.avatarUri)
+        if (joke.avatarByteArr != null) {
+            bindAvatarFromByteArray(joke.avatarByteArr)
         } else {
             bindAvatar(joke.avatar)
         }
@@ -41,6 +42,10 @@ class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHol
             }
         }
     }
+    private fun bindAvatarFromByteArray(avatarByteArray: ByteArray) {
+        val bitmap = BitmapFactory.decodeByteArray(avatarByteArray, 0, avatarByteArray.size)
+        binding.avatar.setImageBitmap(bitmap)
+    }
 
     private fun bindQuestion(question: String){
         binding.question.text = question
@@ -57,12 +62,6 @@ class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHol
     private fun bindAvatar(id: Int?){
         id?.let {
             binding.avatar.setImageResource(it)
-        }
-    }
-
-    private fun bindURIAvatar(uri: Uri?){
-        uri?.let {
-            binding.avatar.setImageURI(it)
         }
     }
 }

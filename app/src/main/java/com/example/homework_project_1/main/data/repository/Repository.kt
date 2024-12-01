@@ -8,8 +8,8 @@ interface Repository {
     suspend fun fetchApiJokes(amount: Int): List<JokeDTO>
 
     // Database
-    suspend fun existsDbJoke(id: Int): Boolean
     suspend fun dropJokesTable()
+    suspend fun resetJokesSequence()
 
     suspend fun insertDbJoke(joke: JokeDTO)
 

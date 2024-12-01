@@ -9,7 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import com.example.homework_project_1.main.data.repository.RepositoryImpl
@@ -50,17 +49,18 @@ class JokeListViewModel : ViewModel() {
             //RepositoryImpl.fetchDbJoke(1)
             _isLoading.postValue(true)
             try {
-                RepositoryImpl.dropJokesTable()
+                //RepositoryImpl.dropJokesTable()
+                //RepositoryImpl.resetJokesSequence()
 
-                val data = JokesGenerator.generateJokesData(15)
+                //val data = JokesGenerator.generateJokesData(1)
+                var data = RepositoryImpl.fetchRandomDbJokes(2)
+                data = JokesGenerator.setAvatar(data)
+
                 val uiModel = data.convertToUIModel(false)
                 _jokes.postValue(uiModel)
 
                 data.forEach { joke ->
                     RepositoryImpl.insertDbJoke(joke)
-                }
-                for (i in 1..14) {
-                    Log.d("myLog", RepositoryImpl.fetchDbJoke(i).toString())
                 }
 
             } catch (e: Exception) {
@@ -68,6 +68,10 @@ class JokeListViewModel : ViewModel() {
                 Log.e("mylog", "Error while generating jokes", e)
             } finally {
                 _isLoading.postValue(false)
+
+//                for (i in 1..6) {
+//                    Log.d("myLog", RepositoryImpl.fetchDbJoke(i).toString())
+//                }
             }
         }
     }
@@ -79,6 +83,10 @@ class JokeListViewModel : ViewModel() {
             _isLoadingEl.value = true
             try {
                 var newJokes = RepositoryImpl.fetchApiJokes(amount = 10)
+
+//                newJokes.forEach { joke ->
+//                    RepositoryImpl.insertDbJoke(joke)
+//                }
 
                 newJokes = JokesGenerator.setAvatar(newJokes)
 
@@ -92,6 +100,7 @@ class JokeListViewModel : ViewModel() {
                 _error.value =  "Unknown error occurred while loading more jokes."
             } finally {
                 _isLoadingEl.value = false
+
             }
         }
     }
@@ -104,6 +113,7 @@ class JokeListViewModel : ViewModel() {
     // Сброс показанных шуток
     fun resetJokes() {
         //_jokes.value = emptyList()
+        RepositoryImpl.resetUsedJokes()
         JokesGenerator.reset()
     }
 
@@ -115,6 +125,15 @@ class JokeListViewModel : ViewModel() {
                 val modelUI = lastJoke.convertToUIModel(false)
                 val updatedJokes = listOf(modelUI) + (_jokes.value ?: emptyList())
                 _jokes.value = updatedJokes
+
+                viewModelScope.launch {
+                    RepositoryImpl.insertDbJoke(lastJoke)
+                    for (i in 1..2) {
+
+                        Log.d("myLog", RepositoryImpl.fetchDbJoke(i).toString())
+                    }
+                }
+
             }
         }
         JokesRepository.getUserJokes().observeForever(jokeObserver!!)

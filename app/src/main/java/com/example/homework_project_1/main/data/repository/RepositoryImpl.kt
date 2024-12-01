@@ -5,7 +5,6 @@ import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.api.ApiServiceImpl
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
-import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeApiEntity
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toDbEntity
@@ -25,12 +24,11 @@ object RepositoryImpl : Repository {
     }
 
     // Database
-    override suspend fun existsDbJoke(id: Int): Boolean {
-        return dbJokeSource.exists(id)
-    }
-
     override suspend fun dropJokesTable() {
         dbJokeSource.dropJokesTable()
+    }
+    override suspend fun resetJokesSequence() {
+        dbJokeSource.resetJokesSequence()
     }
 
     override suspend fun insertDbJoke(joke: JokeDTO) {
@@ -51,13 +49,16 @@ object RepositoryImpl : Repository {
         }
     }
 
-
     override suspend fun fetchRandomDbJokes(amount: Int): List<JokeDTO> {
         return dbJokeSource.getRandomDbJokes(amount).map { jokeEntity ->
             jokeEntity.toDto().apply {
                 source = JokeSource.DATABASE
             }
         }
+    }
+
+    fun resetUsedJokes(){
+        dbJokeSource.resetUsedJokes()
     }
 
     // Database Cache

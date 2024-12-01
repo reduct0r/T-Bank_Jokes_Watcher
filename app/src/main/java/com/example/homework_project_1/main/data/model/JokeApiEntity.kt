@@ -30,7 +30,7 @@ data class JokeApiEntity(
         lang = lang,
         flags = flags,
         avatar = null,
-        avatarUri = null,
+        avatarByteArr = null,
         source = JokeSource.DEFAULT
         )
     }

@@ -23,13 +23,14 @@ data class JokeDbEntity (
     @ColumnInfo(name = "flags")
     val flags: Flags,
     @ColumnInfo(name = "avatar")
-    val avatar: ByteArray?
+    val avatarByteArr: ByteArray?
 ) {
+
     fun toDto(): JokeDTO {
         return JokeDTO(
             id = id ?: 0,
             avatar = null,
-            avatarUri = null,
+            avatarByteArr = avatarByteArr,
             category = category,
             question = question,
             answer = answer,
@@ -51,10 +52,10 @@ data class JokeDbEntity (
         if (answer != other.answer) return false
         if (source != other.source) return false
         if (flags != other.flags) return false
-        if (avatar != null) {
-            if (other.avatar == null) return false
-            if (!avatar.contentEquals(other.avatar)) return false
-        } else if (other.avatar != null) return false
+        if (avatarByteArr != null) {
+            if (other.avatarByteArr == null) return false
+            if (!avatarByteArr.contentEquals(other.avatarByteArr)) return false
+        } else if (other.avatarByteArr != null) return false
 
         return true
     }
@@ -66,9 +67,7 @@ data class JokeDbEntity (
         result = 31 * result + answer.hashCode()
         result = 31 * result + source.hashCode()
         result = 31 * result + flags.hashCode()
-        result = 31 * result + (avatar?.contentHashCode() ?: 0)
+        result = 31 * result + (avatarByteArr?.contentHashCode() ?: 0)
         return result
     }
-
-
 }

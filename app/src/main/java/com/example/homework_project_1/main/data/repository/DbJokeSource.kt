@@ -5,13 +5,10 @@ import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 
 class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
 
-    // Database
-    suspend fun exists(id: Int): Boolean {
-        // Вернуть true, если запись с данным id уже есть
-        val cursor = jokeDb.query("SELECT 1 FROM jokes WHERE id = ?", arrayOf(id.toString()))
-        val exists = cursor.count > 0
-        cursor.close()
-        return exists
+    private val shownJokes = mutableSetOf<Int>()
+
+    suspend fun resetJokesSequence() {
+        jokeDb.jokeDao().resetJokesSequence()
     }
 
     suspend fun dropJokesTable() {
@@ -27,7 +24,16 @@ class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
     }
 
     suspend fun getRandomDbJokes(amount: Int): List<JokeDbEntity> {
-        return jokeDb.jokeDao().getRandomJokes(amount)
+        val allJokes = jokeDb.jokeDao().getRandomJokes(amount * 2)
+        val result = allJokes.filterNot { shownJokes.contains(it.id) }
+            .take(amount) // Оставим только те, которые ещё не были показаны
+        // Сохраним id показанных
+        shownJokes.addAll(result.map { it.id!! })
+        return result
+    }
+
+    fun resetUsedJokes() {
+        shownJokes.clear()
     }
 
     suspend fun getAllDbJokes(): List<JokeDbEntity> {

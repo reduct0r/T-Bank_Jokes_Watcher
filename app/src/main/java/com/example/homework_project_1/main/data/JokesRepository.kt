@@ -45,6 +45,7 @@ object JokesRepository {
                             explicit = false
                         ),
                         lang = "en",
+                        avatarByteArr = null,
                         source = JokeSource.DEFAULT
                     )
                 )

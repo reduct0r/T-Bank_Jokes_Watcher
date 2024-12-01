@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.ui.joke_details
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -96,8 +97,9 @@ class JokeDetailsFragment : Fragment() {
             question.text = item.question
             answer.text = item.answer
             category.text = item.category
-            if (item.avatarUri != null) {
-                avatar.setImageURI(item.avatarUri)
+            if (item.avatarByteArr != null) {
+                val bitmap = BitmapFactory.decodeByteArray(item.avatarByteArr, 0, item.avatarByteArr.size)
+                avatar.setImageBitmap(bitmap)
             } else
                 item.avatar?.let {
                     avatar.setImageResource(it)
