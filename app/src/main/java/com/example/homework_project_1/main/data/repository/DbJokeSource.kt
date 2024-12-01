@@ -1,11 +1,18 @@
 package com.example.homework_project_1.main.data.repository
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
+import com.example.homework_project_1.main.data.model.JokeDTO
 
 class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
 
     private val shownJokes = mutableSetOf<Int>()
+
+    suspend fun getDbUserJokes() : List<JokeDbEntity>{
+        return jokeDb.jokeDao().getUserJokes()
+    }
 
     suspend fun resetJokesSequence() {
         jokeDb.jokeDao().resetJokesSequence()

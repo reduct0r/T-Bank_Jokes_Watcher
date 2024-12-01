@@ -25,7 +25,7 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
             .putString("question", question)
             .putString("answer", answer)
             .putString("category", category)
-            .putString("avatarUri", avatarUri?.toString())
+            .putString("avatarByteArr", avatarUri?.toString())
             .putString("source", source.name)
             .build()
 

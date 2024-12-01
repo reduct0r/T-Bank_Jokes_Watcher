@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.ui.joke_list
 
+import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -59,9 +60,9 @@ class JokeListViewModel : ViewModel() {
                 val uiModel = data.convertToUIModel(false)
                 _jokes.postValue(uiModel)
 
-                data.forEach { joke ->
-                    RepositoryImpl.insertDbJoke(joke)
-                }
+//                data.forEach { joke ->
+//                    RepositoryImpl.insertDbJoke(joke)
+//                }
 
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error while generating jokes."
@@ -126,23 +127,17 @@ class JokeListViewModel : ViewModel() {
                 val updatedJokes = listOf(modelUI) + (_jokes.value ?: emptyList())
                 _jokes.value = updatedJokes
 
-                viewModelScope.launch {
-                    RepositoryImpl.insertDbJoke(lastJoke)
-                    for (i in 1..2) {
-
-                        Log.d("myLog", RepositoryImpl.fetchDbJoke(i).toString())
-                    }
-                }
-
             }
+
+            //JokesRepository.getUserJokes().observeForever(jokeObserver!!)
         }
-        JokesRepository.getUserJokes().observeForever(jokeObserver!!)
+        RepositoryImpl.getUserJokesLiveData().observeForever(jokeObserver!!)
     }
 
     override fun onCleared() {
         super.onCleared()
         jokeObserver?.let {
-            JokesRepository.getUserJokes().removeObserver(it)
+            RepositoryImpl.getUserJokesLiveData().removeObserver(it)
         }
     }
 }

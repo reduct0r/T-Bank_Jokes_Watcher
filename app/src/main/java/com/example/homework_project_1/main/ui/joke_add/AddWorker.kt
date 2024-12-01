@@ -1,15 +1,22 @@
 package com.example.homework_project_1.main.ui.joke_add
 
 import android.content.Context
+import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
+import android.util.Log
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.viewModelScope
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.JokeSource
-import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
+import com.example.homework_project_1.main.data.repository.RepositoryImpl
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
 
@@ -20,19 +27,31 @@ class AddJokeWorker(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
+        val id = inputData.getInt("id", -1)
+        if (id == -1) return Result.failure()
+
         val question = inputData.getString("question") ?: return Result.failure()
         val answer = inputData.getString("answer") ?: return Result.failure()
         val category = inputData.getString("category") ?: return Result.failure()
-        val avatarByteArrString = inputData.getByteArray("avatarByteArr")
+        val avatarUriString = inputData.getString("avatarByteArr")
         val source = inputData.getString("source")?.let { JokeSource.valueOf(it) } ?: return Result.failure()
 
+        val avatarByteArr: ByteArray? = avatarUriString?.let { uriString ->
+            try {
+                val uri = Uri.parse(uriString)
+                applicationContext.contentResolver.openInputStream(uri)?.use { it.readBytes() }
+            } catch (e: Exception) {
+                null
+            }
+        }
+
         val joke = JokeDTO(
-            id = UUID.randomUUID().hashCode(),
+            id = id,
             question = question,
             answer = answer,
             category = category,
-            avatarByteArr = avatarByteArrString,
-            avatar = if (avatarByteArrString == null) AvatarProvider.getAvatarsByCategory(category).random() else null,
+            avatarByteArr = avatarByteArr,
+            avatar = if (avatarByteArr == null) AvatarProvider.getAvatarsByCategory(category).random() else null,
             flags = Flags(
                 nsfw = false,
                 religious = false,
@@ -46,11 +65,15 @@ class AddJokeWorker(
         )
 
         return try {
-            withContext(Dispatchers.IO) {
-                JokesRepository.addNewJoke(joke)
-            }
+            RepositoryImpl.insertDbJoke(joke)
             Result.success()
+        } catch (e: SQLiteConstraintException) {
+            // Логирование ошибки и повторная попытка
+            Log.e("AddJokeWorker", "SQLite Constraint Exception", e)
+            Result.retry()
         } catch (e: Exception) {
+            // Логирование ошибки и повторная попытка
+            Log.e("AddJokeWorker", "Unexpected Exception", e)
             Result.retry()
         }
     }
