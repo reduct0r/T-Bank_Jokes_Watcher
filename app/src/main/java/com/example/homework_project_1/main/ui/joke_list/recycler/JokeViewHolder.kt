@@ -31,6 +31,14 @@ class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHol
                 binding.sourceLabel.text = binding.sourceLabel.context.getString(R.string.default_label)
                 binding.sourceLabel.setTextColor(binding.root.context.getColor(R.color.light_gray))
             }
+            JokeSource.DATABASE -> {
+                binding.sourceLabel.text = binding.sourceLabel.context.getString(R.string.database)
+                binding.sourceLabel.setTextColor(binding.root.context.getColor(R.color.teal_700))
+            }
+            JokeSource.CACHE -> {
+                binding.sourceLabel.text = binding.sourceLabel.context.getString(R.string.cache)
+                binding.sourceLabel.setTextColor(binding.root.context.getColor(R.color.light_green))
+            }
         }
     }
 

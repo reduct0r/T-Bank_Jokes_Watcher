@@ -1,25 +1,32 @@
 package com.example.homework_project_1.main.data.database
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.homework_project_1.main.data.api.ApiClient
+import com.example.homework_project_1.main.data.api.ApiServiceImpl
+
 
 @Database(entities = [JokeDbEntity::class], version = 1)
+@TypeConverters(Converters::class)
 abstract class JokesWatcherDatabase : RoomDatabase() {
     abstract fun jokeDao(): JokeDAO
 
     companion object {
         @Volatile
-        lateinit var INSTANCE: JokesWatcherDatabase
+        var INSTANCE: JokesWatcherDatabase? = null
 
-        fun initDatabase(context: Context) {
-            val instance = Room.databaseBuilder(
-                context.applicationContext,
-                JokesWatcherDatabase::class.java,
-                "jokes_watcher_database"
-            ).build()
-            INSTANCE = instance
+        fun getInstance(context: Context): JokesWatcherDatabase {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: Room.databaseBuilder(
+                    context.applicationContext,
+                    JokesWatcherDatabase::class.java,
+                    "jokes_watcher_database"
+                ).build().also { INSTANCE = it }
+            }
         }
     }
 }

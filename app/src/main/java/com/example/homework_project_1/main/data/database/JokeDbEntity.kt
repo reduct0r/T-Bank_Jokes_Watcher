@@ -6,32 +6,27 @@ import androidx.room.PrimaryKey
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
+import kotlinx.serialization.Serializable
 
 @Entity(tableName = "jokes")
 data class JokeDbEntity (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Int = 0,
-
+    val id: Int,
     @ColumnInfo(name = "category")
     val category: String,
-
     @ColumnInfo(name = "question")
     val question: String,
-
     @ColumnInfo(name = "answer")
     val answer: String,
-
     @ColumnInfo(name = "source")
     val source: String,
-
     @ColumnInfo(name = "flags")
     val flags: Flags,
-
     @ColumnInfo(name = "avatar")
     val avatar: ByteArray?
 ) {
-    fun toDto(flags: Flags): JokeDTO {
+    fun toDto(): JokeDTO {
         return JokeDTO(
             id = id,
             avatar = null,

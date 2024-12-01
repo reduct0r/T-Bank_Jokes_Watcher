@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
+import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import com.example.homework_project_1.main.data.repository.RepositoryImpl
@@ -39,11 +40,13 @@ class JokeListViewModel : ViewModel() {
         _isLoadingEl.value = false
         generateJokes()
         observeNewJoke()
+
     }
 
     fun generateJokes() {
         if (_isLoadingEl.value == true) return
         viewModelScope.launch {
+            //RepositoryImpl.fetchDbJoke(1)
             _isLoading.postValue(true)
             try {
                 val data = JokesGenerator.generateJokesData(15)
@@ -64,7 +67,7 @@ class JokeListViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoadingEl.value = true
             try {
-                var newJokes = RepositoryImpl.fetchJokes(amount = 10)
+                var newJokes = RepositoryImpl.fetchApiJokes(amount = 10)
 
                 newJokes = JokesGenerator.setAvatar(newJokes)
 
@@ -113,3 +116,4 @@ class JokeListViewModel : ViewModel() {
         }
     }
 }
+

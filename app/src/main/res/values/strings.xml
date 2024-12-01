@@ -33,4 +33,6 @@
     <string name="network">Network</string>
     <string name="default_label">Default</string>
     <string name="unknown">Unknown</string>
+    <string name="database">Database</string>
+    <string name="cache">Cache</string>
 </resources>

@@ -2,12 +2,15 @@ package com.example.homework_project_1.main
 
 import android.app.Application
 
+
 class App : Application() {
-    override fun onCreate() {
-        super.onCreate()
+    companion object {
+        lateinit var instance: App
+            private set
     }
 
-    companion object {
-
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
     }
 }

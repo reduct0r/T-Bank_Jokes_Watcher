@@ -19,4 +19,11 @@ interface JokeDAO {
 
     @Query("SELECT * FROM jokes")
     suspend fun getAllJokes(): List<JokeDbEntity>
+
+    @Query("SELECT * FROM jokes WHERE id = :id")
+    suspend fun getJokeById(id: Int): JokeDbEntity
+
+    @Query("SELECT * FROM jokes ORDER BY RANDOM() LIMIT :amount")
+    suspend fun getRandomJokes(amount: Int): List<JokeDbEntity>
+
 }
