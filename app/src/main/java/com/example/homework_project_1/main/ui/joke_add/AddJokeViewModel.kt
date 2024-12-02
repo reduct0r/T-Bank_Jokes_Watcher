@@ -9,6 +9,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.example.homework_project_1.main.data.JokeSource
 import java.util.UUID
 
 class AddJokeViewModel(application: Application) : AndroidViewModel(application) {
@@ -16,7 +17,7 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
     private val _addJokeStatus = MutableLiveData<AddJokeStatus>()
     val addJokeStatus: LiveData<AddJokeStatus> get() = _addJokeStatus
 
-    fun addJoke(question: String, answer: String, category: String, avatarUri: Uri?) {
+    fun addJoke(question: String, answer: String, category: String, avatarUri: Uri?, source: JokeSource) {
         // Создание входных данных для менеджера
         val data = Data.Builder()
             .putInt("id", UUID.randomUUID().hashCode())
@@ -25,6 +26,7 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
             .putString("answer", answer)
             .putString("category", category)
             .putString("avatarUri", avatarUri?.toString())
+            .putString("source", source.name)
             .build()
 
         // Создание задачи для добавления шутки

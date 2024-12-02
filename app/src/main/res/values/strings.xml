@@ -29,4 +29,8 @@
     <string name="joke_add_in_background">Joke is uploading in BG</string>
     <string name="unknown_error">Unknown error</string>
     <string name="DefaultDescription">TODO</string>
+    <string name="own">Own</string>
+    <string name="network">Network</string>
+    <string name="default_label">Default</string>
+    <string name="unknown">Unknown</string>
 </resources>

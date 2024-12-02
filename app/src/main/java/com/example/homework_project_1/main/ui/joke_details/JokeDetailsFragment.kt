@@ -8,9 +8,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeDetailsBinding
+import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.ViewTyped
-
 
 class JokeDetailsFragment : Fragment() {
 
@@ -71,6 +72,22 @@ class JokeDetailsFragment : Fragment() {
         binding.buttonBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+
+        // Установка данных в лейбл
+        when (viewModel.joke.value?.source) {
+            JokeSource.DEFAULT -> {
+                binding.sourceLabel.text = getString(R.string.default_label)
+            }
+            JokeSource.NETWORK -> {
+                binding.sourceLabel.text = getString(R.string.network)
+            }
+            JokeSource.USER -> {
+                binding.sourceLabel.text = getString(R.string.own)
+            }
+            else -> {
+                binding.sourceLabel.text = getString(R.string.unknown)
+            }
+        }
     }
 
     // Установка данных в элементы экрана
@@ -82,9 +99,9 @@ class JokeDetailsFragment : Fragment() {
             if (item.avatarUri != null) {
                 avatar.setImageURI(item.avatarUri)
             } else
-            item.avatar?.let {
-                avatar.setImageResource(it)
-            }
+                item.avatar?.let {
+                    avatar.setImageResource(it)
+                }
         }
     }
 

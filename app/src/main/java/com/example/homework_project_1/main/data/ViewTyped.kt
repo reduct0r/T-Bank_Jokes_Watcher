@@ -4,25 +4,8 @@ import android.net.Uri
 import androidx.annotation.IdRes
 import kotlinx.serialization.Serializable
 
+// UI-Интерфейс для отображения элементов списка
 @Serializable
-data class JokesData(
-    val categories: List<Category>
-)
-
-@Serializable
-data class Category(
-    val name: String,
-    val jokes: List<JokeDTO>
-)
-
-@Serializable
-data class JokeDTO(
-    val question: String,
-    val answer: String,
-    val avatar: String?
-)
-
-// Интерфейс для отображения элементов списка
 sealed interface ViewTyped {
     // Класс шутки
     data class JokeUIModel(
@@ -32,34 +15,23 @@ sealed interface ViewTyped {
         val category: String,
         val question: String,
         val answer: String,
-        var isFavorite: Boolean = false
-    ) : ViewTyped
+        var isFavorite: Boolean = false,
+        val source: JokeSource
+
+    ) : ViewTyped, java.io.Serializable
 
     // Класс заголовка
     data class Header(
         val title: String
     ) : ViewTyped
+
+    // Класс загрузки
+    data object Loading : ViewTyped
 }
 
-data class Joke(
-    var id: Int,
-    @IdRes var avatar: Int?,
-    val avatarUri: Uri? = null,
-    val category: String,
-    val question: String,
-    val answer: String,
-)
-
-fun convertToUiModel(dataList: List<Joke>, isFavorite: Boolean): List<ViewTyped.JokeUIModel> {
-    return dataList.map { data ->
-        ViewTyped.JokeUIModel(
-            id = data.id,
-            avatar = data.avatar,
-            avatarUri = data.avatarUri,
-            category = data.category,
-            question = data.question,
-            answer = data.answer,
-            isFavorite = isFavorite
-        )
-    }
+enum class JokeSource {
+    DEFAULT,
+    USER,
+    NETWORK
 }
+

@@ -2,13 +2,13 @@ package com.example.homework_project_1.main.ui.joke_add
 
 import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.homework_project_1.main.data.AvatarProvider
-import com.example.homework_project_1.main.data.Joke
-import com.example.homework_project_1.main.data.JokesGenerator
+import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.JokesRepository
+import com.example.homework_project_1.main.data.model.FlagsDTO
+import com.example.homework_project_1.main.data.model.JokeDTO
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -25,14 +25,25 @@ class AddJokeWorker(
         val category = inputData.getString("category") ?: return Result.failure()
         val avatarUriString = inputData.getString("avatarUri")
         val avatarUri = avatarUriString?.let { Uri.parse(it) }
+        val source = inputData.getString("source")?.let { JokeSource.valueOf(it) } ?: return Result.failure()
 
-        val joke = Joke(
+        val joke = JokeDTO(
             id = UUID.randomUUID().hashCode(),
             question = question,
             answer = answer,
             category = category,
-            avatarUri = avatarUri,
-            avatar = if (avatarUri == null) AvatarProvider.getAvatarsByCategory(category).random() else null
+            avatarUri = avatarUri?.toString(),
+            avatar = if (avatarUri == null) AvatarProvider.getAvatarsByCategory(category).random() else null,
+            flags = FlagsDTO(
+                nsfw = false,
+                religious = false,
+                political = false,
+                racist = false,
+                sexist = false,
+                explicit = false
+            ),
+            lang = "en",
+            source = source
         )
 
         return try {

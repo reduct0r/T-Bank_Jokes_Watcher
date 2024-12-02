@@ -4,16 +4,19 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.homework_project_1.main.data.model.FlagsDTO
+import com.example.homework_project_1.main.data.model.JokeDTO
 import kotlinx.coroutines.delay
 import java.util.UUID
 
 object JokesRepository {
-    private val defaultJokesList = mutableListOf<Joke>()
-    private val userJokesList = mutableListOf<Joke>()
+    private val defaultJokesList = mutableListOf<JokeDTO>()
+    private val userJokesList = mutableListOf<JokeDTO>()
     private val categories = mutableSetOf<String>()
+    
 
-    private val _userJokesLiveData = MutableLiveData<List<Joke>>()
-    //val userJokesLiveData: LiveData<List<Joke>> get() = _userJokesLiveData
+    private val _userJokesLiveData = MutableLiveData<List<JokeDTO>>()
+    //val userJokesLiveData: LiveData<List<JokeDTO>> get() = _userJokesLiveData
 
     fun parseJSON(context: Context) {
         val jokesData = JsonReader.readJokesFromAsset(context)
@@ -26,12 +29,22 @@ object JokesRepository {
                     null
                 }
                 defaultJokesList.add(
-                    Joke(
+                    JokeDTO(
                         id = UUID.randomUUID().hashCode(),
                         avatar = avatarResId,
                         category = category.name,
                         question = jokeDto.question,
-                        answer = jokeDto.answer
+                        answer = jokeDto.answer,
+                        flags = FlagsDTO(
+                            nsfw = false,
+                            religious = false,
+                            political = false,
+                            racist = false,
+                            sexist = false,
+                            explicit = false
+                        ),
+                        lang = "en",
+                        source = JokeSource.DEFAULT
                     )
                 )
             }
@@ -46,23 +59,24 @@ object JokesRepository {
         }
     }
 
-    suspend fun getJokes(): List<Joke> {
+    suspend fun getJokes(): List<JokeDTO> {
         delay(500)
         return defaultJokesList + userJokesList
     }
 
-    suspend fun addNewJoke(joke: Joke) {
-        delay(5000)
+    suspend fun addNewJoke(joke: JokeDTO) {
+        delay(2000)
         userJokesList.add(joke)
         _userJokesLiveData.postValue(userJokesList.toList())
 
         if (joke.category !in categories ) {
             categories.add(joke.category)
         }
-        JokesGenerator.addToSelectedJokes(joke, userJokesList.size + defaultJokesList.size - 1)
+        JokesGenerator.addToSelectedJokes(joke, index = userJokesList.size + defaultJokesList.size - 1)
     }
 
-    fun getUserJokes(): LiveData<List<Joke>> {
+
+    fun getUserJokes(): LiveData<List<JokeDTO>> {
         return _userJokesLiveData
     }
 

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.data.convertToUiModel
+import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import kotlinx.coroutines.launch
 
 class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
@@ -21,7 +21,8 @@ class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
         viewModelScope.launch {
             try {
                 val selectedJokes = JokesGenerator.getSelectedJokes()
-                val uiModel = convertToUiModel(selectedJokes, false)
+                val uiModel = selectedJokes.convertToUIModel(false)
+
                 if (jokePosition in uiModel.indices) {
                     _joke.value = uiModel[jokePosition]
                 } else {

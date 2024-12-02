@@ -5,6 +5,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="8dp">
 
+    <TextView
+        android:id="@+id/sourceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/label_background"
+        android:paddingStart="8dp"
+        android:paddingTop="0dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="1dp"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title"
+        app:layout_constraintStart_toEndOf="@id/avatar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:text="joke source" />
+
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="64dp"
