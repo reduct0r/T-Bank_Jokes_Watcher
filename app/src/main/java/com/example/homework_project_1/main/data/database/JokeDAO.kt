@@ -72,4 +72,9 @@ interface JokeDAO {
     @Query("SELECT * FROM jokesCache")
     suspend fun getAllCacheJokes(): List<JokeCacheEntity>
 
+    @Query("SELECT * FROM jokesCache WHERE createdAt < :lastTimestamp ORDER BY createdAt ASC")
+    suspend fun getCachedJokesBefore(lastTimestamp: Long): List<JokeDbEntity>
+
+    @Delete
+    suspend fun delete(joke: JokeCacheEntity)
 }

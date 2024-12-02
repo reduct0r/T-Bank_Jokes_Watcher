@@ -59,7 +59,7 @@ class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
     }
 
     suspend fun setMark(mark: Boolean, shown: List<Int>) {
-        jokeDb.jokeDao().markShown(true, shown)
+        jokeDb.jokeDao().markShown(mark, shown)
     }
 
     suspend fun resetUsedJokes() {
@@ -79,6 +79,16 @@ class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
     suspend fun setCacheJoke(joke: JokeCacheEntity) {
         if (jokeDb.jokeDao().checkIfCacheExists(joke.question, joke.answer, joke.category) == 0) {
             jokeDb.jokeDao().insertCache(joke)
+        }
+    }
+
+    suspend fun deleteDeprecatedCache(lastTimestamp: Long): Boolean {
+        val deprecatedCache = jokeDb.jokeDao().getCachedJokesBefore(lastTimestamp)
+        if (deprecatedCache.isEmpty()){
+            return false
+        } else {
+            deprecatedCache.forEach { jokeDb.jokeDao().delete(it) }
+            return true
         }
     }
 

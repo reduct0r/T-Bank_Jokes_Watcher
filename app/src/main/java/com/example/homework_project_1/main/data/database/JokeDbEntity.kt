@@ -94,7 +94,9 @@ data class JokeCacheEntity (
     @ColumnInfo(name = "avatar")
     val avatarByteArr: ByteArray?,
     @ColumnInfo(name = "isShown")
-    val isShown: Boolean = false
+    val isShown: Boolean = false,
+    @ColumnInfo(name = "createdAt")
+    val createdAt: Long = System.currentTimeMillis()
 ) {
 
     fun toDto(): JokeDTO {

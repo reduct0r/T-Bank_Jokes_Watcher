@@ -2,11 +2,13 @@ package com.example.homework_project_1.main.ui.joke_list
 
 import android.database.sqlite.SQLiteConstraintException
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
@@ -50,8 +52,10 @@ class JokeListViewModel : ViewModel() {
         generateJokes()
         observeNewJoke()
 
-
         viewModelScope.launch {
+            // Удаление кэша через сутки
+            if (RepositoryImpl.deleteDeprecatedCache(System.currentTimeMillis() - 3600000 * 24))
+            Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
 
             //TODO: для тестов сбросить состояние таблицы
 //            RepositoryImpl.dropJokesTable()
@@ -83,7 +87,7 @@ class JokeListViewModel : ViewModel() {
                     val uiModel = data.convertToUIModel(false)
                     _jokes.postValue(uiModel)
                 } else {
-                    _error.value = "There is no saved jokes"
+                    _error.value = "There is no new jokes"
                     _jokes.postValue(emptyList())
                 }
             } catch (e: Exception) {
@@ -96,7 +100,6 @@ class JokeListViewModel : ViewModel() {
 
     fun loadMoreJokes() {
         if (_isLoadingEl.value == true) return
-        Log.d("mylog", "load")
         viewModelScope.launch {
             _isLoadingEl.value = true
             try {
@@ -129,7 +132,6 @@ class JokeListViewModel : ViewModel() {
     }
 
     fun resetJokes() {
-
         //_jokes.value = emptyList()
         _isLoading.value = false
         _isLoadingEl.value = false
@@ -166,6 +168,7 @@ class JokeListViewModel : ViewModel() {
                         }
                     }
             } catch (e: Exception) {
+                _error.postValue("Error access DataBase")
                 Log.e("JokeViewModel", "Error observing new jokes", e)
             }
         }

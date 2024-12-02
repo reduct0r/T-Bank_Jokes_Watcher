@@ -103,6 +103,10 @@ object RepositoryImpl : Repository {
 
 
     // Database Cache
+    suspend fun deleteDeprecatedCache(lastTimestamp: Long): Boolean {
+        return dbJokeSource.deleteDeprecatedCache(lastTimestamp)
+    }
+
     suspend fun insertCacheJoke(joke: JokeDTO) = mutex.withLock {
         dbJokeSource.setCacheJoke(joke.toCacheEntity(App.instance))
         categories.add(joke.category)
