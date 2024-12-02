@@ -31,7 +31,7 @@ interface JokeDAO {
     @Query("SELECT * FROM jokes WHERE isShown = 0 ORDER BY RANDOM() LIMIT :limit")
     suspend fun getRandomJokes(limit: Int): List<JokeDbEntity>
 
-    @Query("SELECT * FROM jokes WHERE source = 'USER' AND createdAt > :lastTimestamp ORDER BY createdAt ASC")
+    @Query("SELECT * FROM jokes WHERE source = 'USER' AND createdAt > :lastTimestamp AND isShown = 0 ORDER BY createdAt ASC")
     fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>>
 
     @Query("DELETE FROM sqlite_sequence WHERE name = 'jokes'")

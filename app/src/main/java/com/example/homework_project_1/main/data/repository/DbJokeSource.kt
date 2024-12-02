@@ -1,9 +1,13 @@
 package com.example.homework_project_1.main.data.repository
 
 import android.util.Log
+import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.database.JokeCacheEntity
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
+import com.example.homework_project_1.main.data.model.JokeDTO
+import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toDbEntity
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
@@ -48,6 +52,14 @@ class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
 
         jokeDb.jokeDao().markShown(true, shownJokes) // Обновляем статус в базе
         return jokes
+    }
+
+    suspend fun update(jokeDTO: JokeDTO){
+        jokeDb.jokeDao().update(jokeDTO.toDbEntity(App.instance))
+    }
+
+    suspend fun setMark(mark: Boolean, shown: List<Int>) {
+        jokeDb.jokeDao().markShown(true, shown)
     }
 
     suspend fun resetUsedJokes() {

@@ -38,6 +38,14 @@ object RepositoryImpl : Repository {
         return dbJokeSource.getUserJokesAfter(lastTimestamp)
     }
 
+    suspend fun setMark(mark: Boolean, shown: List<Int>) {
+        dbJokeSource.setMark(mark, shown)
+    }
+
+    suspend fun update(joke: JokeDTO) {
+        dbJokeSource.update(joke)
+    }
+
     suspend fun getJokesAmount(): Int{
         return dbJokeSource.getJokesAmount()
     }

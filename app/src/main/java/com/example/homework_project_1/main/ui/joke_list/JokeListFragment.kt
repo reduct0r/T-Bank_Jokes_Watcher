@@ -20,6 +20,7 @@ import com.example.homework_project_1.databinding.FragmentJokeListBinding
 import com.example.homework_project_1.main.ui.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.ui.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.ui.joke_list.recycler.adapter.ViewTypedListAdapter
+import com.google.android.material.snackbar.Snackbar
 
 class JokeListFragment : Fragment() {
     private var _binding: FragmentJokeListBinding? = null
@@ -105,8 +106,15 @@ class JokeListFragment : Fragment() {
                 Log.d("mylog", "hand")
                 // Проверяем, не запланирована ли уже повторная попытка
                 if (!handler.hasCallbacks(retryRunnable) && !viewModel.isLoading.value!!) {
-                    handler.postDelayed(retryRunnable, 3000)
+                    handler.postDelayed(retryRunnable, 10000)
                 }
+                Snackbar.make(view, "No network connection and cached jokes are over. Trying to reconnect in 10 sec...", Snackbar.LENGTH_LONG)
+                    .setAction("Retry now") {
+                        handler.removeCallbacks(retryRunnable)
+                        handler.postDelayed(retryRunnable, 1000)
+                    }
+                    .show()
+
             } else {
                 handler.removeCallbacks(retryRunnable)
                 if (viewModel.isRetryNeed.value == true) {

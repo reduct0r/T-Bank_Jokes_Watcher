@@ -50,24 +50,33 @@ class JokeListViewModel : ViewModel() {
         generateJokes()
         observeNewJoke()
 
-        //TODO: для тестов использованные шутки сбрасываются каждый запуск
+
         viewModelScope.launch {
-            withContext(Dispatchers.Default) {
-                RepositoryImpl.resetUsedJokes()
-                RepositoryImpl.resetCachedJokes()
+
+            //TODO: для тестов сбросить состояние таблицы
+//            RepositoryImpl.dropJokesTable()
+//            RepositoryImpl.resetJokesSequence()
+
+            //TODO: для тестов запись шуток в бд
+            try {
+                JokesGenerator.generateJokesData(35).forEach { RepositoryImpl.insertDbJoke(it) }
+            } catch (e: Exception){
+                Log.d("JokesGenerator", e.message.toString())
             }
+            //TODO: для тестов использованные шутки сбрасываются каждый запуск
+//            withContext(Dispatchers.Default) {
+//                RepositoryImpl.resetUsedJokes()
+//                RepositoryImpl.resetCachedJokes()
+//            }
         }
     }
 
     fun generateJokes() {
         if (_isLoadingEl.value == true) return
+        lastTimestamp = System.currentTimeMillis()
         viewModelScope.launch {
             _isLoading.postValue(true)
             try {
-
-                //var data = JokesGenerator.generateJokesData(35)
-                //data.forEach{RepositoryImpl.insertDbJoke(it)}
-
                 var data = RepositoryImpl.fetchRandomDbJokes(10)
                 if (data.isNotEmpty()) {
                     data = JokesGenerator.setAvatar(data)
@@ -120,6 +129,7 @@ class JokeListViewModel : ViewModel() {
     }
 
     fun resetJokes() {
+
         //_jokes.value = emptyList()
         _isLoading.value = false
         _isLoadingEl.value = false
@@ -130,6 +140,7 @@ class JokeListViewModel : ViewModel() {
                 RepositoryImpl.resetCachedJokes()
             }
         }
+        lastTimestamp = System.currentTimeMillis()
         JokesGenerator.reset()
     }
 
@@ -139,10 +150,8 @@ class JokeListViewModel : ViewModel() {
                 RepositoryImpl.getDbUserJokesAfter(lastTimestamp)
                     .collect { newJokes ->
                         if (newJokes.isNotEmpty()) {
-                            // Сортируем новые шутки по времени создания
                             val sortedJokes = newJokes.sortedBy { it.createdAt }
 
-                            // Преобразуем каждую шутку в UI модель
                             val newModels = sortedJokes
                                 .map { it.toDto().convertToUIModel(false) }
 
@@ -150,15 +159,13 @@ class JokeListViewModel : ViewModel() {
                             val updatedJokes = (newModels + (_jokes.value ?: emptyList()))
                                 .distinctBy { it }
 
-                            // Обновляем LiveData
                             _jokes.postValue(updatedJokes)
+                            RepositoryImpl.setMark(true, sortedJokes.map { it.id!! })
 
-                            // Обновляем lastTimestamp
-                            lastTimestamp = sortedJokes.last().createdAt
+                            lastTimestamp = System.currentTimeMillis()
                         }
                     }
             } catch (e: Exception) {
-                // Обработка ошибок
                 Log.e("JokeViewModel", "Error observing new jokes", e)
             }
         }
