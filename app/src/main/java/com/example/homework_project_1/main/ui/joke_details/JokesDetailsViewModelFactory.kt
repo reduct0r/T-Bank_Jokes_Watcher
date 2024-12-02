@@ -2,13 +2,14 @@ package com.example.homework_project_1.main.ui.joke_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.homework_project_1.main.data.ViewTyped
 
 // Фабрика для создания ViewModel
 @Suppress("UNCHECKED_CAST")
-class JokesDetailsViewModelFactory(private val jokePosition: Int) : ViewModelProvider.Factory {
+class JokesDetailsViewModelFactory(private val joke: ViewTyped.JokeUIModel) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(JokeDetailsViewModel::class.java)) {
-            JokeDetailsViewModel(jokePosition) as T
+            JokeDetailsViewModel(joke) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")
         }

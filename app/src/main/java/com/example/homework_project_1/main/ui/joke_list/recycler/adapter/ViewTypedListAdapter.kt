@@ -8,14 +8,13 @@ import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.HeaderItemBinding
 import com.example.homework_project_1.databinding.JokeItemBinding
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.data.ViewTyped.*
 import com.example.homework_project_1.main.ui.joke_list.recycler.HeaderViewHolder
 import com.example.homework_project_1.main.ui.joke_list.recycler.JokeViewHolder
 import com.example.homework_project_1.main.ui.joke_list.recycler.LoadingViewHolder
 import com.example.homework_project_1.main.ui.joke_list.recycler.util.ViewTypedCallback
 
 class ViewTypedListAdapter(
-    private val clickListener: (Int) -> Unit
+    private val clickListener: (ViewTyped.JokeUIModel) -> Unit
 ) : ListAdapter<ViewTyped, RecyclerView.ViewHolder>(ViewTypedCallback()) {
 
     private var isLoadingAdded = false
@@ -35,7 +34,8 @@ class ViewTypedListAdapter(
                     itemView.setOnClickListener {
                         val position = bindingAdapterPosition
                         if (position != RecyclerView.NO_POSITION) {
-                            clickListener(position)
+                            val joke = getItem(position) as? ViewTyped.JokeUIModel
+                            joke?.let { clickListener(it) }
                         }
                     }
                 }
@@ -44,10 +44,9 @@ class ViewTypedListAdapter(
                 val binding = HeaderItemBinding.inflate(inflater, parent, false)
                 HeaderViewHolder(binding)
             }
-
             LOADING_VIEW_TYPE -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_loading, parent, false)
-                return LoadingViewHolder(view)
+                LoadingViewHolder(view)
             }
             else -> throw IllegalArgumentException("Unknown view type: $viewType")
         }
@@ -55,19 +54,18 @@ class ViewTypedListAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
-            is JokeUIModel -> (holder as JokeViewHolder).bind(item)
-            is Header -> (holder as HeaderViewHolder).bindHeader(item)
-            is Loading -> Unit
+            is ViewTyped.JokeUIModel -> (holder as JokeViewHolder).bind(item)
+            is ViewTyped.Header -> (holder as HeaderViewHolder).bindHeader(item)
+            is ViewTyped.Loading -> Unit
         }
     }
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is JokeUIModel -> JOKE_VIEW_TYPE
-            is Header -> HEADER_VIEW_TYPE
-            is Loading -> LOADING_VIEW_TYPE
+            is ViewTyped.JokeUIModel -> JOKE_VIEW_TYPE
+            is ViewTyped.Header -> HEADER_VIEW_TYPE
+            is ViewTyped.Loading -> LOADING_VIEW_TYPE
             else -> LOADING_VIEW_TYPE
-            //else -> throw IllegalArgumentException("Unknown type!")
         }
     }
 
@@ -75,7 +73,7 @@ class ViewTypedListAdapter(
         if (!isLoadingAdded) {
             isLoadingAdded = true
             val currentList = currentList.toMutableList()
-            currentList.add(Loading)
+            currentList.add(ViewTyped.Loading)
             submitList(currentList)
         }
     }
@@ -84,7 +82,7 @@ class ViewTypedListAdapter(
         if (isLoadingAdded) {
             isLoadingAdded = false
             val currentList = currentList.toMutableList()
-            if (currentList.isNotEmpty() && currentList.last() is Loading) {
+            if (currentList.isNotEmpty() && currentList.last() is ViewTyped.Loading) {
                 currentList.removeAt(currentList.size - 1)
                 submitList(currentList)
             }
@@ -95,7 +93,7 @@ class ViewTypedListAdapter(
         return if (currentList.isEmpty()) {
             false
         } else {
-            currentList.last() is Loading
+            currentList.last() is ViewTyped.Loading
         }
     }
 }

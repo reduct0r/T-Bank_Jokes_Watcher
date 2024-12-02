@@ -70,6 +70,7 @@ data class JokeDTO(
     companion object {
         fun JokeDTO.convertToUIModel(isFavorite: Boolean): ViewTyped.JokeUIModel {
             return ViewTyped.JokeUIModel(
+                id = id,
                 category = category,
                 question = question,
                 answer = answer,
@@ -83,6 +84,7 @@ data class JokeDTO(
         fun List<JokeDTO>.convertToUIModel(isFavorite: Boolean): List<ViewTyped.JokeUIModel> {
             return this.map { joke ->
                 ViewTyped.JokeUIModel(
+                    id = joke.id,
                     category = joke.category,
                     question = joke.question,
                     answer = joke.answer,

@@ -4,49 +4,31 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.homework_project_1.main.data.JokesGenerator
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import kotlinx.coroutines.launch
 
-class JokeDetailsViewModel(private val jokePosition: Int) : ViewModel() {
+class JokeDetailsViewModel(private val gotJoke: ViewTyped.JokeUIModel) : ViewModel() {
     private val _joke = MutableLiveData<ViewTyped.JokeUIModel>()
     val joke: LiveData<ViewTyped.JokeUIModel> get() = _joke
 
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    // Загрузка шутки
+    init {
+        loadJoke()
+    }
+
     fun loadJoke() {
+        _joke.value = gotJoke
+    }
+
+    fun addToFavorites() {
         viewModelScope.launch {
             try {
-                val selectedJokes = JokesGenerator.getSelectedJokes()
-                val uiModel = selectedJokes.convertToUIModel(false)
-
-                if (jokePosition in uiModel.indices) {
-                    _joke.value = uiModel[jokePosition]
-                } else {
-                    _error.value = "Incorrect position."
-                }
+                //TODO
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error"
             }
         }
-    }
-
-    fun getPosition(): Int {
-        return jokePosition
-    }
-
-    fun addToFavorites(jokeUI: ViewTyped.JokeUIModel) {
-        viewModelScope.launch {
-            try {
-                jokeUI.isFavorite = true
-                // TODO: add to favorites
-            } catch (e: Exception) {
-                _error.value = e.message ?: "Unknown error"
-            }
-        }
-
     }
 }

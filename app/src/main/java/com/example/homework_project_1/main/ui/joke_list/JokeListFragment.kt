@@ -12,20 +12,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
-import com.example.homework_project_1.main.App
-import com.example.homework_project_1.main.data.repository.RepositoryImpl
 import com.example.homework_project_1.main.ui.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.ui.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.ui.joke_list.recycler.adapter.ViewTypedListAdapter
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.launch
 
 class JokeListFragment : Fragment() {
     private var _binding: FragmentJokeListBinding? = null
@@ -45,7 +39,8 @@ class JokeListFragment : Fragment() {
 
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
-    private val adapter = ViewTypedListAdapter { jokePos ->
+    // Update adapter to pass JokeUIModel instead of position
+    private val adapter = ViewTypedListAdapter { joke ->
         parentFragmentManager.beginTransaction()
             .setCustomAnimations(
                 R.anim.slide_in_right,
@@ -53,11 +48,10 @@ class JokeListFragment : Fragment() {
                 R.anim.slide_in_left,
                 R.anim.slide_out_right
             )
-            .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(jokePos))
+            .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke))
             .addToBackStack(null)
             .commit()
     }
-
 
     private fun showError(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
@@ -84,8 +78,7 @@ class JokeListFragment : Fragment() {
                 showError("No new jokes are available.")
                 binding.buttonGenerateJokes.text = getString(R.string.reset_used_jokes)
                 binding.progressBar.visibility = View.GONE
-            }
-            else {
+            } else {
                 adapter.submitList(jokes) {
                     binding.recyclerView.post {
                         adapter.removeLoadingFooter()
@@ -154,7 +147,6 @@ class JokeListFragment : Fragment() {
 
         // Обработка нажатия на кнопку генерации шуток
         binding.buttonGenerateJokes.setOnClickListener {
-            handler.removeCallbacks(retryRunnable)
             handler.removeCallbacks(retryRunnable)
 
             adapter.removeLoadingFooter()

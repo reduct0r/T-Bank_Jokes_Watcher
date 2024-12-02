@@ -73,9 +73,7 @@ object RepositoryImpl : Repository {
 
     override suspend fun fetchAllDbJokes(amount: Int): List<JokeDTO> {
         return dbJokeSource.getAllDbJokes().map { jokeEntity ->
-            jokeEntity.toDto().apply {
-                source = JokeSource.DATABASE
-            }
+            jokeEntity.toDto()
         }
     }
 
@@ -117,9 +115,7 @@ object RepositoryImpl : Repository {
     }
 
     override suspend fun fetchCacheJoke(id: Int): JokeDTO {
-        return dbJokeSource.getCachedJokeById(id).toDto().apply {
-            source = JokeSource.DATABASE
-        }
+        return dbJokeSource.getCachedJokeById(id).toDto()
     }
 
     suspend fun markCacheShown(){

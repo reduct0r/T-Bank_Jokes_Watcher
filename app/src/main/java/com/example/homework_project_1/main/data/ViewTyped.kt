@@ -8,7 +8,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface ViewTyped {
     // Класс шутки
+
     data class JokeUIModel(
+        val id: Int,
         @IdRes var avatar: Int?,
         val avatarByteArr: ByteArray? = null,
         val category: String,

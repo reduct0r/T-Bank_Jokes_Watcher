@@ -2,6 +2,7 @@ package com.example.homework_project_1.main.ui.joke_details
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,21 +18,26 @@ import com.example.homework_project_1.main.data.ViewTyped
 class JokeDetailsFragment : Fragment() {
 
     companion object {
-        private const val JOKE_POSITION_EXTRA = "JOKE_POSITION"
+        private const val JOKE_EXTRA = "joke_extra"
 
-        fun newInstance(jokePosition: Int) = JokeDetailsFragment().apply {
-            arguments = Bundle().apply {
-                putInt(JOKE_POSITION_EXTRA, jokePosition)
+        // Modify newInstance to accept JokeUIModel
+        fun newInstance(joke: ViewTyped.JokeUIModel): JokeDetailsFragment {
+            val fragment = JokeDetailsFragment()
+            val bundle = Bundle().apply {
+                putSerializable(JOKE_EXTRA, joke)
             }
+            fragment.arguments = bundle
+            return fragment
         }
     }
+
 
     private var _binding: FragmentJokeDetailsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: JokeDetailsViewModel by viewModels {
-        arguments?.getInt(JOKE_POSITION_EXTRA)?.let { JokesDetailsViewModelFactory(it) }
-            ?: throw IllegalArgumentException("JOKE_POSITION is missing")
+        arguments?.getSerializable(JOKE_EXTRA)?.let { JokesDetailsViewModelFactory(it as ViewTyped.JokeUIModel) }
+            ?: throw IllegalArgumentException("JOKE_EXTRA is missing")
     }
 
     override fun onCreateView(
@@ -50,9 +56,6 @@ class JokeDetailsFragment : Fragment() {
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-        if (viewModel.getPosition() == -1) {
-            handleError("Incorrect joke position.")
-        }
 
         // Наблюдение за изменениями в LiveData
         viewModel.joke.observe(viewLifecycleOwner) { joke ->
@@ -66,7 +69,7 @@ class JokeDetailsFragment : Fragment() {
 
         binding.addToFavorites.setOnClickListener {
             Toast.makeText(requireContext(), "Added to favorites (TEST)", Toast.LENGTH_SHORT).show()
-            viewModel.addToFavorites(viewModel.joke.value!!)
+            viewModel.addToFavorites()
         }
 
         // Обработка нажатия на кнопку "Назад"
@@ -85,6 +88,12 @@ class JokeDetailsFragment : Fragment() {
             JokeSource.USER -> {
                 binding.sourceLabel.text = getString(R.string.own)
             }
+            JokeSource.DATABASE -> {
+                binding.sourceLabel.text = getString(R.string.database)
+            }
+            JokeSource.CACHE -> {
+                binding.sourceLabel.text = getString(R.string.cache)
+            }
             else -> {
                 binding.sourceLabel.text = getString(R.string.unknown)
             }
@@ -100,10 +109,11 @@ class JokeDetailsFragment : Fragment() {
             if (item.avatarByteArr != null) {
                 val bitmap = BitmapFactory.decodeByteArray(item.avatarByteArr, 0, item.avatarByteArr.size)
                 avatar.setImageBitmap(bitmap)
-            } else
+            } else {
                 item.avatar?.let {
                     avatar.setImageResource(it)
                 }
+            }
         }
     }
 
