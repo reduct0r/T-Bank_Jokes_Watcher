@@ -49,7 +49,7 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
                             _addJokeStatus.value = AddJokeStatus.Success
                         }
                         WorkInfo.State.FAILED -> {
-                            _addJokeStatus.value = AddJokeStatus.Error("Can't add joke")
+                            _addJokeStatus.value = AddJokeStatus.Error("Can't add joke: Maybe it already exists")
                         }
                         WorkInfo.State.BLOCKED -> {
                             _addJokeStatus.value = AddJokeStatus.Error("Work blocked")

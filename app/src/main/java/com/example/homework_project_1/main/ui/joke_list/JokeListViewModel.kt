@@ -13,9 +13,11 @@ import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import com.example.homework_project_1.main.data.repository.RepositoryImpl
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class JokeListViewModel : ViewModel() {
 
@@ -34,6 +36,11 @@ class JokeListViewModel : ViewModel() {
     private val _isLoadingAdded = MutableLiveData(false)
     val isLoadingAdded: LiveData<Boolean> get() = _isLoadingAdded
 
+    private val _isRetryNeed = MutableLiveData<Boolean>()
+    val isRetryNeed: LiveData<Boolean> = _isRetryNeed
+
+    private var lastTimestamp: Long = System.currentTimeMillis()
+
     fun setLoadingAdded(isAdded: Boolean) {
         _isLoadingAdded.value = isAdded
     }
@@ -42,6 +49,14 @@ class JokeListViewModel : ViewModel() {
         _isLoadingEl.value = false
         generateJokes()
         observeNewJoke()
+
+        //TODO: для тестов использованные шутки сбрасываются каждый запуск
+        viewModelScope.launch {
+            withContext(Dispatchers.Default) {
+                RepositoryImpl.resetUsedJokes()
+                RepositoryImpl.resetCachedJokes()
+            }
+        }
     }
 
     fun generateJokes() {
@@ -49,18 +64,19 @@ class JokeListViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.postValue(true)
             try {
-//                RepositoryImpl.dropJokesTable()
-//                RepositoryImpl.resetJokesSequence()
-//                val data = JokesGenerator.generateJokesData(35)
-//                                data.forEach { joke ->
-//                    RepositoryImpl.insertDbJoke(joke)
-//                }
+
+                //var data = JokesGenerator.generateJokesData(35)
+                //data.forEach{RepositoryImpl.insertDbJoke(it)}
 
                 var data = RepositoryImpl.fetchRandomDbJokes(10)
-                data = JokesGenerator.setAvatar(data)
-
-                val uiModel = data.convertToUIModel(false)
-                _jokes.postValue(uiModel)
+                if (data.isNotEmpty()) {
+                    data = JokesGenerator.setAvatar(data)
+                    val uiModel = data.convertToUIModel(false)
+                    _jokes.postValue(uiModel)
+                } else {
+                    _error.value = "There is no saved jokes"
+                    _jokes.postValue(emptyList())
+                }
             } catch (e: Exception) {
                 _error.value = e.message ?: "Unknown error while generating jokes."
             } finally {
@@ -71,65 +87,81 @@ class JokeListViewModel : ViewModel() {
 
     fun loadMoreJokes() {
         if (_isLoadingEl.value == true) return
-
+        Log.d("mylog", "load")
         viewModelScope.launch {
             _isLoadingEl.value = true
             try {
                 var newJokes = RepositoryImpl.fetchApiJokes(amount = 10)
-
-//                newJokes.forEach { joke ->
-//                    RepositoryImpl.insertDbJoke(joke)
-//                }
-
+                newJokes.forEach { joke ->
+                    RepositoryImpl.insertCacheJoke(joke)
+                }
                 newJokes = JokesGenerator.setAvatar(newJokes)
-
                 val uiModels = newJokes.convertToUIModel(false)
-
                 val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
                 _jokes.postValue(updatedJokes)
-
-                newJokes.forEach { joke -> JokesGenerator.addToSelectedJokes(joke, index = -1) }
+                _isRetryNeed.postValue(false)
             } catch (e: Exception) {
-                _error.value =  "Unknown error occurred while loading more jokes."
+                var newJokes = RepositoryImpl.fetchRandomCacheJokes(5)
+                if (newJokes.size == 5) {
+                    _error.value = "Check Network connection"
+                    newJokes = JokesGenerator.setAvatar(newJokes)
+                    val uiModels = newJokes.convertToUIModel(false)
+                    val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
+                    _jokes.postValue(updatedJokes)
+                } else {
+                    RepositoryImpl.markCacheShown()
+                    _isRetryNeed.postValue(true)
+                    _error.postValue("Unknown error occurred while loading more jokes.")
+                }
             } finally {
                 _isLoadingEl.value = false
-
             }
         }
     }
 
-    // Получение списка сгенерированных шуток
-    fun getRenderedJokesList(): List<ViewTyped.JokeUIModel> {
-        return _jokes.value ?: emptyList()
-    }
-
-    // Сброс показанных шуток
     fun resetJokes() {
         //_jokes.value = emptyList()
+        _isLoading.value = false
+        _isLoadingEl.value = false
+        _isLoadingAdded.value = false
         viewModelScope.launch {
-            RepositoryImpl.resetUsedJokes()
+            withContext(Dispatchers.Default) {
+                RepositoryImpl.resetUsedJokes()
+                RepositoryImpl.resetCachedJokes()
+            }
         }
         JokesGenerator.reset()
     }
 
-    // Наблюдение за добавлением новых шуток
     private fun observeNewJoke() {
         viewModelScope.launch {
-            RepositoryImpl.getDbUserJokes()
-                .drop(1) // Пропускаем первый эмит, содержащий существующие шутки
-                .collect { newJokes ->
-                if (newJokes.isNotEmpty()) {
-                    val lastJoke = newJokes.last()
-                    val modelUI = lastJoke.convertToUIModel(false)
-                    val updatedJokes =  listOf(modelUI) + (_jokes.value ?: emptyList())
-                    _jokes.postValue(updatedJokes)
-                }
+            try {
+                RepositoryImpl.getDbUserJokesAfter(lastTimestamp)
+                    .collect { newJokes ->
+                        if (newJokes.isNotEmpty()) {
+                            // Сортируем новые шутки по времени создания
+                            val sortedJokes = newJokes.sortedBy { it.createdAt }
+
+                            // Преобразуем каждую шутку в UI модель
+                            val newModels = sortedJokes
+                                .map { it.toDto().convertToUIModel(false) }
+
+                            // Объединяем новые шутки с существующими, избегая дубликатов
+                            val updatedJokes = (newModels + (_jokes.value ?: emptyList()))
+                                .distinctBy { it }
+
+                            // Обновляем LiveData
+                            _jokes.postValue(updatedJokes)
+
+                            // Обновляем lastTimestamp
+                            lastTimestamp = sortedJokes.last().createdAt
+                        }
+                    }
+            } catch (e: Exception) {
+                // Обработка ошибок
+                Log.e("JokeViewModel", "Error observing new jokes", e)
             }
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-    }
 }
-

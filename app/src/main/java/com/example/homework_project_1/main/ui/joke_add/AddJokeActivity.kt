@@ -54,12 +54,10 @@ class AddJokeActivity : AppCompatActivity() {
         viewModel.viewModelScope.launch {
             categoriesList.addAll(RepositoryImpl.getCategories())
             categoriesList.add(getString(R.string.add_new_category)) //"Добавить новую категорию"
+            categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerCategory.adapter = categoriesAdapter
         }
-
-
         categoriesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoriesList)
-        categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerCategory.adapter = categoriesAdapter
 
         binding.spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}

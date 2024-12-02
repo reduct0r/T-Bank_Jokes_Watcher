@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.homework_project_1.main.data.AvatarProvider
@@ -60,13 +61,9 @@ class AddJokeWorker(
             RepositoryImpl.insertDbJoke(joke)
             Result.success()
         } catch (e: SQLiteConstraintException) {
-            // Логирование ошибки и повторная попытка
-            Log.e("AddJokeWorker", "SQLite Constraint Exception", e)
-            Result.retry()
+            Result.failure()
         } catch (e: Exception) {
-            // Логирование ошибки и повторная попытка
-            Log.e("AddJokeWorker", "Unexpected Exception", e)
-            Result.retry()
+            Result.failure()
         }
     }
 }

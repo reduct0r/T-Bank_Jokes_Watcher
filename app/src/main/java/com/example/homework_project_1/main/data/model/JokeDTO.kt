@@ -11,6 +11,7 @@ import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.database.Converters
+import com.example.homework_project_1.main.data.database.JokeCacheEntity
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
@@ -107,6 +108,19 @@ data class JokeDTO(
 
         fun JokeDTO.toDbEntity(context: Context): JokeDbEntity {
             return JokeDbEntity(
+                id = null,
+                category = category,
+                question = question,
+                answer = answer,
+                flags = flags,
+                avatarByteArr = avatarByteArr,
+                source = source.toString(),
+                isShown = false
+            )
+        }
+
+        fun JokeDTO.toCacheEntity(context: Context): JokeCacheEntity {
+            return JokeCacheEntity(
                 id = null,
                 category = category,
                 question = question,

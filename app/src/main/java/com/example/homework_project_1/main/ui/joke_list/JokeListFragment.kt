@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,7 @@ class JokeListFragment : Fragment() {
     }
     private var next = false
     private var lastErrorTime: Long = 0
-    private val errorInterval: Long = 6000 // Интервал
+    private val errorInterval: Long = 5000 // Интервал
 
     private val handler = Handler(Looper.getMainLooper())
     private val retryRunnable = Runnable {
@@ -96,18 +97,21 @@ class JokeListFragment : Fragment() {
                 showError(it)
                 lastErrorTime = currentTime
             }
-            if (viewModel.error.value == "Unknown error occurred while loading more jokes.") {
+            if (viewModel.error.value == "Unknown error occurred while loading more jokes." && viewModel.isRetryNeed.value == true) {
                 if (!adapter.getIsLoadingAdded() && !viewModel.isLoading.value!!) {
                     adapter.addLoadingFooter()
                     viewModel.setLoadingAdded(true)
                 }
+                Log.d("mylog", "hand")
                 // Проверяем, не запланирована ли уже повторная попытка
                 if (!handler.hasCallbacks(retryRunnable) && !viewModel.isLoading.value!!) {
-                    handler.postDelayed(retryRunnable, 2000) // Задержка в 2 секунды
+                    handler.postDelayed(retryRunnable, 3000)
                 }
             } else {
                 handler.removeCallbacks(retryRunnable)
-                adapter.removeLoadingFooter()
+                if (viewModel.isRetryNeed.value == true) {
+                    adapter.removeLoadingFooter()
+                }
                 viewModel.setLoadingAdded(false)
             }
         }
@@ -118,7 +122,7 @@ class JokeListFragment : Fragment() {
             if (isLoading) {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.buttonGenerateJokes.text = getString(R.string.loading)
-            } else if (viewModel.getRenderedJokesList().isNotEmpty()) {
+            } else if (viewModel.jokes.value!!.isNotEmpty()) {
                 binding.progressBar.visibility = View.GONE
                 binding.buttonGenerateJokes.text = getString(R.string.generate_jokes)
             }
@@ -138,12 +142,15 @@ class JokeListFragment : Fragment() {
         // Обработка нажатия на кнопку генерации шуток
         binding.buttonGenerateJokes.setOnClickListener {
             handler.removeCallbacks(retryRunnable)
+            handler.removeCallbacks(retryRunnable)
+
             adapter.removeLoadingFooter()
             viewModel.setLoadingAdded(false)
+            scrollListener.resetState()
             if (binding.buttonGenerateJokes.text == getString(R.string.reset_used_jokes)) {
                 viewModel.resetJokes()
             }
-            if (!viewModel.isLoadingEl.value!!) {
+            if (viewModel.isLoadingEl.value == false) {
                 viewModel.generateJokes()
             }
         }
@@ -155,11 +162,9 @@ class JokeListFragment : Fragment() {
         }
 
         // Обработка скролла, подгрузка начинается при достижении 4-го элемента до конца списка
-        scrollListener = object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!, 0) {
-            override fun onScrolled(view: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(view, dx, dy)
-                if (isEndOfList() && !viewModel.isLoadingEl.value!!
-                    && !adapter.getIsLoadingAdded() && !handler.hasCallbacks(retryRunnable)) {
+        scrollListener = object : EndlessRecyclerViewScrollListener(binding.recyclerView.layoutManager!!) {
+            override fun onLoadMore() {
+                if (viewModel.isLoadingEl.value == false && !adapter.getIsLoadingAdded()) {
                     viewModel.loadMoreJokes()
                 }
             }
