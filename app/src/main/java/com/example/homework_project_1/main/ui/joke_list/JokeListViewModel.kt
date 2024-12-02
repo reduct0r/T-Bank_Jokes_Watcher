@@ -1,23 +1,16 @@
 package com.example.homework_project_1.main.ui.joke_list
 
-import android.database.sqlite.SQLiteConstraintException
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokesGenerator
-import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import com.example.homework_project_1.main.data.repository.RepositoryImpl
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -65,7 +58,7 @@ class JokeListViewModel : ViewModel() {
             try {
                 JokesGenerator.generateJokesData(35).forEach { RepositoryImpl.insertDbJoke(it) }
             } catch (e: Exception){
-                Log.d("JokesGenerator", e.message.toString())
+                // игнорируем
             }
             //TODO: для тестов использованные шутки сбрасываются каждый запуск
 //            withContext(Dispatchers.Default) {
@@ -169,7 +162,6 @@ class JokeListViewModel : ViewModel() {
                     }
             } catch (e: Exception) {
                 _error.postValue("Error access DataBase")
-                Log.e("JokeViewModel", "Error observing new jokes", e)
             }
         }
     }

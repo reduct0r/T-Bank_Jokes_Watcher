@@ -1,22 +1,12 @@
 package com.example.homework_project_1.main.data.model
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
-import android.util.Log
 import androidx.annotation.IdRes
-import androidx.core.net.toUri
-import androidx.room.TypeConverters
-import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.ViewTyped
-import com.example.homework_project_1.main.data.database.Converters
 import com.example.homework_project_1.main.data.database.JokeCacheEntity
 import com.example.homework_project_1.main.data.database.JokeDbEntity
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
-import java.io.ByteArrayOutputStream
-import java.io.InputStream
 
 @Serializable
 data class JokeDTO(

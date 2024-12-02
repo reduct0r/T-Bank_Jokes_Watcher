@@ -1,6 +1,5 @@
 package com.example.homework_project_1.main.data
 
-import android.net.Uri
 import androidx.annotation.IdRes
 import kotlinx.serialization.Serializable
 

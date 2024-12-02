@@ -2,7 +2,6 @@ package com.example.homework_project_1.main.ui.joke_details
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,7 +19,6 @@ class JokeDetailsFragment : Fragment() {
     companion object {
         private const val JOKE_EXTRA = "joke_extra"
 
-        // Modify newInstance to accept JokeUIModel
         fun newInstance(joke: ViewTyped.JokeUIModel): JokeDetailsFragment {
             val fragment = JokeDetailsFragment()
             val bundle = Bundle().apply {
