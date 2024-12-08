@@ -28,4 +28,12 @@ object ApiRepositoryImpl: Repository {
     override suspend fun updateJoke(joke: JokeDTO) {
         TODO("Not yet implemented")
     }
+
+    override suspend fun resetUsedJokes() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAmountOfJokes(): Int {
+        TODO("Not yet implemented")
+    }
 }

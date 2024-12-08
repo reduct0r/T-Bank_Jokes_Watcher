@@ -33,9 +33,7 @@ object RepositoryImpl : Repository {
     }
 
     // Database
-    fun getDbUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>> {
-        return dbJokeSource.getUserJokesAfter(lastTimestamp)
-    }
+
 
     suspend fun setMark(mark: Boolean, shown: List<Int>) {
         dbJokeSource.setMark(mark, shown)
@@ -84,9 +82,7 @@ object RepositoryImpl : Repository {
         categories.add(newCategory)
     }
 
-    suspend fun resetUsedJokes() = mutex.withLock {
-        dbJokeSource.resetUsedJokes()
-    }
+
 
 
     // Database Cache
@@ -145,6 +141,14 @@ object RepositoryImpl : Repository {
     }
 
     override suspend fun updateJoke(joke: JokeDTO) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun resetUsedJokes() {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAmountOfJokes(): Int {
         TODO("Not yet implemented")
     }
 

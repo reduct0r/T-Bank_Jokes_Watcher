@@ -13,9 +13,6 @@ class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
     private val shownJokes = mutableListOf<Int>()
     private val shownCachedJokes = mutableSetOf<Int>()
 
-    fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>> {
-        return jokeDb.jokeDao().getUserJokesAfter(lastTimestamp)
-    }
 
     suspend fun getCategories(): List<String> {
         return jokeDb.jokeDao().getCategories()

@@ -1,6 +1,7 @@
 package com.example.homework_project_1.main.data.repository
 
 import com.example.homework_project_1.main.App
+import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toCacheEntity
@@ -22,17 +23,21 @@ object CacheRepositoryImpl: Repository {
         val jokes = jokeDb.jokeDao().getRandomCacheJokes(amount)
         jokes.forEach{ shownCachedJokes.add(it.id!!)}
 
-        jokeDb.jokeDao().markShown(true, shownCachedJokes) // Обновляем статус в базе
-        return jokes.map { it.toDto() }
+        jokeDb.jokeDao().markCacheShown(true, shownCachedJokes) // Обновляем статус в базе
+        return jokes.map{ it.toDto().apply { source = JokeSource.CACHE } }
     }
 
     override suspend fun updateJoke(joke: JokeDTO) {
         jokeDb.jokeDao().updateCache(joke.toCacheEntity())
     }
 
-    suspend fun resetUsedJokes() {
+    override suspend fun resetUsedJokes() {
         jokeDb.jokeDao().markCacheUnShown()
         shownCachedJokes.clear()
+    }
+
+    override suspend fun getAmountOfJokes(): Int {
+        TODO("Not yet implemented")
     }
 
     suspend fun deleteDeprecatedCache(lastTimestamp: Long): Boolean {

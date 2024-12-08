@@ -43,6 +43,9 @@ interface JokeDAO {
     @Query("SELECT * FROM jokes WHERE source = 'USER' ")
     suspend fun getAllUserJokes(): List<JokeDbEntity>
 
+    @Query("SELECT COUNT(*) FROM jokes")
+    suspend fun getAmountOfJokes(): Int
+
 
 
 

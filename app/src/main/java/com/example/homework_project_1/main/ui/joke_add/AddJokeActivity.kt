@@ -17,6 +17,7 @@ import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityAddJokeBinding
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.JokesRepository
+import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
 import com.example.homework_project_1.main.data.repository.RepositoryImpl
 import kotlinx.coroutines.launch
 
@@ -52,7 +53,7 @@ class AddJokeActivity : AppCompatActivity() {
 
         // Получение списка категорий
         viewModel.viewModelScope.launch {
-            categoriesList.addAll(RepositoryImpl.getCategories())
+            categoriesList.addAll(JokesRepositoryImpl.getCategories())
             categoriesList.add(getString(R.string.add_new_category)) //"Добавить новую категорию"
             categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerCategory.adapter = categoriesAdapter
@@ -138,7 +139,7 @@ class AddJokeActivity : AppCompatActivity() {
         builder.setPositiveButton(getString(R.string.add)) { dialog, _ ->
             val newCategory = input.text.toString().trim()
             if (newCategory.isNotEmpty() && !categoriesList.contains(newCategory)) {
-                RepositoryImpl.addNewCategory(newCategory)
+                JokesRepositoryImpl.addNewCategory(newCategory)
                 categoriesList.add(categoriesList.size - 1, newCategory)
                 categoriesAdapter.notifyDataSetChanged()
                 binding.spinnerCategory.setSelection(categoriesList.indexOf(newCategory))

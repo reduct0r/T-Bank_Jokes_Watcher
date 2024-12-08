@@ -11,6 +11,7 @@ import com.example.homework_project_1.main.data.AvatarProvider
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
+import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
 import com.example.homework_project_1.main.data.repository.RepositoryImpl
 
 // Для фонового добавления шутки в хранилище
@@ -58,7 +59,7 @@ class AddJokeWorker(
         )
 
         return try {
-            RepositoryImpl.insertDbJoke(joke)
+            JokesRepositoryImpl.insertJoke(joke)
             Result.success()
         } catch (e: SQLiteConstraintException) {
             Result.failure()

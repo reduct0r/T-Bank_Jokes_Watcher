@@ -1,5 +1,8 @@
 package com.example.homework_project_1.main.ui.joke_list
 
+import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +17,13 @@ import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertT
 import com.example.homework_project_1.main.data.repository.ApiRepositoryImpl
 import com.example.homework_project_1.main.data.repository.CacheRepositoryImpl
 import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
+import com.example.homework_project_1.main.data.repository.RepositoryImpl
+import com.example.homework_project_1.main.data.utils.unique
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.drop
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -38,47 +47,66 @@ class JokeListViewModel : ViewModel() {
     private val _isRetryNeed = MutableLiveData<Boolean>()
     val isRetryNeed: LiveData<Boolean> = _isRetryNeed
 
-    private var lastTimestamp: Long = System.currentTimeMillis()
+    private val sharedPreferences: SharedPreferences = App.instance.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+    private val editor: SharedPreferences.Editor = sharedPreferences.edit()
+
+    private var savedLastTimestamp = sharedPreferences.getLong("lastTimestamp", System.currentTimeMillis())
+    private var lastTimestamp = savedLastTimestamp - 2
 
     fun setLoadingAdded(isAdded: Boolean) {
         _isLoadingAdded.value = isAdded
     }
 
     init {
+        Log.d("JokeListViewModel", "SAVED Last timestamp: ${savedLastTimestamp - 173367800000}")
         _isLoadingEl.value = false
-        generateJokes()
         observeNewJoke()
 
         viewModelScope.launch {
             // Удаление кэша через сутки
-//            if (RepositoryImpl.deleteDeprecatedCache(System.currentTimeMillis() - 3600000 * 24))
-//                Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
+            if (CacheRepositoryImpl.deleteDeprecatedCache(System.currentTimeMillis() - 3600000 * 24))
+                Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
 
             //TODO: для тестов сбросить состояние таблицы
 //            RepositoryImpl.dropJokesTable()
 //            RepositoryImpl.resetJokesSequence()
 
-            //TODO: для тестов запись шуток в бд
-            try {
-                JokesGenerator.generateJokesData(35).forEach { JokesRepositoryImpl.insertJoke(it) }
-            } catch (e: Exception){
-                // игнорируем
-            }
             //TODO: для тестов использованные шутки сбрасываются каждый запуск
 //            withContext(Dispatchers.Default) {
 //                RepositoryImpl.resetUsedJokes()
 //                RepositoryImpl.resetCachedJokes()
 //            }
+
+
+            // Если в БД нет шуток (при первом запуске), то генерируем случайные
+            if (JokesRepositoryImpl.getAmountOfJokes() == 0) {
+                try {
+                    JokesGenerator.generateJokesData(35)
+                        .forEach { JokesRepositoryImpl.insertJoke(it) }
+                    generateJokes()
+                } catch (e: Exception) {
+                    // игнорируем повторения шуток
+                }
+            }
+            else {
+                if (JokesRepositoryImpl.fetchRandomJokes(1).isEmpty()){
+                    JokesRepositoryImpl.resetUsedJokes()
+                }
+                generateJokes()
+            }
+
         }
     }
 
     fun generateJokes() {
         if (_isLoadingEl.value == true) return
-        lastTimestamp = System.currentTimeMillis()
+        editor.putLong("lastTimestamp", System.currentTimeMillis()).apply()
+        flag = false
         viewModelScope.launch {
             _isLoading.postValue(true)
             try {
                 var data = JokesRepositoryImpl.fetchRandomJokes(10)
+
                 if (data.isNotEmpty()) {
                     data = JokesGenerator.setAvatar(data)
                     val uiModel = data.convertToUIModel(false)
@@ -111,14 +139,13 @@ class JokeListViewModel : ViewModel() {
                 _isRetryNeed.postValue(false)
             } catch (e: Exception) {
                 var newJokes = CacheRepositoryImpl.fetchRandomJokes(5)
-                if (newJokes.size > 0) {
-                    _error.value = "C= 5heck Network connection"
+                if (newJokes.isNotEmpty()) {
+                    _error.value = "Check Network connection"
                     newJokes = JokesGenerator.setAvatar(newJokes)
                     val uiModels = newJokes.convertToUIModel(false)
                     val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
                     _jokes.postValue(updatedJokes)
                 } else {
-                    //RepositoryImpl.markCacheShown()
                     _isRetryNeed.postValue(true)
                     _error.postValue("Unknown error occurred while loading more jokes.")
                 }
@@ -139,34 +166,44 @@ class JokeListViewModel : ViewModel() {
                 JokesRepositoryImpl.resetUsedJokes()
             }
         }
-        lastTimestamp = System.currentTimeMillis()
+//        lastTimestamp = System.currentTimeMillis()
+//        savedLastTimestamp = System.currentTimeMillis()
         JokesGenerator.reset()
     }
+    private var flag: Boolean = false
 
     private fun observeNewJoke() {
         viewModelScope.launch {
             try {
-                JokesRepositoryImpl.getUserJokesAfter(lastTimestamp)
+                JokesRepositoryImpl.getUserJokesAfter(lastTimestamp + 1)
+                    .unique()
                     .collect { newJokes ->
+                        Log.d("JokeListViewModel", "New jokes: ${newJokes.map { it.createdAt - 173367800000}}")
+                        Log.d("JokeListViewModel", "Last timestamp: ${lastTimestamp - 173367800000}")
                         if (newJokes.isNotEmpty()) {
-                            val sortedJokes = newJokes.sortedBy { it.createdAt }
+                            val sortedJokes = newJokes.sortedBy { it.createdAt }.filter { it.createdAt > lastTimestamp }
+                            var newModels = sortedJokes
+                                .map { it.toDto()}
 
-                            val newModels = sortedJokes
-                                .map { it.toDto().convertToUIModel(false) }
+                            newModels = JokesGenerator.setAvatar(newModels)
 
                             // Объединяем новые шутки с существующими, избегая дубликатов
-                            val updatedJokes = (newModels + (_jokes.value ?: emptyList()))
+                            val updatedJokes = (newModels.convertToUIModel(false) + (_jokes.value ?: emptyList()))
                                 .distinctBy { it }
 
-                            _jokes.postValue(updatedJokes)
-                            JokesRepositoryImpl.setMark(true, sortedJokes.map { it.id!! })
 
-                            lastTimestamp = System.currentTimeMillis()
-                            //JokesRepositoryImpl.updateJoke(sortedJokes.apply { createdAt = lastTimestamp }.toDto())
+                                _jokes.postValue(updatedJokes)
+
+                            //savedLastTimestamp = 0
+                            lastTimestamp = sortedJokes.maxOf { it.createdAt} +1
+                            savedLastTimestamp = sortedJokes.minOf { it.createdAt}
+                            Log.d("JokeListViewModel", "new SAVED Last timestamp: ${savedLastTimestamp - 173367800000}")
+                            editor.putLong("lastTimestamp", savedLastTimestamp).apply()
                         }
                     }
+
             } catch (e: Exception) {
-                _error.postValue("Error access DataBase")
+                _error.postValue(e.message ?: "Unknown error occurred while observing new jokes.")
             }
         }
     }

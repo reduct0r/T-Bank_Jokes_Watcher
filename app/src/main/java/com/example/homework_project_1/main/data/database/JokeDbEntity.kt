@@ -27,7 +27,7 @@ data class JokeDbEntity (
     @ColumnInfo(name = "isShown")
     var isShown: Boolean = false,
     @ColumnInfo(name = "createdAt")
-    var createdAt: Long = System.currentTimeMillis()
+    var createdAt: Long
 ) {
 
     fun toDto(): JokeDTO {
