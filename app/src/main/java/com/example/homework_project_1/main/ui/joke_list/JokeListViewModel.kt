@@ -10,20 +10,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokesGenerator
-import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
-
 import com.example.homework_project_1.main.data.repository.ApiRepositoryImpl
 import com.example.homework_project_1.main.data.repository.CacheRepositoryImpl
 import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
-import com.example.homework_project_1.main.data.repository.RepositoryImpl
 import com.example.homework_project_1.main.data.utils.unique
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.drop
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -58,7 +51,6 @@ class JokeListViewModel : ViewModel() {
     }
 
     init {
-        Log.d("JokeListViewModel", "SAVED Last timestamp: ${savedLastTimestamp - 173367800000}")
         _isLoadingEl.value = false
         observeNewJoke()
 
@@ -178,8 +170,6 @@ class JokeListViewModel : ViewModel() {
                 JokesRepositoryImpl.getUserJokesAfter(lastTimestamp + 1)
                     .unique()
                     .collect { newJokes ->
-                        Log.d("JokeListViewModel", "New jokes: ${newJokes.map { it.createdAt - 173367800000}}")
-                        Log.d("JokeListViewModel", "Last timestamp: ${lastTimestamp - 173367800000}")
                         if (newJokes.isNotEmpty()) {
                             val sortedJokes = newJokes.sortedBy { it.createdAt }.filter { it.createdAt > lastTimestamp }
                             var newModels = sortedJokes
@@ -197,7 +187,6 @@ class JokeListViewModel : ViewModel() {
                             //savedLastTimestamp = 0
                             lastTimestamp = sortedJokes.maxOf { it.createdAt} +1
                             savedLastTimestamp = sortedJokes.minOf { it.createdAt}
-                            Log.d("JokeListViewModel", "new SAVED Last timestamp: ${savedLastTimestamp - 173367800000}")
                             editor.putLong("lastTimestamp", savedLastTimestamp).apply()
                         }
                     }
@@ -207,5 +196,4 @@ class JokeListViewModel : ViewModel() {
             }
         }
     }
-
 }

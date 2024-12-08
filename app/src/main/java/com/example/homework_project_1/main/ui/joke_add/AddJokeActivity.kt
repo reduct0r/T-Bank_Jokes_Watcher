@@ -16,9 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityAddJokeBinding
 import com.example.homework_project_1.main.data.JokeSource
-import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
-import com.example.homework_project_1.main.data.repository.RepositoryImpl
 import kotlinx.coroutines.launch
 
 class AddJokeActivity : AppCompatActivity() {

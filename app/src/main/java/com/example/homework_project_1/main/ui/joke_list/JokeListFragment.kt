@@ -101,7 +101,7 @@ class JokeListFragment : Fragment() {
                     viewModel.setLoadingAdded(true)
                 }
                 // Проверяем, не запланирована ли уже повторная попытка
-                if (!handler.hasCallbacks(retryRunnable) && viewModel.isLoading.value == false) {
+                if (!handler.hasCallbacks(retryRunnable) && viewModel.isLoading.value != true) {
                     handler.postDelayed(retryRunnable, 10000)
                 }
                 Snackbar.make(view, "No network connection and cached jokes are over. Trying to reconnect in 10 sec...", Snackbar.LENGTH_LONG)
