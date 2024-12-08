@@ -4,6 +4,7 @@ import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.api.ApiServiceImpl
 import com.example.homework_project_1.main.data.model.JokeApiEntity
 import com.example.homework_project_1.main.data.model.JokeDTO
+import com.example.homework_project_1.main.domain.repository.Repository
 import kotlinx.coroutines.sync.Mutex
 
 import kotlinx.coroutines.sync.withLock

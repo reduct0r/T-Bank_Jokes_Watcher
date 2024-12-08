@@ -1,14 +1,12 @@
 package com.example.homework_project_1.main.data.repository
 
-import android.util.Log
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toDbEntity
+import com.example.homework_project_1.main.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.sync.withLock
 
 object JokesRepositoryImpl : Repository {
 
