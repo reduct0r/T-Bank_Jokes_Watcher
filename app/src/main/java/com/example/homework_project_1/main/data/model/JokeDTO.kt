@@ -98,7 +98,7 @@ data class JokeDTO(
             type = type
         )
 
-        fun JokeDTO.toDbEntity(context: Context): JokeDbEntity {
+        fun JokeDTO.toDbEntity(lastTimestamp: Long = System.currentTimeMillis()): JokeDbEntity {
             return JokeDbEntity(
                 id = null,
                 category = category,
@@ -107,11 +107,12 @@ data class JokeDTO(
                 flags = flags,
                 avatarByteArr = avatarByteArr,
                 source = source.toString(),
-                isShown = false
+                isShown = false,
+                createdAt = lastTimestamp
             )
         }
 
-        fun JokeDTO.toCacheEntity(context: Context): JokeCacheEntity {
+        fun JokeDTO.toCacheEntity(lastTimestamp: Long = System.currentTimeMillis()): JokeCacheEntity {
             return JokeCacheEntity(
                 id = null,
                 category = category,
@@ -120,7 +121,9 @@ data class JokeDTO(
                 flags = flags,
                 avatarByteArr = avatarByteArr,
                 source = source.toString(),
-                isShown = false
+                isShown = false,
+                createdAt = lastTimestamp
+
             )
         }
 

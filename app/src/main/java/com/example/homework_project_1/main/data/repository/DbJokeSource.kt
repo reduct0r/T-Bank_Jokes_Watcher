@@ -51,7 +51,7 @@ class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
     }
 
     suspend fun update(jokeDTO: JokeDTO){
-        jokeDb.jokeDao().update(jokeDTO.toDbEntity(App.instance))
+        jokeDb.jokeDao().update(jokeDTO.toDbEntity())
     }
 
     suspend fun setMark(mark: Boolean, shown: List<Int>) {
@@ -83,7 +83,7 @@ class DbJokeSource(private val jokeDb: JokesWatcherDatabase) {
         if (deprecatedCache.isEmpty()){
             return false
         } else {
-            deprecatedCache.forEach { jokeDb.jokeDao().delete(it) }
+            deprecatedCache.forEach { jokeDb.jokeDao().delete(it.id!!) }
             return true
         }
     }

@@ -24,7 +24,7 @@ object RepositoryImpl : Repository {
     private val categories = mutableSetOf<String>()
 
     // API
-    override suspend fun fetchApiJokes(amount: Int): List<JokeDTO> = mutex.withLock {
+    suspend fun fetchApiJokes(amount: Int): List<JokeDTO> = mutex.withLock {
         return apiJokeSource.getJokes(amount).map { jokeEntity: JokeApiEntity ->
             jokeEntity.toDto(flags = jokeEntity.flags).apply {
                 source = JokeSource.NETWORK
@@ -49,34 +49,24 @@ object RepositoryImpl : Repository {
         return dbJokeSource.getJokesAmount()
     }
 
-    override suspend fun dropJokesTable() {
+    suspend fun dropJokesTable() {
         dbJokeSource.dropJokesTable()
     }
-    override suspend fun resetJokesSequence() {
+    suspend fun resetJokesSequence() {
         dbJokeSource.resetJokesSequence()
     }
 
-    override suspend fun insertDbJoke(joke: JokeDTO) = mutex.withLock {
-        dbJokeSource.setDbJoke(joke.toDbEntity(App.instance))
+    suspend fun insertDbJoke(joke: JokeDTO) = mutex.withLock {
+        dbJokeSource.setDbJoke(joke.toDbEntity())
 
         if (joke.category !in categories ) {
             categories.add(joke.category)
         }
     }
 
-    override suspend fun fetchDbJoke(id: Int): JokeDTO {
-        return dbJokeSource.getDbJokeById(id).toDto().apply {
-                source = JokeSource.DATABASE
-        }
-    }
 
-    override suspend fun fetchAllDbJokes(amount: Int): List<JokeDTO> {
-        return dbJokeSource.getAllDbJokes().map { jokeEntity ->
-            jokeEntity.toDto()
-        }
-    }
 
-    override suspend fun fetchRandomDbJokes(amount: Int): List<JokeDTO> = mutex.withLock {
+    suspend fun fetchRandomDbJokes(amount: Int): List<JokeDTO> = mutex.withLock {
         delay(500)
         return dbJokeSource.getRandomDbJokes(amount).map { jokeEntity ->
             jokeEntity.toDto()
@@ -105,7 +95,7 @@ object RepositoryImpl : Repository {
     }
 
     suspend fun insertCacheJoke(joke: JokeDTO) = mutex.withLock {
-        dbJokeSource.setCacheJoke(joke.toCacheEntity(App.instance))
+        dbJokeSource.setCacheJoke(joke.toCacheEntity())
         categories.add(joke.category)
     }
 
@@ -113,7 +103,7 @@ object RepositoryImpl : Repository {
         return dbJokeSource.getCacheAmount()
     }
 
-    override suspend fun fetchCacheJoke(id: Int): JokeDTO {
+     suspend fun fetchCacheJoke(id: Int): JokeDTO {
         return dbJokeSource.getCachedJokeById(id).toDto()
     }
 
@@ -121,7 +111,7 @@ object RepositoryImpl : Repository {
         dbJokeSource.markCacheShown()
     }
 
-    override suspend fun fetchAllCacheJokes(amount: Int): List<JokeDTO> {
+     suspend fun fetchAllCacheJokes(amount: Int): List<JokeDTO> {
         return dbJokeSource.getAllCachedJokes().map { jokeEntity ->
             jokeEntity.toDto().apply {
                 source = JokeSource.CACHE
@@ -130,7 +120,7 @@ object RepositoryImpl : Repository {
     }
 
 
-    override suspend fun fetchRandomCacheJokes(amount: Int): List<JokeDTO> = mutex.withLock {
+    suspend fun fetchRandomCacheJokes(amount: Int): List<JokeDTO> = mutex.withLock {
         return dbJokeSource.getRandomCachedJokes(amount).map { jokeEntity ->
             jokeEntity.toDto().apply {
                 source = JokeSource.CACHE
@@ -140,6 +130,22 @@ object RepositoryImpl : Repository {
 
     suspend fun resetCachedJokes() = mutex.withLock {
         dbJokeSource.resetUsedCachedJokes()
+    }
+
+    override suspend fun deleteJoke(id: Int) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun insertJoke(joke: JokeDTO) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun fetchRandomJokes(amount: Int): List<JokeDTO> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun updateJoke(joke: JokeDTO) {
+        TODO("Not yet implemented")
     }
 
 }

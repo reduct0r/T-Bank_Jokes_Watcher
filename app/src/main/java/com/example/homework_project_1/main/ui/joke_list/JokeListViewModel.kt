@@ -7,9 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokesGenerator
+import com.example.homework_project_1.main.data.JokesRepository
 import com.example.homework_project_1.main.data.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
-import com.example.homework_project_1.main.data.repository.RepositoryImpl
+
+import com.example.homework_project_1.main.data.repository.ApiRepositoryImpl
+import com.example.homework_project_1.main.data.repository.CacheRepositoryImpl
+import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -47,8 +51,8 @@ class JokeListViewModel : ViewModel() {
 
         viewModelScope.launch {
             // Удаление кэша через сутки
-            if (RepositoryImpl.deleteDeprecatedCache(System.currentTimeMillis() - 3600000 * 24))
-            Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
+//            if (RepositoryImpl.deleteDeprecatedCache(System.currentTimeMillis() - 3600000 * 24))
+//                Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
 
             //TODO: для тестов сбросить состояние таблицы
 //            RepositoryImpl.dropJokesTable()
@@ -56,7 +60,7 @@ class JokeListViewModel : ViewModel() {
 
             //TODO: для тестов запись шуток в бд
             try {
-                JokesGenerator.generateJokesData(35).forEach { RepositoryImpl.insertDbJoke(it) }
+                JokesGenerator.generateJokesData(35).forEach { JokesRepositoryImpl.insertJoke(it) }
             } catch (e: Exception){
                 // игнорируем
             }
@@ -74,7 +78,7 @@ class JokeListViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.postValue(true)
             try {
-                var data = RepositoryImpl.fetchRandomDbJokes(10)
+                var data = JokesRepositoryImpl.fetchRandomJokes(10)
                 if (data.isNotEmpty()) {
                     data = JokesGenerator.setAvatar(data)
                     val uiModel = data.convertToUIModel(false)
@@ -96,9 +100,9 @@ class JokeListViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoadingEl.value = true
             try {
-                var newJokes = RepositoryImpl.fetchApiJokes(amount = 10)
+                var newJokes = ApiRepositoryImpl.fetchRandomJokes(5)
                 newJokes.forEach { joke ->
-                    RepositoryImpl.insertCacheJoke(joke)
+                    CacheRepositoryImpl.insertJoke(joke)
                 }
                 newJokes = JokesGenerator.setAvatar(newJokes)
                 val uiModels = newJokes.convertToUIModel(false)
@@ -106,15 +110,15 @@ class JokeListViewModel : ViewModel() {
                 _jokes.postValue(updatedJokes)
                 _isRetryNeed.postValue(false)
             } catch (e: Exception) {
-                var newJokes = RepositoryImpl.fetchRandomCacheJokes(5)
-                if (newJokes.size == 5) {
-                    _error.value = "Check Network connection"
+                var newJokes = CacheRepositoryImpl.fetchRandomJokes(5)
+                if (newJokes.size > 0) {
+                    _error.value = "C= 5heck Network connection"
                     newJokes = JokesGenerator.setAvatar(newJokes)
                     val uiModels = newJokes.convertToUIModel(false)
                     val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
                     _jokes.postValue(updatedJokes)
                 } else {
-                    RepositoryImpl.markCacheShown()
+                    //RepositoryImpl.markCacheShown()
                     _isRetryNeed.postValue(true)
                     _error.postValue("Unknown error occurred while loading more jokes.")
                 }
@@ -131,8 +135,8 @@ class JokeListViewModel : ViewModel() {
         _isLoadingAdded.value = false
         viewModelScope.launch {
             withContext(Dispatchers.Default) {
-                RepositoryImpl.resetUsedJokes()
-                RepositoryImpl.resetCachedJokes()
+                CacheRepositoryImpl.resetUsedJokes()
+                JokesRepositoryImpl.resetUsedJokes()
             }
         }
         lastTimestamp = System.currentTimeMillis()
@@ -142,7 +146,7 @@ class JokeListViewModel : ViewModel() {
     private fun observeNewJoke() {
         viewModelScope.launch {
             try {
-                RepositoryImpl.getDbUserJokesAfter(lastTimestamp)
+                JokesRepositoryImpl.getUserJokesAfter(lastTimestamp)
                     .collect { newJokes ->
                         if (newJokes.isNotEmpty()) {
                             val sortedJokes = newJokes.sortedBy { it.createdAt }
@@ -155,9 +159,10 @@ class JokeListViewModel : ViewModel() {
                                 .distinctBy { it }
 
                             _jokes.postValue(updatedJokes)
-                            RepositoryImpl.setMark(true, sortedJokes.map { it.id!! })
+                            JokesRepositoryImpl.setMark(true, sortedJokes.map { it.id!! })
 
                             lastTimestamp = System.currentTimeMillis()
+                            //JokesRepositoryImpl.updateJoke(sortedJokes.apply { createdAt = lastTimestamp }.toDto())
                         }
                     }
             } catch (e: Exception) {

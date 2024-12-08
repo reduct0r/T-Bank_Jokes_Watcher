@@ -25,9 +25,9 @@ data class JokeDbEntity (
     @ColumnInfo(name = "avatar")
     val avatarByteArr: ByteArray?,
     @ColumnInfo(name = "isShown")
-    val isShown: Boolean = false,
+    var isShown: Boolean = false,
     @ColumnInfo(name = "createdAt")
-    val createdAt: Long = System.currentTimeMillis()
+    var createdAt: Long = System.currentTimeMillis()
 ) {
 
     fun toDto(): JokeDTO {

@@ -7,17 +7,47 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface JokeDAO {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+
+    //CRUD operations
+
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     suspend fun insert(joke: JokeDbEntity)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertCache(joke: JokeCacheEntity)
 
     @Update
     suspend fun update(joke: JokeDbEntity)
 
-    @Delete
-    suspend fun delete(joke: JokeDbEntity)
+    @Update
+    suspend fun updateCache(joke: JokeCacheEntity)
+
+    @Query("DELETE FROM jokes WHERE id = :id")
+    suspend fun delete(id: Int)
+
+    @Query("DELETE FROM jokesCache WHERE id = :id")
+    suspend fun deleteCache(id: Int)
+
+    // Extra operations
+
+    @Query("UPDATE jokes SET isShown = 0")
+    suspend fun markUnShown()
+
+    @Query("UPDATE jokesCache SET isShown = 0")
+    suspend fun markCacheUnShown()
+
+    @Query("SELECT * FROM jokes WHERE source = 'USER' ")
+    suspend fun getAllUserJokes(): List<JokeDbEntity>
+
+
+
+
+
+
 
     @Query("SELECT COUNT(*) FROM jokes WHERE question = :question AND answer = :answer AND category = :category")
     suspend fun checkIfExists(question: String, answer: String, category: String): Int
@@ -43,8 +73,6 @@ interface JokeDAO {
     @Query("UPDATE jokes SET isShown = :mark WHERE id IN (:ids)")
     suspend fun markShown(mark: Boolean, ids: List<Int>)
 
-    @Query("UPDATE jokes SET isShown = 0")
-    suspend fun markUnShown()
 
     @Query("SELECT DISTINCT category FROM jokes")
     suspend fun getCategories(): List<String>
@@ -57,14 +85,9 @@ interface JokeDAO {
     @Query("UPDATE jokesCache SET isShown = :mark WHERE id IN (:ids)")
     suspend fun markCacheShown(mark: Boolean, ids: List<Int>)
 
-    @Query("UPDATE jokesCache SET isShown = 0")
-    suspend fun markCacheUnShown()
 
     @Query("UPDATE jokesCache SET isShown = 1")
     suspend fun markCacheShown()
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCache(joke: JokeCacheEntity)
 
     @Query("SELECT * FROM jokesCache WHERE isShown = 0 ORDER BY RANDOM() LIMIT :limit")
     suspend fun getRandomCacheJokes(limit: Int): List<JokeCacheEntity>
@@ -75,6 +98,4 @@ interface JokeDAO {
     @Query("SELECT * FROM jokesCache WHERE createdAt < :lastTimestamp ORDER BY createdAt ASC")
     suspend fun getCachedJokesBefore(lastTimestamp: Long): List<JokeDbEntity>
 
-    @Delete
-    suspend fun delete(joke: JokeCacheEntity)
 }
