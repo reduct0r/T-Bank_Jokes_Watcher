@@ -12,10 +12,12 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityAddJokeBinding
 import com.example.homework_project_1.main.data.JokeSource
-import com.example.homework_project_1.main.data.JokesRepository
+import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
+import kotlinx.coroutines.launch
 
 class AddJokeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddJokeBinding
@@ -48,12 +50,13 @@ class AddJokeActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
         // Получение списка категорий
-        categoriesList.addAll(JokesRepository.getCategories())
-        categoriesList.add(getString(R.string.add_new_category)) //"Добавить новую категорию"
-
+        viewModel.viewModelScope.launch {
+            categoriesList.addAll(JokesRepositoryImpl.getCategories())
+            categoriesList.add(getString(R.string.add_new_category)) //"Добавить новую категорию"
+            categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerCategory.adapter = categoriesAdapter
+        }
         categoriesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, categoriesList)
-        categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerCategory.adapter = categoriesAdapter
 
         binding.spinnerCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -134,7 +137,7 @@ class AddJokeActivity : AppCompatActivity() {
         builder.setPositiveButton(getString(R.string.add)) { dialog, _ ->
             val newCategory = input.text.toString().trim()
             if (newCategory.isNotEmpty() && !categoriesList.contains(newCategory)) {
-                JokesRepository.addNewCategory(newCategory)
+                JokesRepositoryImpl.addNewCategory(newCategory)
                 categoriesList.add(categoriesList.size - 1, newCategory)
                 categoriesAdapter.notifyDataSetChanged()
                 binding.spinnerCategory.setSelection(categoriesList.indexOf(newCategory))

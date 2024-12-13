@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.homework_project_1.main.data.model.FlagsDTO
+import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
 import kotlinx.coroutines.delay
 import java.util.UUID
@@ -13,7 +13,8 @@ object JokesRepository {
     private val defaultJokesList = mutableListOf<JokeDTO>()
     private val userJokesList = mutableListOf<JokeDTO>()
     private val categories = mutableSetOf<String>()
-    
+
+
 
     private val _userJokesLiveData = MutableLiveData<List<JokeDTO>>()
     //val userJokesLiveData: LiveData<List<JokeDTO>> get() = _userJokesLiveData
@@ -35,7 +36,7 @@ object JokesRepository {
                         category = category.name,
                         question = jokeDto.question,
                         answer = jokeDto.answer,
-                        flags = FlagsDTO(
+                        flags = Flags(
                             nsfw = false,
                             religious = false,
                             political = false,
@@ -44,6 +45,7 @@ object JokesRepository {
                             explicit = false
                         ),
                         lang = "en",
+                        avatarByteArr = null,
                         source = JokeSource.DEFAULT
                     )
                 )
@@ -64,27 +66,5 @@ object JokesRepository {
         return defaultJokesList + userJokesList
     }
 
-    suspend fun addNewJoke(joke: JokeDTO) {
-        delay(2000)
-        userJokesList.add(joke)
-        _userJokesLiveData.postValue(userJokesList.toList())
 
-        if (joke.category !in categories ) {
-            categories.add(joke.category)
-        }
-        JokesGenerator.addToSelectedJokes(joke, index = userJokesList.size + defaultJokesList.size - 1)
-    }
-
-
-    fun getUserJokes(): LiveData<List<JokeDTO>> {
-        return _userJokesLiveData
-    }
-
-    fun getCategories(): List<String> {
-        return categories.toList().sorted()
-    }
-
-    fun addNewCategory(newCategory: String) {
-        categories.add(newCategory)
-    }
 }
