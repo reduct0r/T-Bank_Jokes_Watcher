@@ -15,14 +15,14 @@
         android:theme="@style/Theme.Homework_project_1"
         tools:targetApi="35">
 
-        <activity android:name=".main.ui.joke_add.AddJokeActivity"
+        <activity android:name=".main.presentation.joke_add.AddJokeActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat">
         </activity>
 
 
         <activity
-            android:name=".main.ui.joke_list.JokeListActivity"
+            android:name=".main.presentation.joke_list.JokeListActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat">
             <intent-filter>

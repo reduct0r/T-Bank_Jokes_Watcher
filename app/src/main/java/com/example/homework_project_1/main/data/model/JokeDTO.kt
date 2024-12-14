@@ -1,9 +1,8 @@
 package com.example.homework_project_1.main.data.model
 
-import android.content.Context
 import androidx.annotation.IdRes
 import com.example.homework_project_1.main.data.JokeSource
-import com.example.homework_project_1.main.data.ViewTyped
+import com.example.homework_project_1.main.presentation.utils.ViewTyped
 import com.example.homework_project_1.main.data.database.JokeCacheEntity
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import kotlinx.serialization.Serializable
