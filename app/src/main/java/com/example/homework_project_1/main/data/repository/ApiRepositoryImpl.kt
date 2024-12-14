@@ -2,14 +2,21 @@ package com.example.homework_project_1.main.data.repository
 
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.api.ApiServiceImpl
+import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.model.JokeApiEntity
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.domain.repository.Repository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.sync.Mutex
 
 import kotlinx.coroutines.sync.withLock
+import javax.inject.Inject
 
-object ApiRepositoryImpl: Repository {
+
+class ApiRepositoryImpl @Inject constructor(
+    private var apiServiceImpl: ApiServiceImpl
+) : Repository {
+
     private val mutex = Mutex()
 
     override suspend fun deleteJoke(id: Int) {
@@ -21,7 +28,7 @@ object ApiRepositoryImpl: Repository {
     }
 
     override suspend fun fetchRandomJokes(amount: Int): List<JokeDTO> = mutex.withLock {
-        return ApiServiceImpl.getInstance().getJokes(amount).jokes.map { jokeEntity: JokeApiEntity ->
+        return apiServiceImpl.getJokes(amount).jokes.map { jokeEntity: JokeApiEntity ->
             jokeEntity.toDto(flags = jokeEntity.flags).apply { source = JokeSource.NETWORK }
         }
     }
@@ -35,6 +42,10 @@ object ApiRepositoryImpl: Repository {
     }
 
     override suspend fun getAmountOfJokes(): Int {
+        TODO("Not yet implemented")
+    }
+
+    override fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>> {
         TODO("Not yet implemented")
     }
 }

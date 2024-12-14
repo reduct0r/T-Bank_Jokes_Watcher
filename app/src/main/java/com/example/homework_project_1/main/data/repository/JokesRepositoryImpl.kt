@@ -7,10 +7,11 @@ import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toDbEntity
 import com.example.homework_project_1.main.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-object JokesRepositoryImpl : Repository {
-
-    private val jokeDb: JokesWatcherDatabase = JokesWatcherDatabase.getInstance(App.instance)
+class JokesRepositoryImpl @Inject constructor(
+    private val jokeDb: JokesWatcherDatabase
+) : Repository {
     private val shownJokes = mutableListOf<Int>()
     private val categories = mutableSetOf<String>()
 
@@ -24,7 +25,7 @@ object JokesRepositoryImpl : Repository {
 
     override suspend fun fetchRandomJokes(amount: Int): List<JokeDTO> {
         val jokes = jokeDb.jokeDao().getRandomJokes(amount)
-        jokes.forEach{shownJokes.add(it.id!!)}
+        jokes.forEach { shownJokes.add(it.id!!) }
 
         jokeDb.jokeDao().markShown(true, shownJokes) // Обновляем статус в базе
         return jokes.map { it.toDto() }
@@ -43,7 +44,7 @@ object JokesRepositoryImpl : Repository {
         return jokeDb.jokeDao().getAmountOfJokes()
     }
 
-    fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>> {
+    override fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>> {
         return jokeDb.jokeDao().getUserJokesAfter(lastTimestamp)
     }
 

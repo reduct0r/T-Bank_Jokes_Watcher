@@ -1,7 +1,7 @@
 [versions]
 agp = "8.6.1"
 coil = "2.4.0"
-dagger = "2.38.1"
+dagger = "2.48"
 daggerAndroid = "2.38.1"
 daggerAndroidProcessor = "2.38.1"
 daggerAndroidSupport = "2.38.1"

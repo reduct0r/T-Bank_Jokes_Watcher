@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.presentation.joke_list
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -11,31 +12,36 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
+import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.presentation.joke_list.recycler.adapter.ViewTypedListAdapter
 import com.google.android.material.snackbar.Snackbar
+import javax.inject.Inject
 
 class JokeListFragment : Fragment() {
+    @Inject
+    lateinit var jokesViewModelFactory: JokesViewModelFactory
+
     private var _binding: FragmentJokeListBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: JokeListViewModel by viewModels {
-        JokesViewModelFactory()
-    }
     private var next = false
     private var lastErrorTime: Long = 0
     private val errorInterval: Long = 5000 // Интервал
 
     private val handler = Handler(Looper.getMainLooper())
+    private val viewModel: JokeListViewModel by viewModels {
+        jokesViewModelFactory
+    }
     private val retryRunnable = Runnable {
         viewModel.loadMoreJokes()
     }
-
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
     // Update adapter to pass JokeUIModel instead of position
@@ -50,6 +56,11 @@ class JokeListFragment : Fragment() {
             .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke))
             .addToBackStack(null)
             .commit()
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as App).appComponent.inject(this)
     }
 
     private fun showError(message: String) {

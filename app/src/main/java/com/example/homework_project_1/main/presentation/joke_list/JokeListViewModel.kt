@@ -8,12 +8,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.App
+import com.example.homework_project_1.main.data.JokeSource
+import com.example.homework_project_1.main.data.api.ApiServiceImpl
 import com.example.homework_project_1.main.domain.generator.JokesGenerator
 import com.example.homework_project_1.main.presentation.utils.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
-import com.example.homework_project_1.main.data.repository.CacheRepositoryImpl
-import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
 import com.example.homework_project_1.main.data.utils.unique
+import com.example.homework_project_1.main.di.module.ApiRepository
+import com.example.homework_project_1.main.di.module.CacheRepository
+import com.example.homework_project_1.main.di.module.JokesRepository
+import com.example.homework_project_1.main.domain.repository.Repository
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
 import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCase
@@ -23,8 +27,22 @@ import com.example.homework_project_1.main.domain.usecase.ResetUsedJokesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class JokeListViewModel : ViewModel() {
+class JokeListViewModel @Inject constructor(
+
+    @ApiRepository private val fetchRandomJokesFromApi: FetchRandomJokesFromApi,
+    @JokesRepository private val insertJokeUseCase: InsertJokeUseCase,
+    @CacheRepository private val insertCacheJokeUseCase:InsertJokeUseCase,
+    @JokesRepository private val getAmountOfJokesUseCase: GetAmountOfJokesUseCase,
+    @JokesRepository private val resetUsedJokesUseCase: ResetUsedJokesUseCase,
+    @CacheRepository private val resetUsedCacheUseCase: ResetUsedJokesUseCase,
+    @JokesRepository private val fetchRandomJokesFromDbUseCase: FetchRandomJokesFromDbUseCase,
+    @CacheRepository private val fetchRandomCacheFromDbUseCase: FetchRandomJokesFromDbUseCase,
+    @JokesRepository private val getUserJokesAfterUseCase: GetUserJokesAfterUseCase,
+
+
+    ): ViewModel() {
 
     private val _jokes = MutableLiveData<List<ViewTyped.JokeUIModel>>()
     val jokes: LiveData<List<ViewTyped.JokeUIModel>> = _jokes
@@ -50,16 +68,6 @@ class JokeListViewModel : ViewModel() {
     private var savedLastTimestamp = sharedPreferences.getLong("lastTimestamp", System.currentTimeMillis())
     private var lastTimestamp = savedLastTimestamp - 2
 
-    private val insertJokeUseCase = InsertJokeUseCase(JokesRepositoryImpl)
-    private val insertCacheJokeUseCase = InsertJokeUseCase(CacheRepositoryImpl)
-    private val getAmountOfJokesUseCase = GetAmountOfJokesUseCase(JokesRepositoryImpl)
-    private val resetUsedJokesUseCase = ResetUsedJokesUseCase(JokesRepositoryImpl)
-    private val resetUsedCacheUseCase = ResetUsedJokesUseCase(CacheRepositoryImpl)
-    private val fetchRandomJokesFromDbUseCase = FetchRandomJokesFromDbUseCase(JokesRepositoryImpl)
-    private val fetchRandomCacheFromDbUseCase = FetchRandomJokesFromDbUseCase(CacheRepositoryImpl)
-    private val fetchRandomJokesFromApi = FetchRandomJokesFromApi()
-    private val getUserJokesAfterUseCase = GetUserJokesAfterUseCase()
-
     fun setLoadingAdded(isAdded: Boolean) {
         _isLoadingAdded.value = isAdded
     }
@@ -70,8 +78,8 @@ class JokeListViewModel : ViewModel() {
 
         viewModelScope.launch {
             // Удаление кэша через сутки
-            if (CacheRepositoryImpl.deleteDeprecatedCache(System.currentTimeMillis() - 3600000 * 24))
-                Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
+//            if (CacheRepositoryImpl.deleteDeprecatedCache(System.currentTimeMillis() - 3600000 * 24))
+//                Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
 
             //TODO: для тестов сбросить состояние таблицы
 //            RepositoryImpl.dropJokesTable()

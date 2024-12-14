@@ -9,6 +9,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import java.util.UUID
 
@@ -30,18 +31,19 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
             .build()
 
         // Создание задачи для добавления шутки
-        val addJokeRequest = OneTimeWorkRequestBuilder<AddJokeWorker>()
-            .setInputData(data)
+        val workRequest = OneTimeWorkRequestBuilder<AddJokeWorker>()
             .build()
+        WorkManager.getInstance(App.instance)
+            .enqueue(workRequest)
 
         // Получение экземпляра WorkManager с использованием контекста приложения
         val workManager = WorkManager.getInstance(getApplication())
 
         // Добавление задачи в очередь
-        workManager.enqueue(addJokeRequest)
+        workManager.enqueue(workRequest)
 
         // Наблюдение за состоянием задачи
-        workManager.getWorkInfoByIdLiveData(addJokeRequest.id)
+        workManager.getWorkInfoByIdLiveData(workRequest.id)
             .observeForever { workInfo ->
                 if (workInfo != null) {
                     when (workInfo.state) {
