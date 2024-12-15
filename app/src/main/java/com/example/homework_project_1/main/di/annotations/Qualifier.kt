@@ -1,4 +1,4 @@
-package com.example.homework_project_1.main.di.module
+package com.example.homework_project_1.main.di.annotations
 
 import javax.inject.Qualifier
 

@@ -3,20 +3,17 @@ package com.example.homework_project_1.main.presentation.joke_add
 import android.content.Context
 import android.database.sqlite.SQLiteConstraintException
 import android.net.Uri
-import android.util.Log
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.homework_project_1.main.data.provider.AvatarProvider
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
-import com.example.homework_project_1.main.di.module.JokesRepository
+import com.example.homework_project_1.main.di.annotations.JokesRepository
 import com.example.homework_project_1.main.domain.usecase.InsertJokeUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import javax.inject.Inject
 
 // Для фонового добавления шутки в хранилище
 class AddJokeWorker @AssistedInject constructor(

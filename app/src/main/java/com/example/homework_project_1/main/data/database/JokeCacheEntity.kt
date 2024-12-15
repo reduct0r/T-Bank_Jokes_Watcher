@@ -7,8 +7,8 @@ import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
 
-@Entity(tableName = "jokes")
-data class JokeDbEntity (
+@Entity(tableName = "jokesCache")
+data class JokeCacheEntity (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int? = null,
@@ -25,9 +25,9 @@ data class JokeDbEntity (
     @ColumnInfo(name = "avatar")
     val avatarByteArr: ByteArray?,
     @ColumnInfo(name = "isShown")
-    var isShown: Boolean = false,
+    val isShown: Boolean = false,
     @ColumnInfo(name = "createdAt")
-    var createdAt: Long
+    val createdAt: Long = System.currentTimeMillis()
 ) {
 
     fun toDto(): JokeDTO {
@@ -38,7 +38,7 @@ data class JokeDbEntity (
             category = category,
             question = question,
             answer = answer,
-            source = if (source == "USER"){JokeSource.USER} else {JokeSource.DATABASE},
+            source = JokeSource.DATABASE,
             flags = flags,
             lang = "en"
         )
@@ -75,5 +75,3 @@ data class JokeDbEntity (
         return result
     }
 }
-
-

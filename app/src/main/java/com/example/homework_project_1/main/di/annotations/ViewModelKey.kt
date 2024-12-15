@@ -1,4 +1,4 @@
-package com.example.homework_project_1.main.di
+package com.example.homework_project_1.main.di.annotations
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

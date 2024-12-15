@@ -3,7 +3,6 @@ package com.example.homework_project_1.main.presentation.joke_list
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,13 +12,10 @@ import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.domain.generator.JokesGenerator
 import com.example.homework_project_1.main.presentation.utils.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
-import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
 import com.example.homework_project_1.main.data.utils.unique
-import com.example.homework_project_1.main.di.module.ApiRepository
-import com.example.homework_project_1.main.di.module.CacheRepository
-import com.example.homework_project_1.main.di.module.JokesRepository
-import com.example.homework_project_1.main.domain.repository.Repository
-import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheUseCase
+import com.example.homework_project_1.main.di.annotations.ApiRepository
+import com.example.homework_project_1.main.di.annotations.CacheRepository
+import com.example.homework_project_1.main.di.annotations.JokesRepository
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
 import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCase

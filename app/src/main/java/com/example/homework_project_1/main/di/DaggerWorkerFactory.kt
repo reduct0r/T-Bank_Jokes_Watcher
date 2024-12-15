@@ -1,12 +1,9 @@
 package com.example.homework_project_1.main.di
 
 import android.content.Context
-import androidx.work.CoroutineWorker
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import com.example.homework_project_1.main.di.module.JokesRepository
-import com.example.homework_project_1.main.domain.usecase.InsertJokeUseCase
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeWorker
 import javax.inject.Inject
 

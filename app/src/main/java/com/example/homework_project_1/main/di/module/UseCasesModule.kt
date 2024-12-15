@@ -1,6 +1,9 @@
 package com.example.homework_project_1.main.di.module
 
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
+import com.example.homework_project_1.main.di.annotations.ApiRepository
+import com.example.homework_project_1.main.di.annotations.CacheRepository
+import com.example.homework_project_1.main.di.annotations.JokesRepository
 import com.example.homework_project_1.main.domain.repository.Repository
 import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheUseCase
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi

@@ -1,13 +1,11 @@
 package com.example.homework_project_1.main.data.database
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface JokeDAO {
@@ -46,12 +44,6 @@ interface JokeDAO {
     @Query("SELECT COUNT(*) FROM jokes")
     suspend fun getAmountOfJokes(): Int
 
-
-
-
-
-
-
     @Query("SELECT COUNT(*) FROM jokes WHERE question = :question AND answer = :answer AND category = :category")
     suspend fun checkIfExists(question: String, answer: String, category: String): Int
 
@@ -80,7 +72,6 @@ interface JokeDAO {
     @Query("SELECT DISTINCT category FROM jokes")
     suspend fun getCategories(): List<String>
 
-
     //Cache
     @Query("SELECT COUNT(*) FROM jokesCache WHERE question = :question AND answer = :answer AND category = :category")
     suspend fun checkIfCacheExists(question: String, answer: String, category: String): Int
@@ -100,5 +91,4 @@ interface JokeDAO {
 
     @Query("SELECT * FROM jokesCache WHERE createdAt < :lastTimestamp ORDER BY createdAt ASC")
     suspend fun getCachedJokesBefore(lastTimestamp: Long): List<JokeDbEntity>
-
 }
