@@ -27,7 +27,7 @@ class ApiRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun fetchRandomJokes(amount: Int): List<JokeDTO> = mutex.withLock {
+    override suspend fun fetchRandomJokes(amount: Int, needMark: Boolean): List<JokeDTO> = mutex.withLock {
         return apiServiceImpl.getJokes(amount).jokes.map { jokeEntity: JokeApiEntity ->
             jokeEntity.toDto(flags = jokeEntity.flags).apply { source = JokeSource.NETWORK }
         }

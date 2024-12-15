@@ -24,11 +24,13 @@ class CacheRepositoryImpl @Inject constructor(
         jokeDb.jokeDao().insertCache(joke.toCacheEntity())
     }
 
-    override suspend fun fetchRandomJokes(amount: Int): List<JokeDTO> {
+    override suspend fun fetchRandomJokes(amount: Int, needMark: Boolean): List<JokeDTO> {
         val jokes = jokeDb.jokeDao().getRandomCacheJokes(amount)
-        jokes.forEach { shownCachedJokes.add(it.id!!) }
 
-        jokeDb.jokeDao().markCacheShown(true, shownCachedJokes) // Обновляем статус в базе
+        if (needMark) {
+            jokes.forEach { shownCachedJokes.add(it.id!!) }
+            jokeDb.jokeDao().markCacheShown(true, shownCachedJokes) // Обновляем статус в базе
+        }
         return jokes.map { it.toDto().apply { source = JokeSource.CACHE } }
     }
 

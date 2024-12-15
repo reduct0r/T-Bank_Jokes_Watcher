@@ -8,8 +8,7 @@ import javax.inject.Inject
 class FetchRandomJokesFromDbUseCase @Inject constructor(
     private val repository: Repository
 ) {
-    suspend operator fun invoke(amount: Int): List<JokeDTO> {
-        Log.d("FetchFromDb", "${repository::class.java}")
-        return repository.fetchRandomJokes(amount)
+    suspend operator fun invoke(amount: Int, needMark: Boolean = true): List<JokeDTO> {
+        return repository.fetchRandomJokes(amount, needMark)
     }
 }

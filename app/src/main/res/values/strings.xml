@@ -37,5 +37,5 @@
     <string name="cache">Cache</string>
     <string name="view_jokes">View jokes</string>
     <string name="favourite_jokes">Favourite jokes</string>
-    <string name="Greeting">Hello</string>
+    <string name="Greeting">Jokes watcher</string>
 </resources>

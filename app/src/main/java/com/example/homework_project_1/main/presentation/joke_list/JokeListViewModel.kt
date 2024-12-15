@@ -39,7 +39,6 @@ class JokeListViewModel @Inject constructor(
     @JokesRepository private val getUserJokesAfterUseCase: GetUserJokesAfterUseCase,
 
     private val jokesGenerator: JokesGenerator,
-
     ): ViewModel() {
 
     private val _jokes = MutableLiveData<List<ViewTyped.JokeUIModel>>()
@@ -75,17 +74,6 @@ class JokeListViewModel @Inject constructor(
         observeNewJoke()
 
         viewModelScope.launch {
-            //TODO: для тестов сбросить состояние таблицы
-//            repositoryImpl.dropJokesTable()
-//            repositoryImpl.resetJokesSequence()
-
-            //TODO: для тестов использованные шутки сбрасываются каждый запуск
-//            withContext(Dispatchers.Default) {
-//                RepositoryImpl.resetUsedJokes()
-//                RepositoryImpl.resetCachedJokes()
-//            }
-
-
             // Если в БД нет шуток (при первом запуске), то генерируем случайные
             if (getAmountOfJokesUseCase() == 0) {
                 try {
@@ -110,7 +98,6 @@ class JokeListViewModel @Inject constructor(
     fun generateJokes() {
         if (_isLoadingEl.value == true) return
         editor.putLong("lastTimestamp", System.currentTimeMillis()).apply()
-        flag = false
         viewModelScope.launch {
             _isLoading.postValue(true)
             try {
@@ -177,7 +164,6 @@ class JokeListViewModel @Inject constructor(
         }
         jokesGenerator.reset()
     }
-    private var flag: Boolean = false
 
     private fun observeNewJoke() {
         viewModelScope.launch {

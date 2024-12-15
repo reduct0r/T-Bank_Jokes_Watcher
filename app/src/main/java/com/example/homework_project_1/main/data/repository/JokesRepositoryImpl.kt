@@ -22,11 +22,13 @@ class JokesRepositoryImpl @Inject constructor(
         jokeDb.jokeDao().insert(joke.toDbEntity())
     }
 
-    override suspend fun fetchRandomJokes(amount: Int): List<JokeDTO> {
+    override suspend fun fetchRandomJokes(amount: Int, needMark: Boolean): List<JokeDTO> {
         val jokes = jokeDb.jokeDao().getRandomJokes(amount)
-        jokes.forEach { shownJokes.add(it.id!!) }
 
-        jokeDb.jokeDao().markShown(true, shownJokes) // Обновляем статус в базе
+        if (needMark) {
+            jokes.forEach { shownJokes.add(it.id!!) }
+            jokeDb.jokeDao().markShown(true, shownJokes) // Обновляем статус в базе
+        }
         return jokes.map { it.toDto() }
     }
 
