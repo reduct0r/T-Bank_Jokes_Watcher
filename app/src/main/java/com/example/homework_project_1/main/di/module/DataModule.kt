@@ -72,39 +72,22 @@ class DataModule {
         return JsonReader()
     }
 
+    @Singleton
     @Provides
     fun provideJokesGenerator(jsonReader: JsonReader): JokesGenerator {
         return JokesGenerator(jsonReader)
     }
 
-
+    @Singleton
     @Provides
     fun provideDaggerWorkerFactory(addJokeWorkerFactory: AddJokeWorker.Factory): DaggerWorkerFactory {
         return DaggerWorkerFactory(addJokeWorkerFactory)
     }
 
-    @JokesRepository
-    @Provides
-    fun provideJokeRepositoryImpl(jokeDb: JokesWatcherDatabase): JokesRepositoryImpl {
-        return JokesRepositoryImpl(jokeDb)
-    }
+    @Singleton
     @Provides
     fun provideApiServiceImpl(): ApiServiceImpl {
         return ApiServiceImpl.getInstance()
-    }
-
-    @Singleton
-    @JokesRepository
-    @Provides
-    fun provideJokeRepository(jokeDb: JokesWatcherDatabase): Repository {
-        return JokesRepositoryImpl(jokeDb)
-    }
-
-    @Singleton
-    @ApiRepository
-    @Provides
-    fun provideApiRepositoryImpl(apiServiceImpl: ApiServiceImpl): Repository {
-        return ApiRepositoryImpl(apiServiceImpl)
     }
 
     @Singleton
@@ -116,75 +99,7 @@ class DataModule {
 
     @Singleton
     @Provides
-    @ApiRepository
-    fun provideFetchRandomJokesFromApi(@ApiRepository repository: Repository): FetchRandomJokesFromApi {
-        return FetchRandomJokesFromApi(repository)
-    }
-
-    @Singleton
-    @Provides
-    @JokesRepository
-    fun provideFetchRandomJokesFromDbUseCase(@JokesRepository repository: Repository): FetchRandomJokesFromDbUseCase {
-        return FetchRandomJokesFromDbUseCase(repository)
-    }
-
-    @Singleton
-    @Provides
-    @CacheRepository
-    fun provideFetchRandomCacheJokesFromDbUseCase(@CacheRepository repository: Repository): FetchRandomJokesFromDbUseCase {
-        return FetchRandomJokesFromDbUseCase(repository)
-    }
-
-    @Singleton
-    @Provides
-    @JokesRepository
-    fun provideGetAmountOfJokesUseCase(@JokesRepository repository: Repository): GetAmountOfJokesUseCase {
-        return GetAmountOfJokesUseCase(repository)
-    }
-
-    @Singleton
-    @Provides
-    @JokesRepository
-    fun provideResetUsedJokesUseCase(@JokesRepository repository: Repository): ResetUsedJokesUseCase {
-        return ResetUsedJokesUseCase(repository)
-    }
-
-    @Singleton
-    @Provides
-    @CacheRepository
-    fun provideResetUsedJokesCacheUseCase(@CacheRepository repository: Repository): ResetUsedJokesUseCase {
-        return ResetUsedJokesUseCase(repository)
-    }
-
-    @Singleton
-    @Provides
-    @JokesRepository
-    fun provideInsertJokeUseCaseJokes(@JokesRepository repository: Repository): InsertJokeUseCase {
-        return InsertJokeUseCase(repository)
-    }
-
-    @Singleton
-    @Provides
-    @CacheRepository
-    fun provideInsertJokeUseCaseCache(@CacheRepository repository: Repository): InsertJokeUseCase {
-        return InsertJokeUseCase(repository)
-    }
-
-    @Singleton
-    @Provides
-    @JokesRepository
-    fun provideGetUserJokesAfterUseCase(@JokesRepository repository: Repository): GetUserJokesAfterUseCase {
-        return GetUserJokesAfterUseCase(repository)
-    }
-
-    @Provides
     fun provideJokesWatcherDatabase(): JokesWatcherDatabase {
         return JokesWatcherDatabase.getInstance(App.instance)
     }
-
-    @Provides
-    fun provideDeleteDeprecatedCacheUseCase(jokeDb: JokesWatcherDatabase): DeleteDeprecatedCacheUseCase {
-        return DeleteDeprecatedCacheUseCase(jokeDb)
-    }
-
 }

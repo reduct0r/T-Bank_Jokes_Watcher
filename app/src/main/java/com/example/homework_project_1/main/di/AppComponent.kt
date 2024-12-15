@@ -5,6 +5,7 @@ import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.di.module.DataModule
 import com.example.homework_project_1.main.di.module.PresentationModule
 import com.example.homework_project_1.main.di.module.RepositoryModule
+import com.example.homework_project_1.main.di.module.UseCasesModule
 import com.example.homework_project_1.main.di.module.ViewModelModule
 import com.example.homework_project_1.main.di.module.WorkerModule
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
@@ -22,7 +23,8 @@ import javax.inject.Singleton
     ViewModelModule::class,
     RepositoryModule::class,
     WorkerModule::class,
-    PresentationModule::class
+    PresentationModule::class,
+    UseCasesModule::class
 ])
 interface AppComponent {
     fun inject(activity: JokeListActivity)
@@ -36,6 +38,4 @@ interface AppComponent {
     interface Factory {
         fun create(@BindsInstance context: Context): AppComponent
     }
-
-
 }
