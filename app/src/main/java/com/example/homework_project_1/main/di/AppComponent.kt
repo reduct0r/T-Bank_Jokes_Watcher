@@ -10,6 +10,7 @@ import com.example.homework_project_1.main.di.module.ViewModelModule
 import com.example.homework_project_1.main.di.module.WorkerModule
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsFragment
+import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsViewModel
 import com.example.homework_project_1.main.presentation.joke_list.JokeListActivity
 import com.example.homework_project_1.main.presentation.joke_list.JokeListFragment
 import com.example.homework_project_1.main.presentation.joke_list.JokeListViewModel
@@ -42,4 +43,6 @@ interface AppComponent {
     interface Factory {
         fun create(@BindsInstance context: Context): AppComponent
     }
+
+    fun jokeDetailsViewModelFactory(): JokeDetailsViewModel.Factory
 }

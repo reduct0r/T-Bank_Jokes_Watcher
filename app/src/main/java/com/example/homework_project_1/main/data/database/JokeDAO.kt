@@ -68,9 +68,14 @@ interface JokeDAO {
     @Query("UPDATE jokes SET isShown = :mark WHERE id IN (:ids)")
     suspend fun markShown(mark: Boolean, ids: List<Int>)
 
-
     @Query("SELECT DISTINCT category FROM jokes")
     suspend fun getCategories(): List<String>
+
+    @Query("UPDATE jokes SET isFavourite = :isFavourite WHERE id = :jokeId")
+    suspend fun updateFavouriteStatus(jokeId: Int, isFavourite: Boolean)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM jokes WHERE id = :id AND category = :category AND question = :question AND answer = :answer)")
+    suspend fun isJokeExists(id: Int, category: String, question: String, answer: String,): Boolean
 
     //Cache
     @Query("SELECT COUNT(*) FROM jokesCache WHERE question = :question AND answer = :answer AND category = :category")
@@ -78,7 +83,6 @@ interface JokeDAO {
 
     @Query("UPDATE jokesCache SET isShown = :mark WHERE id IN (:ids)")
     suspend fun markCacheShown(mark: Boolean, ids: List<Int>)
-
 
     @Query("UPDATE jokesCache SET isShown = 1")
     suspend fun markCacheShown()

@@ -2,6 +2,8 @@ package com.example.homework_project_1.main.presentation.utils
 
 import androidx.annotation.IdRes
 import com.example.homework_project_1.main.data.JokeSource
+import com.example.homework_project_1.main.data.database.JokeDbEntity
+import com.example.homework_project_1.main.data.model.Flags
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
@@ -20,6 +22,27 @@ sealed interface ViewTyped {
         val source: JokeSource
 
     ) : ViewTyped, java.io.Serializable {
+
+        fun toDbEntity(): JokeDbEntity {
+            return JokeDbEntity(
+                id = id,
+                avatarByteArr = avatarByteArr,
+                category = category,
+                question = question,
+                answer = answer,
+                source = source.toString(),
+                flags = Flags(
+                    nsfw = false,
+                    religious = false,
+                    political = false,
+                    racist = false,
+                    sexist = false,
+                    explicit = false
+                ),
+                createdAt = System.currentTimeMillis(),
+                isFavourite = isFavorite
+            )
+        }
 
         // Фабрика для создания объектов
         class JokeUIModelFactory @Inject constructor() {

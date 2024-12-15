@@ -6,12 +6,14 @@ import com.example.homework_project_1.main.presentation.utils.ViewTyped
 
 // Фабрика для создания ViewModel
 @Suppress("UNCHECKED_CAST")
-class JokesDetailsViewModelFactory(private val joke: ViewTyped.JokeUIModel) : ViewModelProvider.Factory {
+class JokeDetailsViewModelFactory(
+    private val assistedFactory: JokeDetailsViewModel.Factory,
+    private val gotJoke: ViewTyped.JokeUIModel
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return if (modelClass.isAssignableFrom(JokeDetailsViewModel::class.java)) {
-            JokeDetailsViewModel(joke) as T
-        } else {
-            throw IllegalArgumentException("Unknown ViewModel class")
+        if (modelClass.isAssignableFrom(JokeDetailsViewModel::class.java)) {
+            return assistedFactory.create(gotJoke) as T
         }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

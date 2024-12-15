@@ -15,8 +15,12 @@ import com.example.homework_project_1.databinding.FragmentJokeDetailsBinding
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.presentation.utils.ViewTyped
+import javax.inject.Inject
 
 class JokeDetailsFragment : Fragment() {
+
+    @Inject
+    lateinit var jokeDetailsFactory: JokeDetailsViewModel.Factory
 
     companion object {
         private const val JOKE_EXTRA = "joke_extra"
@@ -41,8 +45,10 @@ class JokeDetailsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: JokeDetailsViewModel by viewModels {
-        arguments?.getSerializable(JOKE_EXTRA)?.let { JokesDetailsViewModelFactory(it as ViewTyped.JokeUIModel) }
+        val joke = arguments?.getSerializable(JOKE_EXTRA) as? ViewTyped.JokeUIModel
             ?: throw IllegalArgumentException("JOKE_EXTRA is missing")
+
+        JokeDetailsViewModelFactory(jokeDetailsFactory, joke)
     }
 
     override fun onCreateView(

@@ -107,7 +107,7 @@ data class JokeDTO(
                 avatarByteArr = avatarByteArr,
                 source = source.toString(),
                 isShown = false,
-                createdAt = lastTimestamp
+                createdAt = lastTimestamp,
             )
         }
 

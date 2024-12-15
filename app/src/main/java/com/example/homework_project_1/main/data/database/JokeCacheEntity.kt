@@ -27,7 +27,9 @@ data class JokeCacheEntity (
     @ColumnInfo(name = "isShown")
     val isShown: Boolean = false,
     @ColumnInfo(name = "createdAt")
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    @ColumnInfo(name = "isFavourite")
+    var isFavourite: Boolean = false
 ) {
 
     fun toDto(): JokeDTO {

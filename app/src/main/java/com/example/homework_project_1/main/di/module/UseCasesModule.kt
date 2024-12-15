@@ -5,6 +5,7 @@ import com.example.homework_project_1.main.di.annotations.ApiRepository
 import com.example.homework_project_1.main.di.annotations.CacheRepository
 import com.example.homework_project_1.main.di.annotations.JokesRepository
 import com.example.homework_project_1.main.domain.repository.Repository
+import com.example.homework_project_1.main.domain.usecase.AddToFavouritesUseCase
 import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheUseCase
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
@@ -85,5 +86,11 @@ class UseCasesModule {
     @CacheRepository
     fun provideInsertJokeUseCaseCache(@CacheRepository repository: Repository): InsertJokeUseCase {
         return InsertJokeUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAddToFavouritesUseCase(jokeDb: JokesWatcherDatabase): AddToFavouritesUseCase {
+        return AddToFavouritesUseCase(jokeDb)
     }
 }

@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [JokeDbEntity::class, JokeCacheEntity::class], version = 6)
+@Database(entities = [JokeDbEntity::class, JokeCacheEntity::class], version = 9)
 @TypeConverters(Converters::class)
 abstract class JokesWatcherDatabase : RoomDatabase() {
     abstract fun jokeDao(): JokeDAO
