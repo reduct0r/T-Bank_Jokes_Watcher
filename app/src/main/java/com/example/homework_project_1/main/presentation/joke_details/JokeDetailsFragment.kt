@@ -78,9 +78,20 @@ class JokeDetailsFragment : Fragment() {
             handleError(errorMessage)
         }
 
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            binding.addToFavorites.text = if (isFavorite) {
+                getString(R.string.remove_from_favorites)
+            } else {
+                getString(R.string.add_to_favorites)
+            }
+        }
+
         binding.addToFavorites.setOnClickListener {
-            Toast.makeText(requireContext(), "Added to favorites (TEST)", Toast.LENGTH_SHORT).show()
-            viewModel.addToFavorites()
+            if (viewModel.isFavorite.value == true) {
+                viewModel.removeFromFavorites()
+            } else {
+                viewModel.addToFavorites()
+            }
         }
 
         // Обработка нажатия на кнопку "Назад"

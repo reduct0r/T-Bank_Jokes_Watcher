@@ -38,4 +38,5 @@
     <string name="view_jokes">View jokes</string>
     <string name="favourite_jokes">Favourite jokes</string>
     <string name="Greeting">Jokes watcher</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
 </resources>
