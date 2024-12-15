@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.di.module
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.homework_project_1.main.App
@@ -11,9 +12,12 @@ import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.repository.ApiRepositoryImpl
 import com.example.homework_project_1.main.data.repository.CacheRepositoryImpl
 import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
+import com.example.homework_project_1.main.data.utils.JsonReader
 import com.example.homework_project_1.main.di.DaggerWorkerFactory
 import com.example.homework_project_1.main.di.ViewModelKey
+import com.example.homework_project_1.main.domain.generator.JokesGenerator
 import com.example.homework_project_1.main.domain.repository.Repository
+import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheUseCase
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
 import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCase
@@ -40,7 +44,6 @@ import javax.inject.Singleton
 @Module
 class DataModule {
 
-
     fun provideHttpClient(): HttpClient {
         val httpClient: HttpClient by lazy {
             HttpClient(CIO) {
@@ -58,6 +61,24 @@ class DataModule {
     }
 
     @Provides
+    @Singleton
+    fun provideApp(application: Application): App {
+        return application as App
+    }
+
+    @Provides
+    @Singleton
+    fun provideJsonReader(): JsonReader {
+        return JsonReader()
+    }
+
+    @Provides
+    fun provideJokesGenerator(jsonReader: JsonReader): JokesGenerator {
+        return JokesGenerator(jsonReader)
+    }
+
+
+    @Provides
     fun provideDaggerWorkerFactory(addJokeWorkerFactory: AddJokeWorker.Factory): DaggerWorkerFactory {
         return DaggerWorkerFactory(addJokeWorkerFactory)
     }
@@ -68,22 +89,25 @@ class DataModule {
         return JokesRepositoryImpl(jokeDb)
     }
     @Provides
-    fun provideApiServiceImpl(httpClient: HttpClient): ApiService {
+    fun provideApiServiceImpl(): ApiServiceImpl {
         return ApiServiceImpl.getInstance()
     }
 
+    @Singleton
     @JokesRepository
     @Provides
     fun provideJokeRepository(jokeDb: JokesWatcherDatabase): Repository {
         return JokesRepositoryImpl(jokeDb)
     }
 
+    @Singleton
     @ApiRepository
     @Provides
-    fun provideApiRepositoryImpl(jokeDb: JokesWatcherDatabase): Repository {
-        return JokesRepositoryImpl(jokeDb)
+    fun provideApiRepositoryImpl(apiServiceImpl: ApiServiceImpl): Repository {
+        return ApiRepositoryImpl(apiServiceImpl)
     }
 
+    @Singleton
     @CacheRepository
     @Provides
     fun provideCacheRepositoryImpl(jokeDb: JokesWatcherDatabase): Repository {
@@ -156,6 +180,11 @@ class DataModule {
     @Provides
     fun provideJokesWatcherDatabase(): JokesWatcherDatabase {
         return JokesWatcherDatabase.getInstance(App.instance)
+    }
+
+    @Provides
+    fun provideDeleteDeprecatedCacheUseCase(jokeDb: JokesWatcherDatabase): DeleteDeprecatedCacheUseCase {
+        return DeleteDeprecatedCacheUseCase(jokeDb)
     }
 
 }

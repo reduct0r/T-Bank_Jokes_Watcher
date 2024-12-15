@@ -1,16 +1,18 @@
 package com.example.homework_project_1.main
 
 import android.app.Application
+import android.widget.Toast
 import androidx.work.Configuration
-import androidx.work.WorkManager
 import com.example.homework_project_1.main.di.AppComponent
 import com.example.homework_project_1.main.di.DaggerAppComponent
 import com.example.homework_project_1.main.di.DaggerWorkerFactory
+import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheUseCase
 import javax.inject.Inject
-
 
 class App : Application(), Configuration.Provider {
     lateinit var appComponent: AppComponent
+        private set
+
     @Inject
     lateinit var daggerWorkerFactory: DaggerWorkerFactory
 
@@ -31,6 +33,4 @@ class App : Application(), Configuration.Provider {
             .setWorkerFactory(daggerWorkerFactory)
             .build()
     }
-
-
 }

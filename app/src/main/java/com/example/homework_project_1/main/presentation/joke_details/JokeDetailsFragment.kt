@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.presentation.joke_details
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeDetailsBinding
+import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.presentation.utils.ViewTyped
 
@@ -27,8 +29,13 @@ class JokeDetailsFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
+
     }
 
+    override fun onAttach(context: Context) {
+        (requireActivity().application as App).appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     private var _binding: FragmentJokeDetailsBinding? = null
     private val binding get() = _binding!!

@@ -10,14 +10,15 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.util.UUID
+import javax.inject.Inject
 
 // Класс для чтения данных из JSON-файла
-object JsonReader {
+class JsonReader {
     private val defaultJokesList = mutableListOf<JokeDTO>()
     private val userJokesList = mutableListOf<JokeDTO>()
     private val categories = mutableSetOf<String>()
 
-    fun readJokesFromAsset(context: Context, fileName: String = "jokes.json"): JokesData? {
+    private fun readJokesFromAsset(context: Context, fileName: String = "jokes.json"): JokesData? {
         return try {
             val jsonString = context.assets.open(fileName)
                 .bufferedReader()

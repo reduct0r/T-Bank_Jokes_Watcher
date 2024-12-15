@@ -49,13 +49,4 @@ class CacheRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    suspend fun deleteDeprecatedCache(lastTimestamp: Long): Boolean {
-        val deprecatedCache = jokeDb.jokeDao().getCachedJokesBefore(lastTimestamp)
-        if (deprecatedCache.isEmpty()) {
-            return false
-        } else {
-            deprecatedCache.forEach { jokeDb.jokeDao().delete(it.id!!) }
-            return true
-        }
-    }
 }

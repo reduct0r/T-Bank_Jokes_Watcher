@@ -12,21 +12,28 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
 import com.example.homework_project_1.main.App
+import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheUseCase
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.presentation.joke_list.recycler.adapter.ViewTypedListAdapter
+import com.example.homework_project_1.main.presentation.utils.ViewTyped.JokeUIModel.JokeUIModelFactory
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class JokeListFragment : Fragment() {
     @Inject
     lateinit var jokesViewModelFactory: JokesViewModelFactory
+
+    @Inject
+    lateinit var deleteDeprecatedCacheUseCase: DeleteDeprecatedCacheUseCase
 
     private var _binding: FragmentJokeListBinding? = null
     private val binding get() = _binding!!
@@ -44,7 +51,6 @@ class JokeListFragment : Fragment() {
     }
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
-    // Update adapter to pass JokeUIModel instead of position
     private val adapter = ViewTypedListAdapter { joke ->
         parentFragmentManager.beginTransaction()
             .setCustomAnimations(
@@ -79,6 +85,11 @@ class JokeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         createRecyclerViewList()
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+        viewModel.viewModelScope.launch {
+            if (deleteDeprecatedCacheUseCase(System.currentTimeMillis() - 3600000 * 24))
+                Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
+        }
 
         // Наблюдение за данными шуток
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->

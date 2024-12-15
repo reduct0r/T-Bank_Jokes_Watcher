@@ -3,12 +3,12 @@ package com.example.homework_project_1.main.presentation.utils
 import androidx.annotation.IdRes
 import com.example.homework_project_1.main.data.JokeSource
 import kotlinx.serialization.Serializable
+import javax.inject.Inject
 
 // UI-Интерфейс для отображения элементов списка
 @Serializable
 sealed interface ViewTyped {
     // Класс шутки
-
     data class JokeUIModel(
         val id: Int,
         @IdRes var avatar: Int?,
@@ -20,6 +20,22 @@ sealed interface ViewTyped {
         val source: JokeSource
 
     ) : ViewTyped, java.io.Serializable {
+
+        // Фабрика для создания объектов
+        class JokeUIModelFactory @Inject constructor() {
+            fun create(
+                id: Int,
+                avatar: Int?,
+                avatarByteArr: ByteArray?,
+                category: String,
+                question: String,
+                answer: String,
+                isFavorite: Boolean,
+                source: JokeSource
+            ): JokeUIModel {
+                return JokeUIModel(id, avatar, avatarByteArr, category, question, answer, isFavorite, source)
+            }
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true
