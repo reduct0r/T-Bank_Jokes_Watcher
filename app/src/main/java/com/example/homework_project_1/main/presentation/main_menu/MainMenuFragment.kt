@@ -55,7 +55,13 @@ class MainMenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
-        viewModel.startUpdatingLines()
+        viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                binding.progressBar.visibility = View.VISIBLE
+            } else {
+                binding.progressBar.visibility = View.GONE
+            }
+        }
 
         viewModel.textLine.observe(viewLifecycleOwner) { newText ->
             animateTextChange(newText)
@@ -84,6 +90,11 @@ class MainMenuFragment : Fragment() {
     override fun onStop() {
         super.onStop()
         viewModel.stopUpdatingLines()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        viewModel.startUpdatingLines()
     }
 
     override fun onDestroyView() {

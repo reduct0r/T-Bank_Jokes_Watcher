@@ -9,15 +9,9 @@ import javax.inject.Inject
 
 class JokeListActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var jsonReader: JsonReader
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        (applicationContext as App).appComponent.inject(this)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        jsonReader.parseJSON(this)
 
         // Загрузка начального фрагмента один раз
         if (savedInstanceState == null) {

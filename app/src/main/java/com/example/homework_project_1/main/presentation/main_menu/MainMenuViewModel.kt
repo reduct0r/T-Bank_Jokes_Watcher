@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.presentation.main_menu
 
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
@@ -10,7 +11,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.main.di.annotations.CacheRepository
 import com.example.homework_project_1.main.di.annotations.JokesRepository
+import com.example.homework_project_1.main.domain.generator.JokesGenerator
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
+import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCase
+import com.example.homework_project_1.main.domain.usecase.InsertJokeUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,7 +24,10 @@ import javax.inject.Inject
 class MainMenuViewModel @Inject constructor(
     @JokesRepository private val fetchRandomJokesFromDbUseCase: FetchRandomJokesFromDbUseCase,
     @CacheRepository private val fetchRandomCacheFromDbUseCase: FetchRandomJokesFromDbUseCase,
-    ) : ViewModel() {
+    @JokesRepository private val getAmountOfJokesUseCase: GetAmountOfJokesUseCase,
+    @JokesRepository private val insertJokeUseCase: InsertJokeUseCase,
+    private val jokesGenerator: JokesGenerator,
+) : ViewModel() {
 
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> get() = _loading
@@ -37,14 +44,24 @@ class MainMenuViewModel @Inject constructor(
         if (isRunning) return
         isRunning = true
         viewModelScope.launch {
-            if (lines.isEmpty()) {
-                _loading.postValue(true)
-                lines = withContext(Dispatchers.IO) {
-                    (fetchRandomJokesFromDbUseCase(20, false) + fetchRandomCacheFromDbUseCase(20, false))
-                        .map { it.question + " \n " + it.answer }
+            _loading.postValue(true)
+
+            if (getAmountOfJokesUseCase() == 0) {
+                try {
+                    val generatedJokes = jokesGenerator.generateJokesData(35)
+                    generatedJokes.forEach { insertJokeUseCase(it) }
+                } catch (e: Exception) {
+                    Log.e("MainMenuViewModel", "Failed to generate jokes", e)
                 }
-                _loading.postValue(false)
             }
+
+            lines = withContext(Dispatchers.IO) {
+                (fetchRandomJokesFromDbUseCase(20, false)
+                        + fetchRandomCacheFromDbUseCase(20, false)).map {
+                            "${it.question}\n— ${it.answer}"
+                        }
+            }
+            _loading.postValue(false)
 
             while (isRunning) {
                 if (lines.isNotEmpty()) {
