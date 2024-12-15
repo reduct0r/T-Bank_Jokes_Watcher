@@ -57,7 +57,8 @@ class AddJokeWorker @AssistedInject constructor(
                 explicit = false
             ),
             lang = "en",
-            source = source
+            source = source,
+            isFavorite = false
         )
 
         return try {

@@ -58,7 +58,8 @@ class JsonReader {
                         ),
                         lang = "en",
                         avatarByteArr = null,
-                        source = JokeSource.DEFAULT
+                        source = JokeSource.DEFAULT,
+                        isFavorite = false
                     )
                 )
             }

@@ -16,7 +16,8 @@ class AddToFavouritesUseCase @Inject constructor(
                 jokeEnt.question,
                 jokeEnt.answer)
             ){
-            jokeDb.jokeDao().updateFavouriteStatus(jokeEnt.id, jokeEnt.isFavourite)
+            jokeDb.jokeDao().updateFavouriteStatus(jokeEnt.id!!, jokeEnt.isFavourite)
+            //Log.d("AddToFavouritesUseCase", "Joke with id ${jokeEnt.id} updated")
         } else {
             jokeDb.jokeDao().insert(jokeEnt)
         }

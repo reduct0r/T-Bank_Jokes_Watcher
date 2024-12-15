@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.data.database
 
+import android.util.Log
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -13,7 +14,9 @@ interface JokeDAO {
     //CRUD operations
 
     @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insert(joke: JokeDbEntity)
+    suspend fun insert(joke: JokeDbEntity){
+        Log.d("JokeDAO", "insert: $joke")
+    }
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertCache(joke: JokeCacheEntity)
@@ -72,10 +75,14 @@ interface JokeDAO {
     suspend fun getCategories(): List<String>
 
     @Query("UPDATE jokes SET isFavourite = :isFavourite WHERE id = :jokeId")
-    suspend fun updateFavouriteStatus(jokeId: Int, isFavourite: Boolean)
-
+    suspend fun updateFavouriteStatus(jokeId: Int, isFavourite: Boolean) {
+        Log.d("JokeDAO", "updateFavouriteStatus: jokeId = $jokeId, isFavourite = $isFavourite")
+    }
     @Query("SELECT EXISTS(SELECT 1 FROM jokes WHERE id = :id AND category = :category AND question = :question AND answer = :answer)")
-    suspend fun isJokeExists(id: Int, category: String, question: String, answer: String,): Boolean
+    suspend fun isJokeExists(id: Int, category: String, question: String, answer: String): Boolean {
+        Log.d("JokeDAO", "isJokeExists: ${getJokeById(id).isFavourite}")
+        return true
+    }
 
     //Cache
     @Query("SELECT COUNT(*) FROM jokesCache WHERE question = :question AND answer = :answer AND category = :category")

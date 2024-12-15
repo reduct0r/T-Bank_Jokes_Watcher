@@ -31,7 +31,8 @@ data class JokeApiEntity(
         flags = flags,
         avatar = null,
         avatarByteArr = null,
-        source = JokeSource.DEFAULT
+        source = JokeSource.DEFAULT,
+        isFavorite = false
         )
     }
 }

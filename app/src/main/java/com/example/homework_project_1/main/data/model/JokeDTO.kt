@@ -16,6 +16,7 @@ data class JokeDTO(
     val question: String,
     val answer: String,
     var source: JokeSource,
+    var isFavorite : Boolean,
 
     // Доп поля из запроса
     val flags: Flags,
@@ -57,7 +58,7 @@ data class JokeDTO(
     }
 
     companion object {
-        fun JokeDTO.convertToUIModel(isFavorite: Boolean): ViewTyped.JokeUIModel {
+        fun JokeDTO.convertToUIModel(): ViewTyped.JokeUIModel {
             return ViewTyped.JokeUIModel(
                 id = id,
                 category = category,
@@ -70,14 +71,14 @@ data class JokeDTO(
             )
         }
 
-        fun List<JokeDTO>.convertToUIModel(isFavorite: Boolean): List<ViewTyped.JokeUIModel> {
+        fun List<JokeDTO>.convertToUIModel(): List<ViewTyped.JokeUIModel> {
             return this.map { joke ->
                 ViewTyped.JokeUIModel(
                     id = joke.id,
                     category = joke.category,
                     question = joke.question,
                     answer = joke.answer,
-                    isFavorite = isFavorite,
+                    isFavorite = joke.isFavorite,
                     source = joke.source,
                     avatar = joke.avatar,
                     avatarByteArr = joke.avatarByteArr

@@ -29,7 +29,7 @@ data class JokeDbEntity (
     @ColumnInfo(name = "createdAt")
     var createdAt: Long,
     @ColumnInfo(name = "isFavourite")
-    var isFavourite: Boolean = false
+    var isFavourite: Boolean = true
 ) {
 
     fun toDto(): JokeDTO {
@@ -43,6 +43,7 @@ data class JokeDbEntity (
             source = if (source == "USER"){JokeSource.USER} else {JokeSource.DATABASE},
             flags = flags,
             lang = "en",
+            isFavorite = isFavourite
         )
     }
 

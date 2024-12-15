@@ -105,7 +105,7 @@ class JokeListViewModel @Inject constructor(
 
                 if (data.isNotEmpty()) {
                     data = jokesGenerator.setAvatar(data)
-                    val uiModel = data.convertToUIModel(false)
+                    val uiModel = data.convertToUIModel()
                     _jokes.postValue(uiModel)
                 } else {
                     _error.value = "There is no new jokes"
@@ -129,7 +129,7 @@ class JokeListViewModel @Inject constructor(
                     insertCacheJokeUseCase(joke)
                 }
                 newJokes = jokesGenerator.setAvatar(newJokes)
-                val uiModels = newJokes.convertToUIModel(false)
+                val uiModels = newJokes.convertToUIModel()
                 val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
                 _jokes.postValue(updatedJokes)
                 _isRetryNeed.postValue(false)
@@ -138,7 +138,7 @@ class JokeListViewModel @Inject constructor(
                 if (newJokes.isNotEmpty()) {
                     _error.value = "Check Network connection"
                     newJokes = jokesGenerator.setAvatar(newJokes)
-                    val uiModels = newJokes.convertToUIModel(false)
+                    val uiModels = newJokes.convertToUIModel()
                     val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
                     _jokes.postValue(updatedJokes)
                 } else {
@@ -179,7 +179,7 @@ class JokeListViewModel @Inject constructor(
                             newModels = jokesGenerator.setAvatar(newModels)
 
                             // Объединяем новые шутки с существующими, избегая дубликатов
-                            val updatedJokes = (newModels.convertToUIModel(false) + (_jokes.value ?: emptyList()))
+                            val updatedJokes = (newModels.convertToUIModel() + (_jokes.value ?: emptyList()))
                                 .distinctBy { it }
 
                             _jokes.postValue(updatedJokes)

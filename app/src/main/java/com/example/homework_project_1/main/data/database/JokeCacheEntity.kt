@@ -42,7 +42,8 @@ data class JokeCacheEntity (
             answer = answer,
             source = JokeSource.DATABASE,
             flags = flags,
-            lang = "en"
+            lang = "en",
+            isFavorite = isFavourite
         )
     }
 
