@@ -13,6 +13,7 @@ import com.example.homework_project_1.main.presentation.joke_details.JokeDetails
 import com.example.homework_project_1.main.presentation.joke_list.JokeListActivity
 import com.example.homework_project_1.main.presentation.joke_list.JokeListFragment
 import com.example.homework_project_1.main.presentation.joke_list.JokeListViewModel
+import com.example.homework_project_1.main.presentation.main_menu.MainMenuFragment
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
@@ -31,6 +32,7 @@ interface AppComponent {
     fun inject(viewModel: JokeListViewModel)
     fun inject(fragment: JokeListFragment)
     fun inject(fragment: JokeDetailsFragment)
+    fun inject(fragment: MainMenuFragment)
     fun inject(activity: AddJokeActivity)
     fun inject(app: App)
 

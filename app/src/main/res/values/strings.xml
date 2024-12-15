@@ -35,4 +35,7 @@
     <string name="unknown">Unknown</string>
     <string name="database">Database</string>
     <string name="cache">Cache</string>
+    <string name="view_jokes">View jokes</string>
+    <string name="favourite_jokes">Favourite jokes</string>
+    <string name="Greeting">Hello</string>
 </resources>

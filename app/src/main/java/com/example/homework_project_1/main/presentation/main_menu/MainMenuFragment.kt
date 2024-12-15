@@ -1,0 +1,43 @@
+package com.example.homework_project_1.main.presentation.main_menu
+
+import android.content.Context
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import com.example.homework_project_1.databinding.FragmentMainMenuBinding
+import com.example.homework_project_1.main.App
+import javax.inject.Inject
+
+class MainMenuFragment : Fragment() {
+    @Inject
+    lateinit var mainViewModelFactory: MainMenuViewModelFactory
+
+    private var _binding: FragmentMainMenuBinding? = null
+    private val binding get() = _binding!!
+
+    private val viewModel: MainMenuViewModel by viewModels {
+        mainViewModelFactory
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as App).appComponent.inject(this)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = FragmentMainMenuBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+    }
+}

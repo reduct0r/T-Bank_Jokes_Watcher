@@ -1,8 +1,11 @@
 package com.example.homework_project_1.main.di.module
 
 import android.app.Application
+import android.content.Context
+import androidx.room.Room
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.api.ApiServiceImpl
+import com.example.homework_project_1.main.data.database.JokeDAO
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.repository.CacheRepositoryImpl
 import com.example.homework_project_1.main.data.utils.JsonReader
@@ -81,7 +84,19 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideJokesWatcherDatabase(): JokesWatcherDatabase {
-        return JokesWatcherDatabase.getInstance(App.instance)
+    fun provideDatabase(context: Context): JokesWatcherDatabase {
+        return Room.databaseBuilder(
+            context.applicationContext,
+            JokesWatcherDatabase::class.java,
+            "jokes_watcher_database"
+        )
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideJokeDao(database: JokesWatcherDatabase): JokeDAO {
+        return database.jokeDao()
     }
 }

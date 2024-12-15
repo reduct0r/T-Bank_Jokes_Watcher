@@ -10,4 +10,7 @@
     <color name="light_green">#D0F0AC</color>
     <color name="light_gray">#C1C1C1</color>
     <color name="light_purple">#DCC2FA</color>
+    <color name="light_red">#D54343</color>
+    <color name="dark_prp">#281B79</color>
+    <color name="dark_red">#6E1810</color>
 </resources>
