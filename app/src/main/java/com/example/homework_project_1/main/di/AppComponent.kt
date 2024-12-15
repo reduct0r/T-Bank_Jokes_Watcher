@@ -5,6 +5,7 @@ import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.di.module.DataModule
 import com.example.homework_project_1.main.di.module.RepositoryModule
 import com.example.homework_project_1.main.di.module.ViewModelModule
+import com.example.homework_project_1.main.di.module.WorkerModule
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.presentation.joke_list.JokeListActivity
 import com.example.homework_project_1.main.presentation.joke_list.JokeListFragment
@@ -14,7 +15,12 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [DataModule::class, ViewModelModule::class , RepositoryModule::class])
+@Component(modules = [
+    DataModule::class,
+    ViewModelModule::class,
+    RepositoryModule::class,
+    WorkerModule::class
+])
 interface AppComponent {
     fun inject(activity: JokeListActivity)
     fun inject(viewModel: JokeListViewModel)

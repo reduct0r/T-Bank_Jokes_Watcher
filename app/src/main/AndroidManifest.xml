@@ -15,6 +15,12 @@
         android:theme="@style/Theme.Homework_project_1"
         tools:targetApi="35">
 
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            tools:node="remove">
+        </provider>
+
         <activity android:name=".main.presentation.joke_add.AddJokeActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat">

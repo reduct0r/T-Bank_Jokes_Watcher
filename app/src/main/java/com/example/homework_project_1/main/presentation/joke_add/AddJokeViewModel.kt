@@ -32,12 +32,11 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
 
         // Создание задачи для добавления шутки
         val workRequest = OneTimeWorkRequestBuilder<AddJokeWorker>()
+            .setInputData(data)
             .build()
-        WorkManager.getInstance(App.instance)
-            .enqueue(workRequest)
 
         // Получение экземпляра WorkManager с использованием контекста приложения
-        val workManager = WorkManager.getInstance(getApplication())
+        val workManager = WorkManager.getInstance(App.instance)
 
         // Добавление задачи в очередь
         workManager.enqueue(workRequest)

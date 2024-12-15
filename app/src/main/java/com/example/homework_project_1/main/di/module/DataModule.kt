@@ -11,6 +11,7 @@ import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.repository.ApiRepositoryImpl
 import com.example.homework_project_1.main.data.repository.CacheRepositoryImpl
 import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
+import com.example.homework_project_1.main.di.DaggerWorkerFactory
 import com.example.homework_project_1.main.di.ViewModelKey
 import com.example.homework_project_1.main.domain.repository.Repository
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi
@@ -19,6 +20,7 @@ import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCas
 import com.example.homework_project_1.main.domain.usecase.GetUserJokesAfterUseCase
 import com.example.homework_project_1.main.domain.usecase.InsertJokeUseCase
 import com.example.homework_project_1.main.domain.usecase.ResetUsedJokesUseCase
+import com.example.homework_project_1.main.presentation.joke_add.AddJokeWorker
 import com.example.homework_project_1.main.presentation.joke_list.JokeListViewModel
 import dagger.Binds
 import dagger.Module
@@ -53,6 +55,11 @@ class DataModule {
             }
         }
         return httpClient
+    }
+
+    @Provides
+    fun provideDaggerWorkerFactory(addJokeWorkerFactory: AddJokeWorker.Factory): DaggerWorkerFactory {
+        return DaggerWorkerFactory(addJokeWorkerFactory)
     }
 
     @JokesRepository
