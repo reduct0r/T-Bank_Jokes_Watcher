@@ -85,13 +85,7 @@ class JokeDetailsFragment : Fragment() {
                 getString(R.string.add_to_favorites)
             }
 
-            binding.favoriteStar.setImageResource(
-                if (isFavorite) {
-                    R.drawable.ic_star_filled
-                } else {
-                    R.drawable.ic_star_outline
-                }
-            )
+            binding.favoriteStar.isSelected = isFavorite
         }
 
         binding.addToFavorites.setOnClickListener {

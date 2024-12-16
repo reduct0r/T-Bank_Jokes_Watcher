@@ -109,6 +109,7 @@ data class JokeDTO(
                 source = source.toString(),
                 isShown = false,
                 createdAt = lastTimestamp,
+                isFavourite = isFavorite
             )
         }
 

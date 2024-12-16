@@ -66,9 +66,7 @@ class JokeListFragment : Fragment() {
             .commit()
     },
         favoriteClickListener = { joke, bind ->
-            bind.favoriteStar.setImageResource(
-                if (!joke.isFavorite) R.drawable.ic_star_filled else R.drawable.ic_star_outline
-            )
+            bind.favoriteStar.isSelected = !bind.favoriteStar.isSelected
             viewModel.viewModelScope.launch {
                 viewModel.toggleFavorite(joke)
             }

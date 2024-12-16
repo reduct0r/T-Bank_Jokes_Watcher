@@ -64,14 +64,10 @@ class MainMenuViewModel @Inject constructor(
                     _textLine.postValue(lines[currentIndex])
                     currentIndex = (currentIndex + 1) % lines.size
                 } else {
-                    _textLine.postValue("No jokes in database")
+                    _textLine.postValue("Nothing to show")
                 }
-                delay(5000)
+                delay(6000)
             }
         }
-    }
-
-    fun stopUpdatingLines() {
-        isRunning = false
     }
 }
