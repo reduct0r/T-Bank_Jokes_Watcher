@@ -1,12 +1,10 @@
 package com.example.homework_project_1.main
 
 import android.app.Application
-import android.widget.Toast
 import androidx.work.Configuration
 import com.example.homework_project_1.main.di.AppComponent
 import com.example.homework_project_1.main.di.DaggerAppComponent
 import com.example.homework_project_1.main.di.DaggerWorkerFactory
-import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheUseCase
 import javax.inject.Inject
 
 class App : Application(), Configuration.Provider {

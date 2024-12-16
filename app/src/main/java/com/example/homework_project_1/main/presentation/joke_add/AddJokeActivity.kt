@@ -17,10 +17,9 @@ import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityAddJokeBinding
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
-import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
 import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
 import com.example.homework_project_1.main.domain.repository.JokesRepository
-import com.example.homework_project_1.main.presentation.joke_add.AddJokeViewModel.*
+import com.example.homework_project_1.main.presentation.joke_add.AddJokeViewModel.AddJokeStatus
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

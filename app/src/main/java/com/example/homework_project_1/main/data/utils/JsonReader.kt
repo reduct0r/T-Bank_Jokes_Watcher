@@ -10,7 +10,6 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.IOException
 import java.util.UUID
-import javax.inject.Inject
 
 // Класс для чтения данных из JSON-файла
 class JsonReader {

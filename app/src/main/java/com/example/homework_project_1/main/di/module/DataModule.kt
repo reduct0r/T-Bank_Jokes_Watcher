@@ -8,11 +8,9 @@ import com.example.homework_project_1.main.data.api.ApiServiceImpl
 import com.example.homework_project_1.main.data.database.JokeDAO
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.repository.CacheRepositoryImpl
-import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
 import com.example.homework_project_1.main.data.utils.JsonReader
-import com.example.homework_project_1.main.di.annotations.CacheRepositoryA
 import com.example.homework_project_1.main.di.DaggerWorkerFactory
-import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
+import com.example.homework_project_1.main.di.annotations.CacheRepositoryA
 import com.example.homework_project_1.main.domain.generator.JokesGenerator
 import com.example.homework_project_1.main.domain.repository.Repository
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeWorker

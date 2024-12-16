@@ -6,27 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
-import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentMainMenuBinding
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.presentation.favourite_jokes.FavoriteJokeListFragment
-import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.presentation.joke_list.JokeListActivity
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import okhttp3.internal.wait
-import java.util.Timer
-import java.util.TimerTask
 import javax.inject.Inject
 
 class MainMenuFragment : Fragment() {

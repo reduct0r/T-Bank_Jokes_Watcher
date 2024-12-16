@@ -1,6 +1,5 @@
 package com.example.homework_project_1.main.data.database
 
-import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey

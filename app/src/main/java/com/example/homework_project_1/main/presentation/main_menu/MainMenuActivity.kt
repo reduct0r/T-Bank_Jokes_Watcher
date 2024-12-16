@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.homework_project_1.R
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.utils.JsonReader
-import com.example.homework_project_1.main.presentation.joke_list.JokeListFragment
 import javax.inject.Inject
 
 class MainMenuActivity : AppCompatActivity() {

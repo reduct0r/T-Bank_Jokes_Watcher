@@ -12,10 +12,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentFavoriteJokeListBinding
-import com.example.homework_project_1.databinding.FragmentJokeListBinding
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsFragment
-import com.example.homework_project_1.main.presentation.joke_list.JokeListViewModel
 import com.example.homework_project_1.main.presentation.joke_list.JokesViewModelFactory
 import com.example.homework_project_1.main.presentation.joke_list.recycler.adapter.ViewTypedListAdapter
 import kotlinx.coroutines.launch

@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,9 +22,7 @@ import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheU
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.presentation.joke_list.recycler.adapter.ViewTypedListAdapter
-import com.example.homework_project_1.main.presentation.utils.ViewTyped.JokeUIModel.JokeUIModelFactory
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

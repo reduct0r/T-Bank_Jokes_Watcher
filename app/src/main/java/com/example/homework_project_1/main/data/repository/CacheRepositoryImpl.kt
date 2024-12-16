@@ -1,13 +1,11 @@
 package com.example.homework_project_1.main.data.repository
 
-import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toCacheEntity
 import com.example.homework_project_1.main.domain.repository.CacheRepository
-import com.example.homework_project_1.main.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

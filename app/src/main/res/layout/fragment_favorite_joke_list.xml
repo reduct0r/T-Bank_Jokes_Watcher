@@ -16,7 +16,6 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/rounded_button"
         android:text="@string/back"
-        app:layout_constraintBottom_toTopOf="@+id/avatar"
         app:layout_constraintHorizontal_weight="1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
