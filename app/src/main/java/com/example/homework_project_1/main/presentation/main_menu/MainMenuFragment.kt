@@ -87,11 +87,6 @@ class MainMenuFragment : Fragment() {
             .start()
     }
 
-    override fun onStop() {
-        super.onStop()
-        viewModel.stopUpdatingLines()
-    }
-
     override fun onStart() {
         super.onStart()
         viewModel.startUpdatingLines()

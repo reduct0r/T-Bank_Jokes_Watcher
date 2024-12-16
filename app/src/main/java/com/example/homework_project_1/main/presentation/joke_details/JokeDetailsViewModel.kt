@@ -41,7 +41,7 @@ class JokeDetailsViewModel @AssistedInject constructor(
                 _isFavorite.value = true
                 addToFavouritesUseCase(gotJoke)
             } catch (e: Exception) {
-                _error.value = e.message ?: "Unknown error"
+                _error.value = e.message ?: "Unknown error while adding to favorites"
             }
         }
     }
@@ -53,7 +53,8 @@ class JokeDetailsViewModel @AssistedInject constructor(
                 _isFavorite.value = false
                 addToFavouritesUseCase(gotJoke)
             } catch (e: Exception) {
-                _error.value = e.message ?: "Unknown error"
+
+                _error.value = e.message ?: "Unknown error while removing from favorites"
             }
         }
     }
