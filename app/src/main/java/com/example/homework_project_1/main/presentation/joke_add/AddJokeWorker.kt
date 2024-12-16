@@ -9,7 +9,7 @@ import com.example.homework_project_1.main.data.provider.AvatarProvider
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
-import com.example.homework_project_1.main.di.annotations.JokesRepository
+import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
 import com.example.homework_project_1.main.domain.usecase.InsertJokeUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -19,7 +19,7 @@ import dagger.assisted.AssistedInject
 class AddJokeWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted private val params: WorkerParameters,
-    @JokesRepository private val insertJokeUseCase: InsertJokeUseCase
+    @JokesRepositoryA private val insertJokeUseCase: InsertJokeUseCase
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {

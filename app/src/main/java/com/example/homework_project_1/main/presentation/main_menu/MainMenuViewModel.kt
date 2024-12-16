@@ -1,16 +1,12 @@
 package com.example.homework_project_1.main.presentation.main_menu
 
 import android.util.Log
-import android.view.View
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.homework_project_1.main.di.annotations.CacheRepository
-import com.example.homework_project_1.main.di.annotations.JokesRepository
+import com.example.homework_project_1.main.di.annotations.CacheRepositoryA
+import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
 import com.example.homework_project_1.main.domain.generator.JokesGenerator
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
 import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCase
@@ -22,10 +18,10 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class MainMenuViewModel @Inject constructor(
-    @JokesRepository private val fetchRandomJokesFromDbUseCase: FetchRandomJokesFromDbUseCase,
-    @CacheRepository private val fetchRandomCacheFromDbUseCase: FetchRandomJokesFromDbUseCase,
-    @JokesRepository private val getAmountOfJokesUseCase: GetAmountOfJokesUseCase,
-    @JokesRepository private val insertJokeUseCase: InsertJokeUseCase,
+    @JokesRepositoryA private val fetchRandomJokesFromDbUseCase: FetchRandomJokesFromDbUseCase,
+    @CacheRepositoryA private val fetchRandomCacheFromDbUseCase: FetchRandomJokesFromDbUseCase,
+    @JokesRepositoryA private val getAmountOfJokesUseCase: GetAmountOfJokesUseCase,
+    @JokesRepositoryA private val insertJokeUseCase: InsertJokeUseCase,
     private val jokesGenerator: JokesGenerator,
 ) : ViewModel() {
 

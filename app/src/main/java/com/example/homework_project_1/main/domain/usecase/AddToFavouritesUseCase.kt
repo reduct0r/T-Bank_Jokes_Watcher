@@ -1,25 +1,18 @@
 package com.example.homework_project_1.main.domain.usecase
 
-import android.util.Log
-import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
+import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
+import com.example.homework_project_1.main.domain.repository.JokesRepository
 import com.example.homework_project_1.main.presentation.utils.ViewTyped
 import javax.inject.Inject
 
 class AddToFavouritesUseCase @Inject constructor(
-    private var jokeDb: JokesWatcherDatabase
+    @JokesRepositoryA private var repository: JokesRepository
 ) {
     suspend operator fun invoke(joke: ViewTyped.JokeUIModel) {
-        val jokeEnt = joke.toDbEntity()
-        if (jokeDb.jokeDao().isJokeExists(
-                jokeEnt.id!!,
-                jokeEnt.category,
-                jokeEnt.question,
-                jokeEnt.answer)
-            ){
-            jokeDb.jokeDao().updateFavouriteStatus(jokeEnt.id!!, jokeEnt.isFavourite)
-            //Log.d("AddToFavouritesUseCase", "Joke with id ${jokeEnt.id} updated")
+        if (repository.isJokeExists(joke.toDto())) {
+                repository.changeFavouriteStatus(joke.id, joke.isFavorite)
         } else {
-            jokeDb.jokeDao().insert(jokeEnt)
+            repository.insertJoke(joke.toDto())
         }
     }
 }

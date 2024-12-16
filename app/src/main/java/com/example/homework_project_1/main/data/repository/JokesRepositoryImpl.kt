@@ -4,13 +4,13 @@ import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toDbEntity
-import com.example.homework_project_1.main.domain.repository.Repository
+import com.example.homework_project_1.main.domain.repository.JokesRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class JokesRepositoryImpl @Inject constructor(
     private val jokeDb: JokesWatcherDatabase
-) : Repository {
+) : JokesRepository {
     private val shownJokes = mutableListOf<Int>()
     private val categories = mutableSetOf<String>()
 
@@ -49,20 +49,35 @@ class JokesRepositoryImpl @Inject constructor(
         return jokeDb.jokeDao().getUserJokesAfter(lastTimestamp)
     }
 
-    suspend fun getCategories(): List<String> {
+    override suspend fun getCategories(): List<String> {
         jokeDb.jokeDao().getCategories().map {
             categories.add(it)
         }
         return categories.toList()
     }
 
-    fun addNewCategory(newCategory: String) {
+    override fun addNewCategory(newCategory: String) {
         categories.add(newCategory)
+    }
+
+    override suspend fun getFavoriteJokes(): List<JokeDTO> {
+        return jokeDb.jokeDao().getFavouriteJokes().map { it.toDto() }
     }
 
     suspend fun getAllUserJokes(): List<JokeDTO> {
         return jokeDb.jokeDao().getAllUserJokes().map { it.toDto() }
     }
 
+    override suspend fun changeFavouriteStatus(jokeId: Int, isFavourite: Boolean) {
+        jokeDb.jokeDao().updateFavouriteStatus(jokeId, isFavourite)
+    }
 
+    override suspend fun isJokeExists(joke: JokeDTO): Boolean {
+        return jokeDb.jokeDao().isJokeExists(
+            joke.id,
+            joke.category,
+            joke.question,
+            joke.answer
+        )
+    }
 }

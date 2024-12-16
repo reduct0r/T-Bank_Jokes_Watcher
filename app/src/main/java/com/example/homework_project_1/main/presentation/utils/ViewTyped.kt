@@ -4,6 +4,7 @@ import androidx.annotation.IdRes
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.model.Flags
+import com.example.homework_project_1.main.data.model.JokeDTO
 import kotlinx.serialization.Serializable
 import javax.inject.Inject
 
@@ -41,6 +42,28 @@ sealed interface ViewTyped {
                 ),
                 createdAt = System.currentTimeMillis(),
                 isFavourite = isFavorite
+            )
+        }
+
+        fun toDto(): JokeDTO {
+            return JokeDTO(
+                id = id,
+                avatarByteArr = avatarByteArr,
+                category = category,
+                question = question,
+                answer = answer,
+                source = source,
+                flags = Flags(
+                    nsfw = false,
+                    religious = false,
+                    political = false,
+                    racist = false,
+                    sexist = false,
+                    explicit = false
+                ),
+                isFavorite = isFavorite,
+                lang = "en",
+                avatar = avatar
             )
         }
 

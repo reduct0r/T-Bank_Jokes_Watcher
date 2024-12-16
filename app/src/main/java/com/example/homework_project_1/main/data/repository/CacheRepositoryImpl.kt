@@ -6,13 +6,14 @@ import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toCacheEntity
+import com.example.homework_project_1.main.domain.repository.CacheRepository
 import com.example.homework_project_1.main.domain.repository.Repository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class CacheRepositoryImpl @Inject constructor(
     private val jokeDb: JokesWatcherDatabase
-) : Repository {
+) : CacheRepository {
 
     private val shownCachedJokes = mutableListOf<Int>()
 
@@ -48,6 +49,10 @@ class CacheRepositoryImpl @Inject constructor(
     }
 
     override fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun isJokeExists(joke: JokeDTO): Boolean {
         TODO("Not yet implemented")
     }
 

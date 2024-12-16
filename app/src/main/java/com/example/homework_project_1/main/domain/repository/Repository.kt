@@ -12,5 +12,6 @@ interface Repository {
     suspend fun resetUsedJokes()
     suspend fun getAmountOfJokes(): Int
     fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>>
+    suspend fun isJokeExists(joke: JokeDTO): Boolean
 
 }

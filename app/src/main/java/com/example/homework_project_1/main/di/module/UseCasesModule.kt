@@ -1,9 +1,10 @@
 package com.example.homework_project_1.main.di.module
 
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
-import com.example.homework_project_1.main.di.annotations.ApiRepository
-import com.example.homework_project_1.main.di.annotations.CacheRepository
-import com.example.homework_project_1.main.di.annotations.JokesRepository
+import com.example.homework_project_1.main.di.annotations.ApiRepositoryA
+import com.example.homework_project_1.main.di.annotations.CacheRepositoryA
+import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
+import com.example.homework_project_1.main.domain.repository.JokesRepository
 import com.example.homework_project_1.main.domain.repository.Repository
 import com.example.homework_project_1.main.domain.usecase.AddToFavouritesUseCase
 import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheUseCase
@@ -27,70 +28,72 @@ class UseCasesModule {
 
     @Singleton
     @Provides
-    @JokesRepository
-    fun provideGetUserJokesAfterUseCase(@JokesRepository repository: Repository): GetUserJokesAfterUseCase {
+    @JokesRepositoryA
+    fun provideGetUserJokesAfterUseCase(@JokesRepositoryA repository: JokesRepository): GetUserJokesAfterUseCase {
         return GetUserJokesAfterUseCase(repository)
     }
 
     @Singleton
     @Provides
-    @ApiRepository
-    fun provideFetchRandomJokesFromApiUseCase(@ApiRepository repository: Repository): FetchRandomJokesFromApi {
+    @ApiRepositoryA
+    fun provideFetchRandomJokesFromApiUseCase(@ApiRepositoryA repository: Repository): FetchRandomJokesFromApi {
         return FetchRandomJokesFromApi(repository)
     }
 
     @Singleton
     @Provides
-    @JokesRepository
-    fun provideFetchRandomJokesFromDbUseCase(@JokesRepository repository: Repository): FetchRandomJokesFromDbUseCase {
+    @JokesRepositoryA
+    fun provideFetchRandomJokesFromDbUseCase(@JokesRepositoryA repository: JokesRepository): FetchRandomJokesFromDbUseCase {
         return FetchRandomJokesFromDbUseCase(repository)
     }
 
     @Singleton
     @Provides
-    @CacheRepository
-    fun provideFetchRandomCacheJokesFromDbUseCase(@CacheRepository repository: Repository): FetchRandomJokesFromDbUseCase {
+    @CacheRepositoryA
+    fun provideFetchRandomCacheJokesFromDbUseCase(@CacheRepositoryA repository: Repository): FetchRandomJokesFromDbUseCase {
         return FetchRandomJokesFromDbUseCase(repository)
     }
 
     @Singleton
     @Provides
-    @JokesRepository
-    fun provideGetAmountOfJokesUseCase(@JokesRepository repository: Repository): GetAmountOfJokesUseCase {
+    @JokesRepositoryA
+    fun provideGetAmountOfJokesUseCase(@JokesRepositoryA repository: JokesRepository): GetAmountOfJokesUseCase {
         return GetAmountOfJokesUseCase(repository)
     }
 
     @Singleton
     @Provides
-    @JokesRepository
-    fun provideResetUsedJokesUseCase(@JokesRepository repository: Repository): ResetUsedJokesUseCase {
+    @JokesRepositoryA
+    fun provideResetUsedJokesUseCase(@JokesRepositoryA repository: JokesRepository): ResetUsedJokesUseCase {
         return ResetUsedJokesUseCase(repository)
     }
 
     @Singleton
     @Provides
-    @CacheRepository
-    fun provideResetUsedJokesCacheUseCase(@CacheRepository repository: Repository): ResetUsedJokesUseCase {
+    @CacheRepositoryA
+    fun provideResetUsedJokesCacheUseCase(@CacheRepositoryA repository: Repository): ResetUsedJokesUseCase {
         return ResetUsedJokesUseCase(repository)
     }
 
     @Singleton
     @Provides
-    @JokesRepository
-    fun provideInsertJokeUseCaseJokes(@JokesRepository repository: Repository): InsertJokeUseCase {
+    @JokesRepositoryA
+    fun provideInsertJokeUseCaseJokes(@JokesRepositoryA repository: JokesRepository): InsertJokeUseCase {
         return InsertJokeUseCase(repository)
     }
 
     @Singleton
     @Provides
-    @CacheRepository
-    fun provideInsertJokeUseCaseCache(@CacheRepository repository: Repository): InsertJokeUseCase {
+    @CacheRepositoryA
+    fun provideInsertJokeUseCaseCache(@CacheRepositoryA repository: Repository): InsertJokeUseCase {
         return InsertJokeUseCase(repository)
     }
 
     @Singleton
     @Provides
-    fun provideAddToFavouritesUseCase(jokeDb: JokesWatcherDatabase): AddToFavouritesUseCase {
-        return AddToFavouritesUseCase(jokeDb)
+    @JokesRepositoryA
+    fun provideAddToFavouritesUseCase(@JokesRepositoryA repository: JokesRepository): AddToFavouritesUseCase {
+        return AddToFavouritesUseCase(repository)
     }
+
 }

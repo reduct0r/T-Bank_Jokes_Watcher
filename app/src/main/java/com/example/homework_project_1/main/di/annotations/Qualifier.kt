@@ -4,12 +4,12 @@ import javax.inject.Qualifier
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class JokesRepository
+annotation class JokesRepositoryA
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class CacheRepository
+annotation class CacheRepositoryA
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class ApiRepository
+annotation class ApiRepositoryA

@@ -13,9 +13,9 @@ import com.example.homework_project_1.main.domain.generator.JokesGenerator
 import com.example.homework_project_1.main.presentation.utils.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
 import com.example.homework_project_1.main.data.utils.unique
-import com.example.homework_project_1.main.di.annotations.ApiRepository
-import com.example.homework_project_1.main.di.annotations.CacheRepository
-import com.example.homework_project_1.main.di.annotations.JokesRepository
+import com.example.homework_project_1.main.di.annotations.ApiRepositoryA
+import com.example.homework_project_1.main.di.annotations.CacheRepositoryA
+import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
 import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCase
@@ -28,15 +28,15 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class JokeListViewModel @Inject constructor(
-    @ApiRepository private val fetchRandomJokesFromApi: FetchRandomJokesFromApi,
-    @JokesRepository private val insertJokeUseCase: InsertJokeUseCase,
-    @CacheRepository private val insertCacheJokeUseCase:InsertJokeUseCase,
-    @JokesRepository private val getAmountOfJokesUseCase: GetAmountOfJokesUseCase,
-    @JokesRepository private val resetUsedJokesUseCase: ResetUsedJokesUseCase,
-    @CacheRepository private val resetUsedCacheUseCase: ResetUsedJokesUseCase,
-    @JokesRepository private val fetchRandomJokesFromDbUseCase: FetchRandomJokesFromDbUseCase,
-    @CacheRepository private val fetchRandomCacheFromDbUseCase: FetchRandomJokesFromDbUseCase,
-    @JokesRepository private val getUserJokesAfterUseCase: GetUserJokesAfterUseCase,
+    @ApiRepositoryA private val fetchRandomJokesFromApi: FetchRandomJokesFromApi,
+    @JokesRepositoryA private val insertJokeUseCase: InsertJokeUseCase,
+    @CacheRepositoryA private val insertCacheJokeUseCase:InsertJokeUseCase,
+    @JokesRepositoryA private val getAmountOfJokesUseCase: GetAmountOfJokesUseCase,
+    @JokesRepositoryA private val resetUsedJokesUseCase: ResetUsedJokesUseCase,
+    @CacheRepositoryA private val resetUsedCacheUseCase: ResetUsedJokesUseCase,
+    @JokesRepositoryA private val fetchRandomJokesFromDbUseCase: FetchRandomJokesFromDbUseCase,
+    @CacheRepositoryA private val fetchRandomCacheFromDbUseCase: FetchRandomJokesFromDbUseCase,
+    @JokesRepositoryA private val getUserJokesAfterUseCase: GetUserJokesAfterUseCase,
 
     private val jokesGenerator: JokesGenerator,
     ): ViewModel() {

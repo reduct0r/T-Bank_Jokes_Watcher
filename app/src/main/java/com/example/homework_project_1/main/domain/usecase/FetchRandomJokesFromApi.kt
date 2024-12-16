@@ -10,7 +10,7 @@ class FetchRandomJokesFromApi @Inject constructor(
 ) {
     suspend operator fun invoke(amount: Int, needMark: Boolean = true): List<JokeDTO> {
         val jokes = apiRepositoryImpl.fetchRandomJokes(amount, needMark)
-            jokes.forEach { it.source = JokeSource.NETWORK }
+        jokes.forEach { it.source = JokeSource.NETWORK }
         return jokes
     }
 }

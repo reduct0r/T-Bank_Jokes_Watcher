@@ -48,4 +48,8 @@ class ApiRepositoryImpl @Inject constructor(
     override fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>> {
         TODO("Not yet implemented")
     }
+
+    override suspend fun isJokeExists(joke: JokeDTO): Boolean {
+        TODO("Not yet implemented")
+    }
 }

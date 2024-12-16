@@ -77,6 +77,10 @@ interface JokeDAO {
 
     @Query("SELECT EXISTS(SELECT 1 FROM jokes WHERE id = :id AND category = :category AND question = :question AND answer = :answer)")
     suspend fun isJokeExists(id: Int, category: String, question: String, answer: String): Boolean
+
+    @Query("SELECT * FROM jokes WHERE isFavourite = 1")
+    suspend fun getFavouriteJokes(): List<JokeDbEntity>
+
     //Cache
     @Query("SELECT COUNT(*) FROM jokesCache WHERE question = :question AND answer = :answer AND category = :category")
     suspend fun checkIfCacheExists(question: String, answer: String, category: String): Int
