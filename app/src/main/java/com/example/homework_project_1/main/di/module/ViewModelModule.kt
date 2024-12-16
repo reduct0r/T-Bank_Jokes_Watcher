@@ -2,6 +2,7 @@ package com.example.homework_project_1.main.di.module
 
 import androidx.lifecycle.ViewModel
 import com.example.homework_project_1.main.di.annotations.ViewModelKey
+import com.example.homework_project_1.main.presentation.favourite_jokes.FavoriteJokesListViewModel
 import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsViewModel
 import com.example.homework_project_1.main.presentation.joke_list.JokeListViewModel
 import com.example.homework_project_1.main.presentation.main_menu.MainMenuViewModel
@@ -27,4 +28,8 @@ abstract class ViewModelModule {
     @ViewModelKey(JokeDetailsViewModel::class)
     abstract fun bindJokeDetailsViewModelFactory(factory: JokeDetailsViewModel.Factory): JokeDetailsViewModel.Factory
 
+    @Binds
+    @IntoMap
+    @ViewModelKey(FavoriteJokesListViewModel::class)
+    abstract fun bindFavoriteJokesListViewModel(viewModel: FavoriteJokesListViewModel): ViewModel
 }

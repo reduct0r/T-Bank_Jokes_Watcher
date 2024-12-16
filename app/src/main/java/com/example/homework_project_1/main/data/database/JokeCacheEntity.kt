@@ -29,13 +29,15 @@ data class JokeCacheEntity (
     @ColumnInfo(name = "createdAt")
     val createdAt: Long = System.currentTimeMillis(),
     @ColumnInfo(name = "isFavourite")
-    var isFavourite: Boolean = false
+    var isFavourite: Boolean = false,
+    @ColumnInfo(name = "avatarUrl")
+    val avatarUrl: Int?
 ) {
 
     fun toDto(): JokeDTO {
         return JokeDTO(
             id = id ?: 0,
-            avatar = null,
+            avatar = avatarUrl,
             avatarByteArr = avatarByteArr,
             category = category,
             question = question,

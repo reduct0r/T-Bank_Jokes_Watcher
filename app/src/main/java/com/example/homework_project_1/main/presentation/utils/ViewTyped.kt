@@ -41,7 +41,8 @@ sealed interface ViewTyped {
                     explicit = false
                 ),
                 createdAt = System.currentTimeMillis(),
-                isFavourite = isFavorite
+                isFavourite = isFavorite,
+                avatarUrl = avatar
             )
         }
 

@@ -110,7 +110,6 @@ class JokeListViewModel @Inject constructor(
                     val uiModel = data.convertToUIModel()
                     _jokes.postValue(uiModel)
                 } else {
-                    _error.value = "There is no new jokes"
                     _jokes.postValue(emptyList())
                 }
             } catch (e: Exception) {

@@ -84,7 +84,6 @@ data class JokeDTO(
                     avatarByteArr = joke.avatarByteArr
                 )
             }
-
         }
 
         fun JokeDTO.toApiEntity(safe: Boolean, type: String) = JokeApiEntity(
@@ -109,7 +108,8 @@ data class JokeDTO(
                 source = source.toString(),
                 isShown = false,
                 createdAt = lastTimestamp,
-                isFavourite = isFavorite
+                isFavourite = isFavorite,
+                avatarUrl = avatar
             )
         }
 
@@ -123,8 +123,9 @@ data class JokeDTO(
                 avatarByteArr = avatarByteArr,
                 source = source.toString(),
                 isShown = false,
-                createdAt = lastTimestamp
-
+                createdAt = lastTimestamp,
+                isFavourite = isFavorite,
+                avatarUrl = avatar
             )
         }
 

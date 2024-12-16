@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "7e44255e3d0ed90c52078c74f840e1b2",
+    "identityHash": "b49ac76ff55921ee2013b76ea3c96b93",
     "entities": [
       {
         "tableName": "jokes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `category` TEXT NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `source` TEXT NOT NULL, `flags` TEXT NOT NULL, `avatar` BLOB, `isShown` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `isFavourite` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `category` TEXT NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `source` TEXT NOT NULL, `flags` TEXT NOT NULL, `avatar` BLOB, `isShown` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `isFavourite` INTEGER NOT NULL, `avatarUrl` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -66,6 +66,12 @@
             "fieldPath": "isFavourite",
             "columnName": "isFavourite",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avatarUrl",
+            "columnName": "avatarUrl",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -80,7 +86,7 @@
       },
       {
         "tableName": "jokesCache",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `category` TEXT NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `source` TEXT NOT NULL, `flags` TEXT NOT NULL, `avatar` BLOB, `isShown` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `isFavourite` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `category` TEXT NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `source` TEXT NOT NULL, `flags` TEXT NOT NULL, `avatar` BLOB, `isShown` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `isFavourite` INTEGER NOT NULL, `avatarUrl` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -140,6 +146,12 @@
             "fieldPath": "isFavourite",
             "columnName": "isFavourite",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "avatarUrl",
+            "columnName": "avatarUrl",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -156,7 +168,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7e44255e3d0ed90c52078c74f840e1b2')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b49ac76ff55921ee2013b76ea3c96b93')"
     ]
   }
 }

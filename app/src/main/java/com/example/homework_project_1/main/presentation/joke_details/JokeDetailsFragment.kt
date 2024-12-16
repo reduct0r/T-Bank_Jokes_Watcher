@@ -3,6 +3,7 @@ package com.example.homework_project_1.main.presentation.joke_details
 import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +34,6 @@ class JokeDetailsFragment : Fragment() {
             fragment.arguments = bundle
             return fragment
         }
-
     }
 
     override fun onAttach(context: Context) {

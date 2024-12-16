@@ -16,8 +16,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentMainMenuBinding
 import com.example.homework_project_1.main.App
+import com.example.homework_project_1.main.presentation.favourite_jokes.FavoriteJokeListFragment
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.presentation.joke_list.JokeListActivity
 import kotlinx.coroutines.delay
@@ -70,6 +72,19 @@ class MainMenuFragment : Fragment() {
         binding.jokesButton.setOnClickListener {
             val intent = Intent(context, JokeListActivity::class.java)
             startActivity(intent)
+        }
+
+        binding.favoritesButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .setCustomAnimations(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+                )
+                .replace(R.id.fragment_container, FavoriteJokeListFragment())
+                .addToBackStack(null)
+                .commit()
         }
     }
 

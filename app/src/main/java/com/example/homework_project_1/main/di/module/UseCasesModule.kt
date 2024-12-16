@@ -11,6 +11,7 @@ import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheU
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
 import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCase
+import com.example.homework_project_1.main.domain.usecase.GetFavoriteJokesUseCase
 import com.example.homework_project_1.main.domain.usecase.GetUserJokesAfterUseCase
 import com.example.homework_project_1.main.domain.usecase.InsertJokeUseCase
 import com.example.homework_project_1.main.domain.usecase.ResetUsedJokesUseCase
@@ -94,6 +95,13 @@ class UseCasesModule {
     @JokesRepositoryA
     fun provideAddToFavouritesUseCase(@JokesRepositoryA repository: JokesRepository): AddToFavouritesUseCase {
         return AddToFavouritesUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    @JokesRepositoryA
+    fun provideGetFavoriteJokesUseCase(@JokesRepositoryA repository: JokesRepository): GetFavoriteJokesUseCase {
+        return GetFavoriteJokesUseCase(repository)
     }
 
 }

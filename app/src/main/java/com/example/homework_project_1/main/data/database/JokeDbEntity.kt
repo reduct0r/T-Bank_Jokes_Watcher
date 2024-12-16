@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.data.database
 
+import android.util.Log
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -29,13 +30,15 @@ data class JokeDbEntity (
     @ColumnInfo(name = "createdAt")
     var createdAt: Long,
     @ColumnInfo(name = "isFavourite")
-    var isFavourite: Boolean = true
+    var isFavourite: Boolean = true,
+    @ColumnInfo(name = "avatarUrl")
+    val avatarUrl: Int?
 ) {
 
     fun toDto(): JokeDTO {
         return JokeDTO(
             id = id ?: 0,
-            avatar = null,
+            avatar = avatarUrl,
             avatarByteArr = avatarByteArr,
             category = category,
             question = question,

@@ -8,6 +8,7 @@ import com.example.homework_project_1.main.di.module.RepositoryModule
 import com.example.homework_project_1.main.di.module.UseCasesModule
 import com.example.homework_project_1.main.di.module.ViewModelModule
 import com.example.homework_project_1.main.di.module.WorkerModule
+import com.example.homework_project_1.main.presentation.favourite_jokes.FavoriteJokeListFragment
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsViewModel
@@ -35,6 +36,7 @@ interface AppComponent {
     fun inject(fragment: JokeListFragment)
     fun inject(fragment: JokeDetailsFragment)
     fun inject(fragment: MainMenuFragment)
+    fun inject(fragment: FavoriteJokeListFragment)
     fun inject(activity: AddJokeActivity)
     fun inject(activity: MainMenuActivity)
     fun inject(app: App)
