@@ -1,4 +1,5 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -38,15 +39,16 @@
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:text="TITLE"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="20sp"
+        android:autoSizeMinTextSize="12sp"
         android:autoSizeStepGranularity="2sp"
-        app:layout_constraintStart_toEndOf="@id/avatar"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:text="TITLE"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/favoriteStar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/sourceLabel"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="HardcodedText" />
 
@@ -83,5 +85,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="Long text that may not fitLong text that may not fitLong text that may not fit"
         tools:ignore="RtlSymmetry" />
+
+    <ImageView
+        android:id="@+id/favoriteStar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:clickable="true"
+        android:contentDescription="@string/favorite"
+        android:focusable="false"
+        android:src="@drawable/star_selector"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

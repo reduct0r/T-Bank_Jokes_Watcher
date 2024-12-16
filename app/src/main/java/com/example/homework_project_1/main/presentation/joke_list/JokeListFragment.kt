@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +52,8 @@ class JokeListFragment : Fragment() {
     }
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
-    private val adapter = ViewTypedListAdapter { joke ->
+    private val adapter = ViewTypedListAdapter(
+        jokeClickListener = { joke ->
         parentFragmentManager.beginTransaction()
             .setCustomAnimations(
                 R.anim.slide_in_right,
@@ -62,7 +64,16 @@ class JokeListFragment : Fragment() {
             .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke))
             .addToBackStack(null)
             .commit()
-    }
+    },
+        favoriteClickListener = { joke, bind ->
+            bind.favoriteStar.setImageResource(
+                if (!joke.isFavorite) R.drawable.ic_star_filled else R.drawable.ic_star_outline
+            )
+            viewModel.viewModelScope.launch {
+                viewModel.toggleFavorite(joke)
+            }
+        }
+    )
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

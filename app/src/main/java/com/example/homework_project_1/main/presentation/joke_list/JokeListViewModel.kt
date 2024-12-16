@@ -16,6 +16,7 @@ import com.example.homework_project_1.main.data.utils.unique
 import com.example.homework_project_1.main.di.annotations.ApiRepositoryA
 import com.example.homework_project_1.main.di.annotations.CacheRepositoryA
 import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
+import com.example.homework_project_1.main.domain.usecase.AddToFavouritesUseCase
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
 import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCase
@@ -37,6 +38,7 @@ class JokeListViewModel @Inject constructor(
     @JokesRepositoryA private val fetchRandomJokesFromDbUseCase: FetchRandomJokesFromDbUseCase,
     @CacheRepositoryA private val fetchRandomCacheFromDbUseCase: FetchRandomJokesFromDbUseCase,
     @JokesRepositoryA private val getUserJokesAfterUseCase: GetUserJokesAfterUseCase,
+    @JokesRepositoryA private val addToFavouritesUseCase: AddToFavouritesUseCase,
 
     private val jokesGenerator: JokesGenerator,
     ): ViewModel() {
@@ -194,5 +196,10 @@ class JokeListViewModel @Inject constructor(
                 _error.postValue(e.message ?: "Unknown error occurred while observing new jokes.")
             }
         }
+    }
+
+    suspend fun toggleFavorite(joke: ViewTyped.JokeUIModel) {
+        joke.isFavorite = !joke.isFavorite
+        addToFavouritesUseCase(joke)
     }
 }

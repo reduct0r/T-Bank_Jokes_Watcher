@@ -13,4 +13,8 @@
     <color name="light_red">#D54343</color>
     <color name="dark_prp">#281B79</color>
     <color name="dark_red">#6E1810</color>
+    <color name="yellow_or">#FFC100</color>
+    <color name="yellow">#EAD10A</color>
+    <color name="dark_yellow">#DC9E00</color>
+    <color name="dark_gray">#807E7E</color>
 </resources>

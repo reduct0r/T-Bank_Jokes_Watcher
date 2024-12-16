@@ -84,9 +84,25 @@ class JokeDetailsFragment : Fragment() {
             } else {
                 getString(R.string.add_to_favorites)
             }
+
+            binding.favoriteStar.setImageResource(
+                if (isFavorite) {
+                    R.drawable.ic_star_filled
+                } else {
+                    R.drawable.ic_star_outline
+                }
+            )
         }
 
         binding.addToFavorites.setOnClickListener {
+            if (viewModel.isFavorite.value == true) {
+                viewModel.removeFromFavorites()
+            } else {
+                viewModel.addToFavorites()
+            }
+        }
+
+        binding.favoriteStar.setOnClickListener {
             if (viewModel.isFavorite.value == true) {
                 viewModel.removeFromFavorites()
             } else {

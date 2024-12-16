@@ -12,6 +12,7 @@ class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHol
         bindQuestion(joke.question)
         bindAnswer(joke.answer)
         bindTitle(joke.category)
+        bindFavorite(joke.isFavorite)
 
         if (joke.avatarByteArr != null) {
             bindAvatarFromByteArray(joke.avatarByteArr)
@@ -62,5 +63,9 @@ class JokeViewHolder(private val binding: JokeItemBinding): RecyclerView.ViewHol
         id?.let {
             binding.avatar.setImageResource(it)
         }
+    }
+
+    private fun bindFavorite(isFavorite: Boolean) {
+        binding.favoriteStar.isSelected = isFavorite
     }
 }
