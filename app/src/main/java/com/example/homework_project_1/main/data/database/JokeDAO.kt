@@ -45,8 +45,8 @@ interface JokeDAO {
     @Query("SELECT COUNT(*) FROM jokes")
     suspend fun getAmountOfJokes(): Int
 
-    @Query("SELECT COUNT(*) FROM jokes WHERE question = :question AND answer = :answer AND category = :category")
-    suspend fun checkIfExists(question: String, answer: String, category: String): Int
+    @Query("SELECT COUNT(*) FROM jokes WHERE id = :id AND question = :question AND answer = :answer AND category = :category")
+    suspend fun checkIfExists(id: Int, question: String, answer: String, category: String): Int
 
     @Query("SELECT * FROM jokes")
     suspend fun getAllJokes(): List<JokeDbEntity>
@@ -75,8 +75,8 @@ interface JokeDAO {
     @Query("UPDATE jokes SET isFavourite = :isFavourite WHERE id = :jokeId")
     suspend fun updateFavouriteStatus(jokeId: Int, isFavourite: Boolean)
 
-    @Query("SELECT EXISTS(SELECT 1 FROM jokes WHERE id = :id AND category = :category AND question = :question AND answer = :answer)")
-    suspend fun isJokeExists(id: Int, category: String, question: String, answer: String): Boolean
+    @Query("SELECT EXISTS(SELECT 1 FROM jokes WHERE category = :category AND question = :question AND answer = :answer)")
+    suspend fun isJokeDataExists(category: String, question: String, answer: String): Boolean
 
     @Query("SELECT * FROM jokes WHERE isFavourite = 1")
     suspend fun getFavouriteJokes(): List<JokeDbEntity>

@@ -7,4 +7,5 @@ interface JokesRepository : Repository {
     suspend fun getCategories(): List<String>
     suspend fun getFavoriteJokes(): List<JokeDTO>
     suspend fun changeFavouriteStatus(jokeId: Int, isFavourite: Boolean)
+    suspend fun countIfJokeExists(joke: JokeDTO): Int
 }

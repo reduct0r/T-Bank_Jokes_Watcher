@@ -58,16 +58,16 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
                         WorkInfo.State.CANCELLED -> {
                             _addJokeStatus.value = AddJokeStatus.Error("Work cancelled")
                         }
-
                         WorkInfo.State.ENQUEUED -> {}
                         WorkInfo.State.RUNNING -> {}
                     }
                 }
             }
     }
+
+    sealed class AddJokeStatus {
+        data object Success : AddJokeStatus()
+        data class Error(val message: String) : AddJokeStatus()
+    }
 }
 
-sealed class AddJokeStatus {
-    data object Success : AddJokeStatus()
-    data class Error(val message: String) : AddJokeStatus()
-}

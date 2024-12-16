@@ -15,11 +15,9 @@
         android:focusable="true"
         android:src="@drawable/star_selector"
         app:layout_constraintBottom_toTopOf="@+id/category"
-        app:layout_constraintEnd_toStartOf="@+id/sourceLabel"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/buttonBack"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.461" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/sourceLabel"
@@ -32,11 +30,11 @@
         android:paddingBottom="5dp"
         android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/category"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.905"
+        app:layout_constraintEnd_toStartOf="@+id/favoriteStar"
+        app:layout_constraintHorizontal_bias="0.424"
         app:layout_constraintStart_toEndOf="@+id/buttonBack"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.361"
+        app:layout_constraintVertical_bias="0.235"
         tools:text="joke source" />
 
     <ImageView

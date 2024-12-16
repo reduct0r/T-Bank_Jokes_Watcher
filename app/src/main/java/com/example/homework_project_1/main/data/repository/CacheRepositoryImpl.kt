@@ -52,8 +52,7 @@ class CacheRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun isJokeExists(joke: JokeDTO): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun isJokeDataExists(joke: JokeDTO): Boolean {
+        return false
     }
-
 }

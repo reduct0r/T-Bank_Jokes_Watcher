@@ -9,7 +9,7 @@ class AddToFavouritesUseCase @Inject constructor(
     @JokesRepositoryA private var repository: JokesRepository
 ) {
     suspend operator fun invoke(joke: ViewTyped.JokeUIModel) {
-        if (repository.isJokeExists(joke.toDto())) {
+        if (repository.countIfJokeExists(joke.toDto()) > 0) {
                 repository.changeFavouriteStatus(joke.id, joke.isFavorite)
         } else {
             repository.insertJoke(joke.toDto())

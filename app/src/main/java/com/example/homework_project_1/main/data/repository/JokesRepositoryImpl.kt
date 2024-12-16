@@ -72,12 +72,17 @@ class JokesRepositoryImpl @Inject constructor(
         jokeDb.jokeDao().updateFavouriteStatus(jokeId, isFavourite)
     }
 
-    override suspend fun isJokeExists(joke: JokeDTO): Boolean {
-        return jokeDb.jokeDao().isJokeExists(
-            joke.id,
+    override suspend fun countIfJokeExists(joke: JokeDTO): Int {
+        return jokeDb.jokeDao().checkIfExists(joke.id, joke.question, joke.answer, joke.category)
+    }
+
+    override suspend fun isJokeDataExists(joke: JokeDTO): Boolean {
+        return jokeDb.jokeDao().isJokeDataExists(
             joke.category,
             joke.question,
             joke.answer
         )
     }
+
+
 }

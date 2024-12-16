@@ -75,6 +75,10 @@ class FavoriteJokeListFragment : Fragment() {
         viewModel.favoriteJokes.observe(viewLifecycleOwner) { jokes ->
             adapter.submitList(jokes)
         }
+
+        binding.buttonBack.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
     }
 
     private fun createRecyclerViewList() {
