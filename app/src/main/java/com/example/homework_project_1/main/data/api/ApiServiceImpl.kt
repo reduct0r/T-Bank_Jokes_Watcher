@@ -5,8 +5,12 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import javax.inject.Inject
 
-class ApiServiceImpl private constructor(private val client: HttpClient) : ApiService {
+class ApiServiceImpl @Inject constructor(
+    private val client: HttpClient
+) : ApiService {
+
     companion object {
         private const val BASE_URL = "https://v2.jokeapi.dev/joke/Any"
         private const val BLACKLIST_FLAGS = "nsfw,religious,political,racist,sexist,explicit"
@@ -14,9 +18,9 @@ class ApiServiceImpl private constructor(private val client: HttpClient) : ApiSe
         @Volatile
         private var instance: ApiServiceImpl? = null
 
-        fun getInstance(): ApiServiceImpl {
+        fun getInstance(apiClient: HttpClient): ApiServiceImpl {
             return instance ?: synchronized(this) {
-                instance ?: ApiServiceImpl(ApiClient.httpClient).also { instance = it }
+                instance ?: ApiServiceImpl(apiClient).also { instance = it }
             }
         }
     }

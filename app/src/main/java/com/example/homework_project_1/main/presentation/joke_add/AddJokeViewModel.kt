@@ -9,6 +9,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import java.util.UUID
 
@@ -30,18 +31,18 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
             .build()
 
         // Создание задачи для добавления шутки
-        val addJokeRequest = OneTimeWorkRequestBuilder<AddJokeWorker>()
+        val workRequest = OneTimeWorkRequestBuilder<AddJokeWorker>()
             .setInputData(data)
             .build()
 
         // Получение экземпляра WorkManager с использованием контекста приложения
-        val workManager = WorkManager.getInstance(getApplication())
+        val workManager = WorkManager.getInstance(App.instance)
 
         // Добавление задачи в очередь
-        workManager.enqueue(addJokeRequest)
+        workManager.enqueue(workRequest)
 
         // Наблюдение за состоянием задачи
-        workManager.getWorkInfoByIdLiveData(addJokeRequest.id)
+        workManager.getWorkInfoByIdLiveData(workRequest.id)
             .observeForever { workInfo ->
                 if (workInfo != null) {
                     when (workInfo.state) {
@@ -57,16 +58,16 @@ class AddJokeViewModel(application: Application) : AndroidViewModel(application)
                         WorkInfo.State.CANCELLED -> {
                             _addJokeStatus.value = AddJokeStatus.Error("Work cancelled")
                         }
-
                         WorkInfo.State.ENQUEUED -> {}
                         WorkInfo.State.RUNNING -> {}
                     }
                 }
             }
     }
+
+    sealed class AddJokeStatus {
+        data object Success : AddJokeStatus()
+        data class Error(val message: String) : AddJokeStatus()
+    }
 }
 
-sealed class AddJokeStatus {
-    data object Success : AddJokeStatus()
-    data class Error(val message: String) : AddJokeStatus()
-}

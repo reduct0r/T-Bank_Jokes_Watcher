@@ -15,11 +15,19 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.viewModelScope
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.ActivityAddJokeBinding
+import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
-import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
+import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
+import com.example.homework_project_1.main.domain.repository.JokesRepository
+import com.example.homework_project_1.main.presentation.joke_add.AddJokeViewModel.AddJokeStatus
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class AddJokeActivity : AppCompatActivity() {
+    @Inject
+    @JokesRepositoryA
+    lateinit var jokesRepository: JokesRepository
+
     private lateinit var binding: ActivityAddJokeBinding
     private lateinit var categoriesAdapter: ArrayAdapter<String>
     private var categoriesList: MutableList<String> = mutableListOf()
@@ -44,6 +52,8 @@ class AddJokeActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as App).appComponent.inject(this)
+
         super.onCreate(savedInstanceState)
         binding = ActivityAddJokeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -51,7 +61,7 @@ class AddJokeActivity : AppCompatActivity() {
 
         // Получение списка категорий
         viewModel.viewModelScope.launch {
-            categoriesList.addAll(JokesRepositoryImpl.getCategories())
+            categoriesList.addAll(jokesRepository.getCategories())
             categoriesList.add(getString(R.string.add_new_category)) //"Добавить новую категорию"
             categoriesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerCategory.adapter = categoriesAdapter
@@ -137,7 +147,7 @@ class AddJokeActivity : AppCompatActivity() {
         builder.setPositiveButton(getString(R.string.add)) { dialog, _ ->
             val newCategory = input.text.toString().trim()
             if (newCategory.isNotEmpty() && !categoriesList.contains(newCategory)) {
-                JokesRepositoryImpl.addNewCategory(newCategory)
+                jokesRepository.addNewCategory(newCategory)
                 categoriesList.add(categoriesList.size - 1, newCategory)
                 categoriesAdapter.notifyDataSetChanged()
                 binding.spinnerCategory.setSelection(categoriesList.indexOf(newCategory))

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "527f01bbaea18668176bce0d0cdc6d8b",
+    "identityHash": "6d8c2590de36223e8cca197d53419eeb",
     "entities": [
       {
         "tableName": "jokes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `category` TEXT NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `source` TEXT NOT NULL, `flags` TEXT NOT NULL, `avatar` BLOB, `isShown` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `category` TEXT NOT NULL, `question` TEXT NOT NULL, `answer` TEXT NOT NULL, `source` TEXT NOT NULL, `flags` TEXT NOT NULL, `avatar` BLOB, `isShown` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, `isFavourite` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -59,6 +59,12 @@
           {
             "fieldPath": "createdAt",
             "columnName": "createdAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isFavourite",
+            "columnName": "isFavourite",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -144,7 +150,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '527f01bbaea18668176bce0d0cdc6d8b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6d8c2590de36223e8cca197d53419eeb')"
     ]
   }
 }

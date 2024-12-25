@@ -1,13 +1,11 @@
 package com.example.homework_project_1.main.data.database
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 @Dao
 interface JokeDAO {
@@ -46,14 +44,8 @@ interface JokeDAO {
     @Query("SELECT COUNT(*) FROM jokes")
     suspend fun getAmountOfJokes(): Int
 
-
-
-
-
-
-
-    @Query("SELECT COUNT(*) FROM jokes WHERE question = :question AND answer = :answer AND category = :category")
-    suspend fun checkIfExists(question: String, answer: String, category: String): Int
+    @Query("SELECT COUNT(*) FROM jokes WHERE id = :id AND question = :question AND answer = :answer AND category = :category")
+    suspend fun checkIfExists(id: Int, question: String, answer: String, category: String): Int
 
     @Query("SELECT * FROM jokes")
     suspend fun getAllJokes(): List<JokeDbEntity>
@@ -76,10 +68,17 @@ interface JokeDAO {
     @Query("UPDATE jokes SET isShown = :mark WHERE id IN (:ids)")
     suspend fun markShown(mark: Boolean, ids: List<Int>)
 
-
     @Query("SELECT DISTINCT category FROM jokes")
     suspend fun getCategories(): List<String>
 
+    @Query("UPDATE jokes SET isFavourite = :isFavourite WHERE id = :jokeId")
+    suspend fun updateFavouriteStatus(jokeId: Int, isFavourite: Boolean)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM jokes WHERE category = :category AND question = :question AND answer = :answer)")
+    suspend fun isJokeDataExists(category: String, question: String, answer: String): Boolean
+
+    @Query("SELECT * FROM jokes WHERE isFavourite = 1")
+    suspend fun getFavouriteJokes(): List<JokeDbEntity>
 
     //Cache
     @Query("SELECT COUNT(*) FROM jokesCache WHERE question = :question AND answer = :answer AND category = :category")
@@ -87,7 +86,6 @@ interface JokeDAO {
 
     @Query("UPDATE jokesCache SET isShown = :mark WHERE id IN (:ids)")
     suspend fun markCacheShown(mark: Boolean, ids: List<Int>)
-
 
     @Query("UPDATE jokesCache SET isShown = 1")
     suspend fun markCacheShown()
@@ -100,5 +98,4 @@ interface JokeDAO {
 
     @Query("SELECT * FROM jokesCache WHERE createdAt < :lastTimestamp ORDER BY createdAt ASC")
     suspend fun getCachedJokesBefore(lastTimestamp: Long): List<JokeDbEntity>
-
 }

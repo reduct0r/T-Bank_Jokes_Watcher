@@ -2,13 +2,16 @@ package com.example.homework_project_1.main.presentation.utils
 
 import androidx.annotation.IdRes
 import com.example.homework_project_1.main.data.JokeSource
+import com.example.homework_project_1.main.data.database.JokeDbEntity
+import com.example.homework_project_1.main.data.model.Flags
+import com.example.homework_project_1.main.data.model.JokeDTO
 import kotlinx.serialization.Serializable
+import javax.inject.Inject
 
 // UI-Интерфейс для отображения элементов списка
 @Serializable
 sealed interface ViewTyped {
     // Класс шутки
-
     data class JokeUIModel(
         val id: Int,
         @IdRes var avatar: Int?,
@@ -20,6 +23,66 @@ sealed interface ViewTyped {
         val source: JokeSource
 
     ) : ViewTyped, java.io.Serializable {
+
+        fun toDbEntity(): JokeDbEntity {
+            return JokeDbEntity(
+                id = id,
+                avatarByteArr = avatarByteArr,
+                category = category,
+                question = question,
+                answer = answer,
+                source = source.toString(),
+                flags = Flags(
+                    nsfw = false,
+                    religious = false,
+                    political = false,
+                    racist = false,
+                    sexist = false,
+                    explicit = false
+                ),
+                createdAt = System.currentTimeMillis(),
+                isFavourite = isFavorite,
+                avatarUrl = avatar
+            )
+        }
+
+        fun toDto(): JokeDTO {
+            return JokeDTO(
+                id = id,
+                avatarByteArr = avatarByteArr,
+                category = category,
+                question = question,
+                answer = answer,
+                source = source,
+                flags = Flags(
+                    nsfw = false,
+                    religious = false,
+                    political = false,
+                    racist = false,
+                    sexist = false,
+                    explicit = false
+                ),
+                isFavorite = isFavorite,
+                lang = "en",
+                avatar = avatar
+            )
+        }
+
+        // Фабрика для создания объектов
+        class JokeUIModelFactory @Inject constructor() {
+            fun create(
+                id: Int,
+                avatar: Int?,
+                avatarByteArr: ByteArray?,
+                category: String,
+                question: String,
+                answer: String,
+                isFavorite: Boolean,
+                source: JokeSource
+            ): JokeUIModel {
+                return JokeUIModel(id, avatar, avatarByteArr, category, question, answer, isFavorite, source)
+            }
+        }
 
         override fun equals(other: Any?): Boolean {
             if (this === other) return true

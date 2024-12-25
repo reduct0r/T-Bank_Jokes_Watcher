@@ -2,18 +2,21 @@ package com.example.homework_project_1.main.presentation.joke_list
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.widget.Toast
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+
 import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.domain.generator.JokesGenerator
 import com.example.homework_project_1.main.presentation.utils.ViewTyped
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.convertToUIModel
-import com.example.homework_project_1.main.data.repository.CacheRepositoryImpl
-import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
 import com.example.homework_project_1.main.data.utils.unique
+import com.example.homework_project_1.main.di.annotations.ApiRepositoryA
+import com.example.homework_project_1.main.di.annotations.CacheRepositoryA
+import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
+import com.example.homework_project_1.main.domain.usecase.AddToFavouritesUseCase
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromApi
 import com.example.homework_project_1.main.domain.usecase.FetchRandomJokesFromDbUseCase
 import com.example.homework_project_1.main.domain.usecase.GetAmountOfJokesUseCase
@@ -23,8 +26,22 @@ import com.example.homework_project_1.main.domain.usecase.ResetUsedJokesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class JokeListViewModel : ViewModel() {
+class JokeListViewModel @Inject constructor(
+    @ApiRepositoryA private val fetchRandomJokesFromApi: FetchRandomJokesFromApi,
+    @JokesRepositoryA private val insertJokeUseCase: InsertJokeUseCase,
+    @CacheRepositoryA private val insertCacheJokeUseCase:InsertJokeUseCase,
+    @JokesRepositoryA private val getAmountOfJokesUseCase: GetAmountOfJokesUseCase,
+    @JokesRepositoryA private val resetUsedJokesUseCase: ResetUsedJokesUseCase,
+    @CacheRepositoryA private val resetUsedCacheUseCase: ResetUsedJokesUseCase,
+    @JokesRepositoryA private val fetchRandomJokesFromDbUseCase: FetchRandomJokesFromDbUseCase,
+    @CacheRepositoryA private val fetchRandomCacheFromDbUseCase: FetchRandomJokesFromDbUseCase,
+    @JokesRepositoryA private val getUserJokesAfterUseCase: GetUserJokesAfterUseCase,
+    @JokesRepositoryA private val addToFavouritesUseCase: AddToFavouritesUseCase,
+
+    private val jokesGenerator: JokesGenerator,
+    ): ViewModel() {
 
     private val _jokes = MutableLiveData<List<ViewTyped.JokeUIModel>>()
     val jokes: LiveData<List<ViewTyped.JokeUIModel>> = _jokes
@@ -50,16 +67,6 @@ class JokeListViewModel : ViewModel() {
     private var savedLastTimestamp = sharedPreferences.getLong("lastTimestamp", System.currentTimeMillis())
     private var lastTimestamp = savedLastTimestamp - 2
 
-    private val insertJokeUseCase = InsertJokeUseCase(JokesRepositoryImpl)
-    private val insertCacheJokeUseCase = InsertJokeUseCase(CacheRepositoryImpl)
-    private val getAmountOfJokesUseCase = GetAmountOfJokesUseCase(JokesRepositoryImpl)
-    private val resetUsedJokesUseCase = ResetUsedJokesUseCase(JokesRepositoryImpl)
-    private val resetUsedCacheUseCase = ResetUsedJokesUseCase(CacheRepositoryImpl)
-    private val fetchRandomJokesFromDbUseCase = FetchRandomJokesFromDbUseCase(JokesRepositoryImpl)
-    private val fetchRandomCacheFromDbUseCase = FetchRandomJokesFromDbUseCase(CacheRepositoryImpl)
-    private val fetchRandomJokesFromApi = FetchRandomJokesFromApi()
-    private val getUserJokesAfterUseCase = GetUserJokesAfterUseCase()
-
     fun setLoadingAdded(isAdded: Boolean) {
         _isLoadingAdded.value = isAdded
     }
@@ -69,27 +76,13 @@ class JokeListViewModel : ViewModel() {
         observeNewJoke()
 
         viewModelScope.launch {
-            // Удаление кэша через сутки
-            if (CacheRepositoryImpl.deleteDeprecatedCache(System.currentTimeMillis() - 3600000 * 24))
-                Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
-
-            //TODO: для тестов сбросить состояние таблицы
-//            RepositoryImpl.dropJokesTable()
-//            RepositoryImpl.resetJokesSequence()
-
-            //TODO: для тестов использованные шутки сбрасываются каждый запуск
-//            withContext(Dispatchers.Default) {
-//                RepositoryImpl.resetUsedJokes()
-//                RepositoryImpl.resetCachedJokes()
-//            }
-
-
             // Если в БД нет шуток (при первом запуске), то генерируем случайные
             if (getAmountOfJokesUseCase() == 0) {
                 try {
-                    JokesGenerator.generateJokesData(35)
+                    jokesGenerator.generateJokesData(35)
                         .forEach { insertJokeUseCase(it) }
                     generateJokes()
+                    Log.d("JokeListViewModel", "Jokes generated")
                 } catch (e: Exception) {
                     // игнорируем повторения шуток
                 }
@@ -107,18 +100,16 @@ class JokeListViewModel : ViewModel() {
     fun generateJokes() {
         if (_isLoadingEl.value == true) return
         editor.putLong("lastTimestamp", System.currentTimeMillis()).apply()
-        flag = false
         viewModelScope.launch {
             _isLoading.postValue(true)
             try {
                 var data = fetchRandomJokesFromDbUseCase(10)
 
                 if (data.isNotEmpty()) {
-                    data = JokesGenerator.setAvatar(data)
-                    val uiModel = data.convertToUIModel(false)
+                    data = jokesGenerator.setAvatar(data)
+                    val uiModel = data.convertToUIModel()
                     _jokes.postValue(uiModel)
                 } else {
-                    _error.value = "There is no new jokes"
                     _jokes.postValue(emptyList())
                 }
             } catch (e: Exception) {
@@ -138,8 +129,8 @@ class JokeListViewModel : ViewModel() {
                 newJokes.forEach { joke ->
                     insertCacheJokeUseCase(joke)
                 }
-                newJokes = JokesGenerator.setAvatar(newJokes)
-                val uiModels = newJokes.convertToUIModel(false)
+                newJokes = jokesGenerator.setAvatar(newJokes)
+                val uiModels = newJokes.convertToUIModel()
                 val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
                 _jokes.postValue(updatedJokes)
                 _isRetryNeed.postValue(false)
@@ -147,8 +138,8 @@ class JokeListViewModel : ViewModel() {
                 var newJokes = fetchRandomCacheFromDbUseCase(5)
                 if (newJokes.isNotEmpty()) {
                     _error.value = "Check Network connection"
-                    newJokes = JokesGenerator.setAvatar(newJokes)
-                    val uiModels = newJokes.convertToUIModel(false)
+                    newJokes = jokesGenerator.setAvatar(newJokes)
+                    val uiModels = newJokes.convertToUIModel()
                     val updatedJokes = (_jokes.value ?: emptyList()) + uiModels
                     _jokes.postValue(updatedJokes)
                 } else {
@@ -172,11 +163,8 @@ class JokeListViewModel : ViewModel() {
                 resetUsedCacheUseCase()
             }
         }
-//        lastTimestamp = System.currentTimeMillis()
-//        savedLastTimestamp = System.currentTimeMillis()
-        JokesGenerator.reset()
+        jokesGenerator.reset()
     }
-    private var flag: Boolean = false
 
     private fun observeNewJoke() {
         viewModelScope.launch {
@@ -189,15 +177,14 @@ class JokeListViewModel : ViewModel() {
                             var newModels = sortedJokes
                                 .map { it.toDto()}
 
-                            newModels = JokesGenerator.setAvatar(newModels)
+                            newModels = jokesGenerator.setAvatar(newModels)
 
                             // Объединяем новые шутки с существующими, избегая дубликатов
-                            val updatedJokes = (newModels.convertToUIModel(false) + (_jokes.value ?: emptyList()))
+                            val updatedJokes = (newModels.convertToUIModel() + (_jokes.value ?: emptyList()))
                                 .distinctBy { it }
 
                             _jokes.postValue(updatedJokes)
 
-                            //savedLastTimestamp = 0
                             lastTimestamp = sortedJokes.maxOf { it.createdAt} +1
                             savedLastTimestamp = sortedJokes.minOf { it.createdAt}
                             editor.putLong("lastTimestamp", savedLastTimestamp).apply()
@@ -208,5 +195,10 @@ class JokeListViewModel : ViewModel() {
                 _error.postValue(e.message ?: "Unknown error occurred while observing new jokes.")
             }
         }
+    }
+
+    suspend fun toggleFavorite(joke: ViewTyped.JokeUIModel) {
+        joke.isFavorite = !joke.isFavorite
+        addToFavouritesUseCase(joke)
     }
 }

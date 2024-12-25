@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.presentation.joke_list
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -11,35 +12,45 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeListBinding
+import com.example.homework_project_1.main.App
+import com.example.homework_project_1.main.domain.usecase.DeleteDeprecatedCacheUseCase
 import com.example.homework_project_1.main.presentation.joke_add.AddJokeActivity
 import com.example.homework_project_1.main.presentation.joke_details.JokeDetailsFragment
 import com.example.homework_project_1.main.presentation.joke_list.recycler.adapter.ViewTypedListAdapter
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class JokeListFragment : Fragment() {
+    @Inject
+    lateinit var jokesViewModelFactory: JokesViewModelFactory
+
+    @Inject
+    lateinit var deleteDeprecatedCacheUseCase: DeleteDeprecatedCacheUseCase
+
     private var _binding: FragmentJokeListBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: JokeListViewModel by viewModels {
-        JokesViewModelFactory()
-    }
     private var next = false
     private var lastErrorTime: Long = 0
     private val errorInterval: Long = 5000 // Интервал
 
     private val handler = Handler(Looper.getMainLooper())
+    private val viewModel: JokeListViewModel by viewModels {
+        jokesViewModelFactory
+    }
     private val retryRunnable = Runnable {
         viewModel.loadMoreJokes()
     }
-
     private lateinit var scrollListener: EndlessRecyclerViewScrollListener
 
-    // Update adapter to pass JokeUIModel instead of position
-    private val adapter = ViewTypedListAdapter { joke ->
+    private val adapter = ViewTypedListAdapter(
+        jokeClickListener = { joke ->
         parentFragmentManager.beginTransaction()
             .setCustomAnimations(
                 R.anim.slide_in_right,
@@ -50,6 +61,18 @@ class JokeListFragment : Fragment() {
             .replace(R.id.fragment_container, JokeDetailsFragment.newInstance(joke))
             .addToBackStack(null)
             .commit()
+    },
+        favoriteClickListener = { joke, bind ->
+            bind.favoriteStar.isSelected = !bind.favoriteStar.isSelected
+            viewModel.viewModelScope.launch {
+                viewModel.toggleFavorite(joke)
+            }
+        }
+    )
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        (requireActivity().application as App).appComponent.inject(this)
     }
 
     private fun showError(message: String) {
@@ -68,6 +91,11 @@ class JokeListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         createRecyclerViewList()
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+        viewModel.viewModelScope.launch {
+            if (deleteDeprecatedCacheUseCase(System.currentTimeMillis() - 3600000 * 24))
+                Toast.makeText(App.instance, "Deprecated cache cleared", Toast.LENGTH_SHORT).show()
+        }
 
         // Наблюдение за данными шуток
         viewModel.jokes.observe(viewLifecycleOwner) { jokes ->

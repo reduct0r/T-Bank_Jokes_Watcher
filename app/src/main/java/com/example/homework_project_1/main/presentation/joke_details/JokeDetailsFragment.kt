@@ -1,5 +1,6 @@
 package com.example.homework_project_1.main.presentation.joke_details
 
+import android.content.Context
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,10 +12,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.homework_project_1.R
 import com.example.homework_project_1.databinding.FragmentJokeDetailsBinding
+import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.presentation.utils.ViewTyped
+import javax.inject.Inject
 
 class JokeDetailsFragment : Fragment() {
+
+    @Inject
+    lateinit var jokeDetailsFactory: JokeDetailsViewModel.Factory
 
     companion object {
         private const val JOKE_EXTRA = "joke_extra"
@@ -29,13 +35,19 @@ class JokeDetailsFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        (requireActivity().application as App).appComponent.inject(this)
+        super.onAttach(context)
+    }
 
     private var _binding: FragmentJokeDetailsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: JokeDetailsViewModel by viewModels {
-        arguments?.getSerializable(JOKE_EXTRA)?.let { JokesDetailsViewModelFactory(it as ViewTyped.JokeUIModel) }
+        val joke = arguments?.getSerializable(JOKE_EXTRA) as? ViewTyped.JokeUIModel
             ?: throw IllegalArgumentException("JOKE_EXTRA is missing")
+
+        JokeDetailsViewModelFactory(jokeDetailsFactory, joke)
     }
 
     override fun onCreateView(
@@ -65,9 +77,30 @@ class JokeDetailsFragment : Fragment() {
             handleError(errorMessage)
         }
 
+        viewModel.isFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            binding.addToFavorites.text = if (isFavorite) {
+                getString(R.string.remove_from_favorites)
+            } else {
+                getString(R.string.add_to_favorites)
+            }
+
+            binding.favoriteStar.isSelected = isFavorite
+        }
+
         binding.addToFavorites.setOnClickListener {
-            Toast.makeText(requireContext(), "Added to favorites (TEST)", Toast.LENGTH_SHORT).show()
-            viewModel.addToFavorites()
+            if (viewModel.isFavorite.value == true) {
+                viewModel.removeFromFavorites()
+            } else {
+                viewModel.addToFavorites()
+            }
+        }
+
+        binding.favoriteStar.setOnClickListener {
+            if (viewModel.isFavorite.value == true) {
+                viewModel.removeFromFavorites()
+            } else {
+                viewModel.addToFavorites()
+            }
         }
 
         // Обработка нажатия на кнопку "Назад"

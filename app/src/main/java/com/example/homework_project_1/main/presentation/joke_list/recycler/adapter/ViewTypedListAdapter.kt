@@ -14,7 +14,8 @@ import com.example.homework_project_1.main.presentation.joke_list.recycler.Loadi
 import com.example.homework_project_1.main.presentation.joke_list.recycler.util.ViewTypedCallback
 
 class ViewTypedListAdapter(
-    private val clickListener: (ViewTyped.JokeUIModel) -> Unit
+    private val jokeClickListener: (ViewTyped.JokeUIModel) -> Unit,
+    private val favoriteClickListener: (ViewTyped.JokeUIModel, binding: JokeItemBinding) -> Unit
 ) : ListAdapter<ViewTyped, RecyclerView.ViewHolder>(ViewTypedCallback()) {
 
     private var isLoadingAdded = false
@@ -35,7 +36,14 @@ class ViewTypedListAdapter(
                         val position = bindingAdapterPosition
                         if (position != RecyclerView.NO_POSITION) {
                             val joke = getItem(position) as? ViewTyped.JokeUIModel
-                            joke?.let { clickListener(it) }
+                            joke?.let { jokeClickListener(it) }
+                        }
+                    }
+                    binding.favoriteStar.setOnClickListener {
+                        val position = bindingAdapterPosition
+                        if (position != RecyclerView.NO_POSITION) {
+                            val joke = getItem(position) as? ViewTyped.JokeUIModel
+                            joke?.let { favoriteClickListener(it, binding) }
                         }
                     }
                 }

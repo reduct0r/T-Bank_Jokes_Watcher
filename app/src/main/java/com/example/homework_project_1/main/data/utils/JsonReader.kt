@@ -12,12 +12,12 @@ import java.io.IOException
 import java.util.UUID
 
 // Класс для чтения данных из JSON-файла
-object JsonReader {
+class JsonReader {
     private val defaultJokesList = mutableListOf<JokeDTO>()
     private val userJokesList = mutableListOf<JokeDTO>()
     private val categories = mutableSetOf<String>()
 
-    fun readJokesFromAsset(context: Context, fileName: String = "jokes.json"): JokesData? {
+    private fun readJokesFromAsset(context: Context, fileName: String = "jokes.json"): JokesData? {
         return try {
             val jsonString = context.assets.open(fileName)
                 .bufferedReader()
@@ -57,7 +57,8 @@ object JsonReader {
                         ),
                         lang = "en",
                         avatarByteArr = null,
-                        source = JokeSource.DEFAULT
+                        source = JokeSource.DEFAULT,
+                        isFavorite = false
                     )
                 )
             }

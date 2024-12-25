@@ -9,12 +9,17 @@ import com.example.homework_project_1.main.data.provider.AvatarProvider
 import com.example.homework_project_1.main.data.JokeSource
 import com.example.homework_project_1.main.data.model.Flags
 import com.example.homework_project_1.main.data.model.JokeDTO
-import com.example.homework_project_1.main.data.repository.JokesRepositoryImpl
+import com.example.homework_project_1.main.di.annotations.JokesRepositoryA
+import com.example.homework_project_1.main.domain.usecase.InsertJokeUseCase
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
 // Для фонового добавления шутки в хранилище
-class AddJokeWorker(
-    context: Context,
-    params: WorkerParameters
+class AddJokeWorker @AssistedInject constructor(
+    @Assisted private val context: Context,
+    @Assisted private val params: WorkerParameters,
+    @JokesRepositoryA private val insertJokeUseCase: InsertJokeUseCase
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
@@ -52,16 +57,23 @@ class AddJokeWorker(
                 explicit = false
             ),
             lang = "en",
-            source = source
+            source = source,
+            isFavorite = false
         )
 
         return try {
-            JokesRepositoryImpl.insertJoke(joke)
+            insertJokeUseCase(joke)
             Result.success()
         } catch (e: SQLiteConstraintException) {
             Result.failure()
-        } catch (e: Exception) {
+        }
+        catch (e: Exception) {
             Result.failure()
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(@Assisted context: Context, @Assisted params: WorkerParameters): AddJokeWorker
     }
 }

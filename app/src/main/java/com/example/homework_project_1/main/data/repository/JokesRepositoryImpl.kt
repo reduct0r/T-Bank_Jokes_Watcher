@@ -1,16 +1,16 @@
 package com.example.homework_project_1.main.data.repository
 
-import com.example.homework_project_1.main.App
 import com.example.homework_project_1.main.data.database.JokeDbEntity
 import com.example.homework_project_1.main.data.database.JokesWatcherDatabase
 import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.model.JokeDTO.Companion.toDbEntity
-import com.example.homework_project_1.main.domain.repository.Repository
+import com.example.homework_project_1.main.domain.repository.JokesRepository
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-object JokesRepositoryImpl : Repository {
-
-    private val jokeDb: JokesWatcherDatabase = JokesWatcherDatabase.getInstance(App.instance)
+class JokesRepositoryImpl @Inject constructor(
+    private val jokeDb: JokesWatcherDatabase
+) : JokesRepository {
     private val shownJokes = mutableListOf<Int>()
     private val categories = mutableSetOf<String>()
 
@@ -22,11 +22,13 @@ object JokesRepositoryImpl : Repository {
         jokeDb.jokeDao().insert(joke.toDbEntity())
     }
 
-    override suspend fun fetchRandomJokes(amount: Int): List<JokeDTO> {
+    override suspend fun fetchRandomJokes(amount: Int, needMark: Boolean): List<JokeDTO> {
         val jokes = jokeDb.jokeDao().getRandomJokes(amount)
-        jokes.forEach{shownJokes.add(it.id!!)}
 
-        jokeDb.jokeDao().markShown(true, shownJokes) // Обновляем статус в базе
+        if (needMark) {
+            jokes.forEach { shownJokes.add(it.id!!) }
+            jokeDb.jokeDao().markShown(true, shownJokes) // Обновляем статус в базе
+        }
         return jokes.map { it.toDto() }
     }
 
@@ -43,23 +45,43 @@ object JokesRepositoryImpl : Repository {
         return jokeDb.jokeDao().getAmountOfJokes()
     }
 
-    fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>> {
+    override fun getUserJokesAfter(lastTimestamp: Long): Flow<List<JokeDbEntity>> {
         return jokeDb.jokeDao().getUserJokesAfter(lastTimestamp)
     }
 
-    suspend fun getCategories(): List<String> {
+    override suspend fun getCategories(): List<String> {
         jokeDb.jokeDao().getCategories().map {
             categories.add(it)
         }
         return categories.toList()
     }
 
-    fun addNewCategory(newCategory: String) {
+    override fun addNewCategory(newCategory: String) {
         categories.add(newCategory)
+    }
+
+    override suspend fun getFavoriteJokes(): List<JokeDTO> {
+        return jokeDb.jokeDao().getFavouriteJokes().map { it.toDto() }
     }
 
     suspend fun getAllUserJokes(): List<JokeDTO> {
         return jokeDb.jokeDao().getAllUserJokes().map { it.toDto() }
+    }
+
+    override suspend fun changeFavouriteStatus(jokeId: Int, isFavourite: Boolean) {
+        jokeDb.jokeDao().updateFavouriteStatus(jokeId, isFavourite)
+    }
+
+    override suspend fun countIfJokeExists(joke: JokeDTO): Int {
+        return jokeDb.jokeDao().checkIfExists(joke.id, joke.question, joke.answer, joke.category)
+    }
+
+    override suspend fun isJokeDataExists(joke: JokeDTO): Boolean {
+        return jokeDb.jokeDao().isJokeDataExists(
+            joke.category,
+            joke.question,
+            joke.answer
+        )
     }
 
 

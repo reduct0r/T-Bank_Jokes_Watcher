@@ -5,10 +5,13 @@ import com.example.homework_project_1.main.data.model.JokeDTO
 import com.example.homework_project_1.main.data.provider.AvatarProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 import kotlin.random.Random
 
 // Класс для генерации шуток
-object JokesGenerator {
+class JokesGenerator @Inject constructor(
+    private val jsonReader: JsonReader
+) {
     private var jokesList: List<JokeDTO> = emptyList()                  // Список всех шуток
     private val _loading = MutableLiveData<Boolean>()
     private var selectedJokes = mutableListOf<JokeDTO>()                // Список выбранных шуток
@@ -19,7 +22,7 @@ object JokesGenerator {
     suspend fun generateJokesData(jokesAmount: Int = 15): List<JokeDTO> {
         _loading.value = true
         withContext(Dispatchers.IO) {
-            jokesList = JsonReader.getJokes()
+            jokesList = jsonReader.getJokes()
             _loading.postValue(false)
         }
 
@@ -66,21 +69,6 @@ object JokesGenerator {
     fun reset() {
         selectedJokes.clear()
         usedJokesIndices.clear()
-    }
-
-    // Получение списка выбранных шуток
-    fun getSelectedJokes(): List<JokeDTO> {
-        return selectedJokes.toList()
-    }
-
-    // Добавление шутки в список выбранных
-    fun addToSelectedJokes(joke: JokeDTO, index: Int) {
-        if (index != -1) {
-            selectedJokes.add(0, joke)
-            usedJokesIndices.add(index)
-        } else {
-            selectedJokes.add(joke)
-        }
     }
 
     fun setAvatar(newJokes: List<JokeDTO>): List<JokeDTO> {
